@@ -1,0 +1,44 @@
+<div class="container">
+    <div class="slider-container">
+        <div class="intro-text">
+
+            <div class="intro-heading">Usunięte dokumenty</div>
+
+            <div id="showDocument">
+
+                <table class="table" ts-wrapper>
+                    <thead>
+                    <tr>
+
+                        <th style="width: 55%;">Numer WZ</th>
+                        <th style="width: 15%;" ts-criteria="subPro|parseInt">Pod proces</th>
+                        <th style="width: 20%;" ts-criteria="nameClient|lowercase">Klient</th>
+                        <th style="width: 20%;" ts-criteria="nameTrader|lowercase">Handlowiec</th>
+                        <th style="width: 20%;" ts-criteria="clientNumber|parseInt">Wykonał</th>
+                        <th style="width: 20%;" ts-criteria="date|parseInt">Data</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="delete in deleteDocument" ts-repeat>
+                        <td>{{delete.numberWZ}}</td>
+                        <td>{{delete.subPro}}</td>
+                        <td>{{delete.nameClient}}</td>
+                        <td>{{delete.nameTrader}}</td>
+                        <td>{{delete.user}}</td>
+                        <td>{{delete.date | date:'dd/MM/yyyy'}}</td>
+
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div>
+                <a href="#/history">
+                    <img src="images/icons/back.png">
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>

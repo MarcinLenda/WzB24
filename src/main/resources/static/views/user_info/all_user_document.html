@@ -1,0 +1,45 @@
+<div class="container">
+    <div class="slider-container">
+        <div class="intro-text">
+            <div class="intro-lead-in">Wszystkie dokumenty użytkownika: {{nameUser}}</div>
+            <div id="showDocument">
+                <table class="table" ts-wrapper>
+                    <thead>
+                    <tr>
+
+                        <th>Numer WZ</th>
+                        <th ts-criteria="subProcess|parseInt">Podproces</th>
+                        <th ts-criteria="client|lowercase">Klient</th>
+                        <th ts-criteria="clientNumber|parseInt">Numer klienta</th>
+                        <th ts-criteria="traderName|lowercase">Handlowiec</th>
+                        <th ts-criteria="date|parseInt">Data zatwierdzenia</th>
+                        <th>Zwłoka</th>
+
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="document in documents" ts-repeat>
+                        <td>{{document.numberWZ}}</td>
+                        <td>{{document.subProcess}}</td>
+                        <td>{{document.client}}</td>
+                        <td>{{document.clientNumber}}</td>
+                        <td>{{document.traderName}}</td>
+                        <td>{{document.date | date:'MM/dd/yyyy'}}</td>
+                        <td><timer start-time="document.date">{{days}} dni </timer></td>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <a href="#/account">
+                    <img src="images/icons/back.png">
+                </a>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+</div>

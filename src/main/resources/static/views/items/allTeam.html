@@ -1,0 +1,20 @@
+<div class="container">
+    <div class="slider-container">
+        <div class="intro-text">
+
+            <div class="intro-heading" style="font-size: 35px; letter-spacing: 1px;">STATYSTYKI WSZYSTKICH TOK-ów</div>
+
+            <div>
+                <div fusioncharts
+
+                     width="1000"
+                     height="400"
+                     type="pie3d"
+                     dataSource="{{myData}}">
+                </div>
+            </div>
+            <p><a class="btn btn-default" ng-click="updateMyChartData()">Click me to change data</a></p>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,42 @@
+<div class="container">
+    <div class="slider-container">
+        <div class="intro-text">
+
+            <div class="intro-heading">Historia logowania</div>
+
+            <div id="showDocument">
+
+                <table class="table" ts-wrapper>
+                    <thead>
+                    <tr>
+
+                        <th style="width: 55%;">Użytkownik</th>
+                        <th style="width: 20%;" ts-criteria="name|lowercase">Imie</th>
+                        <th style="width: 20%;" ts-criteria="surname|lowercase">Nazwisko</th>
+                        <th style="width: 20%;" ts-criteria="howManyTimesLoggedIn|parseInt">Które</th>
+                        <th style="width: 20%;" ts-criteria="dateLogged|parseInt">Kiedy</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="user in loggedInUser" ts-repeat>
+                        <td>{{user.username}}</td>
+                        <td>{{user.name}}</td>
+                        <td>{{user.surname}}</td>
+                        <td>{{user.howManyTimesLoggedIn}}</td>
+                        <td>{{user.dateLogged | date:'medium'}}</td>
+
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div>
+                <a href="#/history">
+                    <img src="images/icons/back.png">
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>

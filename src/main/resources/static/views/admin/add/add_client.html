@@ -1,0 +1,55 @@
+<div class="container">
+    <div class="slider-container">
+        <div class="intro-text">
+
+            <form id="form" class="topBefore" ng-submit="createAccountClient()">
+                <h1>Dodwanie klienta</h1>
+
+                <input name="nameClient" type="text" ng-model="form.nameClient" placeholder="Nazwa klienta">
+                <input name="nameClient" type="text" ng-model="form.abbreviationName" placeholder="Skrót">
+                <input name="numberClient" required type="text" ng-model="form.numberClient" placeholder="Numer klienta" />
+                <select ng-model="nameTeam" ng-options="x for x in names | orderBy"></select>
+                <!--
+                -->
+                <input id="submit" type="submit" value="Dodaj">
+
+            </form>
+            <div>
+                <a href="#/client">
+                    <img src="images/icons/back.png">
+                </a>
+            </div>
+
+        </div>
+    </div>
+    <script type="text/ng-template" id="addClient">
+        <h1 style="font-size: 25px;">{{responseFromServer}}</h1>
+        <input style="background-color: #23AD21;" class="submitSuccess" type="submit" value="Ok" ng-click="reloadRoute(); closeThisDialog(0);">
+    </script>
+    <script type="text/ng-template" id="errorClientNumber">
+        <h1>Numer klienta istnieje w bazie danych.</h1>
+        <p style="font-size: 18px; color: #ffffff;">Sprwadź numer w bazie danych.</p>
+        <input style="background-color:rgb(221,44,0);" class="submitSuccess" type="submit" value="Ok" ng-click="clearInput(); closeThisDialog(0);">
+    </script>
+    <script type="text/ng-template" id="errorClient">
+        <h1>Klient o podanej nazwie istnieje w bazie danych.</h1>
+        <p style="font-size: 18px; color: #ffffff;">Sprwadź nazwę klienta w bazie danych.</p>
+        <input style="background-color:rgb(221,44,0);" class="submitSuccess" type="submit" value="Ok" ng-click="clearInput(); closeThisDialog(0);">
+    </script>
+    <script type="text/ng-template" id="errorClientNumberLength">
+        <h1 style="font-size: 30px;">Niepoprawny numer klienta.</h1>
+        <p style="font-size: 18px; color: #ffffff;">Sprwadź długość numeru klienta.</p>
+        <input style="background-color:rgb(221,44,0);" class="submitSuccess" type="submit" value="Ok" ng-click="clearInput(); closeThisDialog(0);">
+    </script>
+    <script type="text/ng-template" id="errorExistsAbbreviation">
+        <h1 style="font-size: 25px;">Podany skrót już jest przypisany do innego klienta.</h1>
+        <p style="font-size: 18px; color: #ffffff;">Spróbuj  przebudować  obecny.</p>
+        <input style="background-color:rgb(221,44,0);" class="submitSuccess" type="submit" value="Ok" ng-click="clearInput(); closeThisDialog(0);">
+    </script>
+    <script type="text/ng-template" id="errorAddClient">
+        <h1 style="font-size: 15px;">Wystąpił błąd.</h1>
+        <p style="font-size: 18px; color: #ffffff;">Brak połączenia z serwerem.</p>
+        <input style="background-color:rgb(221,44,0);" class="submitSuccess" type="submit" value="Ok"
+               ng-click="closeThisDialog(0);">
+    </script>
+</div>

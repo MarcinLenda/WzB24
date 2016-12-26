@@ -1,0 +1,82 @@
+<div class="container">
+    <div class="slider-container">
+        <div class="intro-text">
+
+            <div class="intro-heading">Nieaktywne konta</div>
+            <div id="showDocument">
+                <table class="table" ts-wrapper>
+                    <thead>
+                    <tr>
+
+                        <th ts-criteria="username|lowercase">
+                            <md-icon md-svg-src='images/icons/mail.svg' style="color: #e7e7e7;"></md-icon>
+                            E-mail
+                        </th>
+                        <th ts-criteria="name|lowercase">
+                            <md-icon md-svg-src='images/icons/face.svg' style="color: #e7e7e7;"></md-icon>
+                            Imię
+                        </th>
+                        <th ts-criteria="surname|lowercase">
+                            <md-icon md-svg-src='images/icons/surname.svg' style="color: #e7e7e7;"></md-icon>
+                            Nazwisko
+                        </th>
+                        <th>
+                            <md-icon md-svg-src='images/icons/number.svg' style="color: #e7e7e7;"></md-icon>
+                            Numer
+                        </th>
+                        <th>
+                            <md-icon md-svg-src='images/icons/confirm.svg' style="color: #e7e7e7;"></md-icon>
+                            Zatwierdź</th>
+                        <th>
+                            <md-icon md-svg-src='images/icons/role.svg' style="color: #e7e7e7;"></md-icon>
+                            Uprawnienia
+                        </th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="account in notActiveAccounts" ts-repeat>
+                        <td>{{account.username}}</td>
+                        <td>{{account.name}}</td>
+                        <td>{{account.surname}}</td>
+                        <td>{{account.numberUser}}</td>
+                        <td class="active_account"><input class="adminSubmit" type="submit" value="Aktywuj konto"
+                                                          ng-click="editData.accounts = account; activeAccount();">
+                        <td ng-show="account.role=='USER'" class="active_account"><input class="adminSubmit"
+                                                                                         type="submit" value="Podnieś"
+                                                                                         ng-click="editData.accounts = account; giveRoleAdmin();">
+                        </td>
+                        <td style="color:rgb(221,44,0);" ng-show="account.role=='ADMIN'"><b>ADMIN</b></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <a href="#/admin">
+                    <img src="images/icons/back.png">
+                </a>
+            </div>
+
+        </div>
+        <script type="text/ng-template" id="Active">
+            <h1>Aktywować konto?</h1>
+            <input class="submitConfirmDialog" type="submit" value="Tak"
+                   ng-click="closeThisDialog(0); activeThisAccount(); ">
+            <input class="submitDelete" type="submit" value="Nie" ng-click="closeThisDialog(0)">
+        </script>
+        <script type="text/ng-template" id="Admin">
+            <h1>Czy nadać uprawnienia administratora?</h1>
+            <input class="submitConfirmDialog" type="submit" value="Tak"
+                   ng-click="closeThisDialog(0); confirmGiveRoleAdmin();">
+            <input class="submitDelete" type="submit" value="Nie" ng-click="closeThisDialog(0)">
+        </script>
+        <script type="text/ng-template" id="successActiveAccount">
+            <h1>Aktywacja zakończona sukcesem!</h1>
+            <input style="background-color: #23AD21;" class="submitSuccess" type="submit" value="Aktywowano konto!"
+                   ng-click="reloadRoute(); closeThisDialog(0);">
+
+        </script>
+
+    </div>
+</div>
+</div>

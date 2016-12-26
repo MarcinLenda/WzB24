@@ -1,0 +1,52 @@
+<div class="container">
+    <div class="slider-container">
+        <div class="intro-text">
+
+            <div class="intro-heading">Handlowcy</div>
+            <div id="showDocument">
+                <table class="table" ts-wrapper>
+                    <thead>
+                    <tr>
+
+                        <th ts-criteria="name|lowercase" ts-default>Imię</th>
+                        <th ts-criteria="surname|lowercase">Nazwisko</th>
+                        <th ts-criteria="numberTrader|parseInt">Numer</th>
+                        <th ts-criteria="nameTeam|lowercase">Team</th>
+                        <th style="width: 15%">Usuń</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="trader in traders" ts-repeat>
+                        <td>{{trader.name}}</td>
+                        <td>{{trader.surname}}</td>
+                        <td>{{trader.numberTrader}}</td>
+                        <td>{{trader.nameTeam}}</td>
+                        <td class="active_account"><input style="background-color:rgb(221,44,0);width: 95px;" class="adminSubmit" type="submit" value="Usuń"
+                                                          ng-click="editData.accounts = trader; deleteTrader();">
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <a href="#/trader">
+                    <img src="images/icons/back.png">
+                </a>
+            </div>
+
+
+            <script type="text/ng-template" id="DeleteTrader">
+                <h1 style="font-size: 30px;">Czy chcesz usunąć tego handlowca?</h1>
+                <input class="submitConfirmDialog" type="submit" value="Tak"
+                       ng-click="closeThisDialog(0); deleteTraderConfirm();">
+                <input class="submitDelete" type="submit" value="Nie" ng-click="closeThisDialog(0)">
+            </script>
+            <script type="text/ng-template" id="DeleteTraderInfo">
+                <h1 style="font-size: 30px;">Udało się.</h1>
+                <input style="background-color: #23AD21;" class="submitSuccess" type="submit" value="Handlowiec usunięty!"
+                       ng-click="reloadRoute(); closeThisDialog(0);">
+            </script>
+
+        </div>
+    </div>
+</div>

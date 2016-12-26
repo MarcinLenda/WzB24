@@ -1,0 +1,33 @@
+<div class="container">
+    <div class="slider-container">
+        <div class="intro-text">
+
+            <div ng-show="!authenticated">
+                <div style="font-weight: 800; font-size: 40px; padding: 15px;" class="intro-lead-in">Witaj na stronie
+                    WzB
+                </div>
+                <div style="margin: 0 auto">
+                    <img src="images/4wzb24.png">
+                </div>
+                <div style="font-size: 42px;" class="intro-heading">Zaloguj się lub załóż konto.</div>
+                <a href="#/login" class="page-scroll btn btn-xl">Zaloguj / Zarejestruj</a>
+
+            </div>
+            <div ng-show="authenticated">
+                <img ng-show="load" style="font-size: 10px; padding-top: 80px;" src="../images/gears.svg">
+
+                <div ng-show="showInfo">
+                    <div style="letter-spacing: 1px;" class="intro-heading">Witaj {{nameUser}}</div>
+
+                    <p style="font-size: 35px; font-family: 'Kreon', serif; color: #FFFFFF; line-height: 120%;"> Aplikacja
+                        umożliwia szybkie zweryfikowanie, czy konkretny dokument WZ został odebrany. Dwa razy w miesiącu
+                        generuje listę nieodebranych dokumentów, gdzie zwłoka nieodbierania przekracza 14 dni i wysyła maila do
+                        opiekuna danego klienta. Oferuje też usystematyzowanie przepływu informacji dotyczącego zrobionej
+                        korekty.</p>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>

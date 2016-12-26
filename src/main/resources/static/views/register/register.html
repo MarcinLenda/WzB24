@@ -1,0 +1,111 @@
+<div class="container">
+    <div class="slider-container">
+        <div class="intro-text">
+            <a style="color: #fec503;" href="#/login">Powrót do logowania</a>
+            <div id="register">
+                <h1>Rejestracja</h1>
+                <md-content layout="column" md-theme="docs-dark" layout-padding="">
+                    <form name="projectForm" ng-submit="registerUser()">
+                        <div>
+
+                            <md-input-container class="md-block">
+                                <label>E-mail</label>
+                                <input required type="email" name="email" ng-model="register.email"
+                                       minlength="10" maxlength="100" ng-pattern="/^.+@.+\..+$/"/>
+
+                                <div ng-messages="projectForm.email.$error" role="alert">
+                                    <div ng-message="required">Wprowadź adres e-mail.</div>
+                                    <div ng-message-exp="['minlength', 'maxlength', 'pattern']">
+                                        Wprowadziłeś niepoprawny adres e-mail, proszę skorygować.
+                                    </div>
+                                </div>
+                                <div ng-show="userAlreadyExists">
+                                    <small style="color:rgb(221,44,0); display: block; text-align: center">
+                                        Użytkownik o
+                                        podanym e-mailu istnieje w bazie danych.
+                                    </small>
+                                </div>
+
+                            </md-input-container>
+
+
+                            <md-input-container class="md-block" flex-gt-sm="">
+                                <label>Imię</label>
+                                <input required name="name" ng-model="register.name">
+                                <div ng-messages="projectForm.name.$error">
+                                    <div ng-message="required">Podaj swoje imię.</div>
+                                </div>
+                            </md-input-container>
+
+                            <md-input-container class="md-block" flex-gt-sm="">
+                                <label>Nazwisko</label>
+                                <input required name="surname" ng-model="register.surname">
+                                <div ng-messages="projectForm.surname.$error">
+                                    <div ng-message="required">Podaj swoje nazwisko.</div>
+                                </div>
+                            </md-input-container>
+
+                            <md-input-container class="md-block" flex-gt-sm="">
+                                <label>Numer pracowniczy</label>
+                                <input required name="number" ng-model="register.number">
+                                <div ng-messages="projectForm.number.$error">
+                                    <div ng-message="required">Podaj numer pracowniczy.</div>
+                                </div>
+                                <div ng-show="numberAlreadyExists">
+                                    <small style="color:rgb(221,44,0); display: block; text-align: center">
+                                        Podany numer istnieje w bazie danych.
+                                    </small>
+                                </div>
+                                <div ng-show="numberStart0">
+                                    <small style="color:rgb(221,44,0); display: block; text-align: center">
+                                        Usuń 0 z przodu.
+                                    </small>
+                                </div>
+                            </md-input-container>
+
+                            <md-input-container class="md-block" flex-gt-sm="">
+                                <label>Hasło</label>
+                                <input ng-minlength="5" required type="password" name="password"
+                                       ng-model="register.password">
+
+
+                                <div ng-messages="projectForm.password.$error">
+                                    <div ng-message="required">Podaj hasło.</div>
+                                    <div ng-show="projectForm.password.$invalid && projectForm.password.$touched">
+                                        <small style="color:rgb(221,44,0); display: block; text-align: center">Hasło mu
+                                            się skłądać minimalnie z 5 znaków.
+                                        </small>
+                                    </div>
+                                </div>
+                            </md-input-container>
+
+                            <md-input-container class="md-block" flex-gt-sm="">
+                                <label>Powtórz hasło</label>
+                                <input ng-minlength="5" required type="password" name="passwordConfirm"
+                                       ng-model="register.passwordConfirm">
+
+                                <div ng-messages="projectForm.passwordConfirm.$error">
+                                    <div ng-message="required">Powtórz hasło.</div>
+                                </div>
+                                <div ng-show="wrongPass">
+                                    <small style="color:rgb(221,44,0); display: block; text-align: center">
+                                        Podana hasłą rożnią się.
+                                    </small>
+                                </div>
+                            </md-input-container>
+                        </div>
+                        <input class="page-scroll btn btn-xl" type="submit" value="Zarejestruj">
+                        <div ng-show="reponseError">
+                            <small style="color:rgb(221,44,0); display: block; text-align: center; font-size: 13px;">
+                                Wystąpił błąd przy rejestracji.
+                            </small>
+                        </div>
+                    </form>
+                </md-content>
+
+
+            </div>
+
+        </div>
+    </div>
+</div>

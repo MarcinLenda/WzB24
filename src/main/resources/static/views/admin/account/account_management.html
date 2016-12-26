@@ -1,0 +1,186 @@
+<div class="container">
+    <div class="slider-container">
+        <div class="intro-text">
+
+            <div class="intro-heading">Aktywne konta</div>
+            <div id="showDocument">
+                <table class="table" ts-wrapper>
+                    <thead>
+                    <tr>
+
+                        <th ts-criteria="username|lowercase">
+                            <md-icon md-svg-src='images/icons/mail.svg' style="color: #e7e7e7;"></md-icon>
+                            E-mail
+                        </th>
+                        <th ts-criteria="name|lowercase">
+                            <md-icon md-svg-src='images/icons/face.svg' style="color: #e7e7e7;"></md-icon>
+                            Imię
+                        </th>
+                        <th ts-criteria="surname|lowercase">
+                            <md-icon md-svg-src='images/icons/surname.svg' style="color: #e7e7e7;"></md-icon>
+                            Nazwisko
+                        </th>
+                        <th ts-criteria="numberUser|parseInt">
+                            <md-icon md-svg-src='images/icons/number.svg' style="color: #e7e7e7;"></md-icon>
+                            Numer
+                        </th>
+                        <th ts-criteria="name|lowercase">
+                            <md-icon md-svg-src='images/icons/team.svg' style="color: #e7e7e7;"></md-icon>
+                            Team
+                        </th>
+                        <th ts-criteria="nameTeam">
+                            <md-icon md-svg-src='images/icons/role.svg' style="color: #e7e7e7;"></md-icon>
+                            Rola
+                        </th>
+                        <th>
+                            <md-icon md-svg-src='images/icons/block.svg' style="color: #e7e7e7;"></md-icon>
+                            Blokada
+                        </th>
+                        <th ts-criteria="">
+                            <md-icon md-svg-src='images/icons/delete.svg' style="color: #e7e7e7;"></md-icon>
+                            Usuń
+                        </th>
+
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="account in activeAccounts" ts-repeat>
+                        <td ng-click="editData.accounts = account; editMail();">{{account.username}}</td>
+                        <td ng-click="editData.accounts = account; editName();">{{account.name}}</td>
+                        <td ng-click="editData.accounts = account; editSurname();">{{account.surname}}</td>
+                        <td ng-click="editData.accounts = account; editNumber();">{{account.numberUser}}</td>
+                        <td ng-click="editData.accounts = account; editTeam();">{{account.nameTeam}}</td>
+                        <td ng-show="account.role=='ADMIN'"><input
+                                style="background-color:#DAA502; clear: both; width:95px;" class="adminSubmit"
+                                type="submit" value="ADMIN"
+                                ng-click="editData.accounts = account; giveRoleUser();"></td>
+                        <td ng-show="account.role=='USER'"><input
+                                style="background-color:#13BA10; ;clear: both; width:95px;" class="adminSubmit"
+                                type="submit" value="USER"
+                                ng-click="editData.accounts = account; giveRoleAdmin();"></td>
+
+                        <td class="active_account"><input style="background-color:#FF5D00;width: 95px;"
+                                                          class="adminSubmit" type="submit" value="Zablokuj"
+                                                          ng-click="editData.accounts = account; blockAccount();">
+                        </td>
+                        <td class="active_account"><input style="background-color:rgb(221,44,0);width: 95px;"
+                                                          class="adminSubmit" type="submit" value="Usuń"
+                                                          ng-click="editData.accounts = account; deleteAccount();">
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <a href="#/admin">
+                    <img src="images/icons/back.png">
+                </a>
+            </div>
+
+
+
+        </div>
+        <script type="text/ng-template" id="Block">
+            <h1>Zablokować konto?</h1>
+            <input class="submitConfirmDialog" type="submit" value="Tak"
+                   ng-click="closeThisDialog(0); blockAccountUser(); ">
+            <input class="submitDelete" type="submit" value="Nie" ng-click="closeThisDialog(0)">
+        </script>
+        <script type="text/ng-template" id="successBlock">
+            <h1 style="font-size: 30px;">Konto zostało zablokowane!</h1>
+            <input style="width: 410px;" class="submitConfirmDialog" type="submit" value="OK"
+                   ng-click="reloadRoute(); closeThisDialog(0);">
+
+        </script>
+        <script type="text/ng-template" id="Delete">
+            <h1>Usunąć konto?</h1>
+            <p style="color: #ffffff;">Spowoduje to stałe użytkownika usunięcie z aplikacji.</p>
+            <input class="submitConfirmDialog" type="submit" value="Tak"
+                   ng-click="closeThisDialog(0); deleteThisAccount(); ">
+            <input class="submitDelete" type="submit" value="Nie" ng-click="closeThisDialog(0)">
+        </script>
+        <script type="text/ng-template" id="successDelete">
+            <h1 style="font-size: 30px;">Konto zostało usunięte!</h1>
+            <input style="width: 410px;" class="submitConfirmDialog" type="submit" value="OK"
+                   ng-click="reloadRoute(); closeThisDialog(0);">
+
+        </script>
+        <script type="text/ng-template" id="User">
+            <h1 style="font-size: 25px;">Czy chcesz zmniejszyć uprawnienia temu użytkownikowi?</h1>
+            <input class="submitConfirmDialog" type="submit" value="Tak"
+                   ng-click="closeThisDialog(0); confirmRoleUser();">
+            <input class="submitDelete" type="submit" value="Nie" ng-click="closeThisDialog(0)">
+
+        </script>
+        <script type="text/ng-template" id="SuccessAddRole">
+            <h1 style="font-size: 25px;">Rola nadana z powodzeniem.</h1>
+            <input style="width: 410px; background-color:#23AD21" class="submitConfirmDialog" type="submit" value="OK"
+                   ng-click="reloadRoute(); closeThisDialog(0);">
+
+        </script>
+        <script type="text/ng-template" id="Admin">
+            <h1>Czy nadać uprawnienia administratora?</h1>
+            <input class="submitConfirmDialog" type="submit" value="Tak"
+                   ng-click="closeThisDialog(0); confirmGiveRoleAdmin();">
+            <input class="submitDelete" type="submit" value="Nie" ng-click="closeThisDialog(0)">
+        </script>
+
+        <script type="text/ng-template" id="EditName">
+            <h1>Edycja imienia:</h1>
+            <input required style="width: 99.5%" class="inputDocument" type="text" ng-model="edit.Name" placeholder="Podaj imie.">
+            <input style="width: 50%; background-color:#23AD21" class="submitConfirmDialog" type="submit" value="Edytuj"
+                   ng-click="editDataAccount(); closeThisDialog(0);">
+            <input style="margin-right: 1.5px; float:left;" class="submitDelete" type="submit" value="Anuluj"
+                   ng-click="closeThisDialog(0);">
+        </script>
+        <script type="text/ng-template" id="EditSurname">
+            <h1>Edycja nazwiska:</h1>
+            <input style="width: 99.5%" class="inputDocument" type="text" ng-model="edit.Surname" placeholder="Wprowadź imie.">
+            <input style="width: 50%; background-color:#23AD21" class="submitConfirmDialog" type="submit" value="Edytuj"
+                   ng-click="editDataAccount(); closeThisDialog(0);">
+            <input style="margin-right: 1.5px; float:left;" class="submitDelete" type="submit" value="Anuluj"
+                   ng-click="closeThisDialog(0);">
+        </script>
+        <script type="text/ng-template" id="EditNumber">
+            <h1>Edycja numeru:</h1>
+            <input style="width: 99.5%" class="inputDocument" type="text" ng-model="edit.Number" placeholder="Wprowadź imie.">
+            <input style="width: 50%; background-color:#23AD21" class="submitConfirmDialog" type="submit" value="Edytuj"
+                   ng-click="editDataAccount(); closeThisDialog(0);">
+            <input style="margin-right: 1.5px; float:left;" class="submitDelete" type="submit" value="Anuluj"
+                   ng-click="closeThisDialog(0);">
+        </script>
+        <script type="text/ng-template" id="EditPassword">
+            <h1>Edycja hasła:</h1>
+            <input style="width: 99.5%" class="inputDocument" type="text" ng-model="edit.Password" placeholder="Wprowadź imie.">
+            <input style="width: 50%; background-color:#23AD21" class="submitConfirmDialog" type="submit" value="Edytuj"
+                   ng-click="editDataAccount(); closeThisDialog(0);">
+            <input style="margin-right: 1.5px; float:left;" class="submitDelete" type="submit" value="Anuluj"
+                   ng-click="closeThisDialog(0);">
+        </script>
+        <script type="text/ng-template" id="EditEmail">
+            <h1>Edycja e-mailu.</h1>
+            <input style="width: 99.5%" class="inputDocument" type="text" ng-model="edit.Mail" placeholder="Wprowadź imie.">
+            <input style="width: 50%; background-color:#23AD21" class="submitConfirmDialog" type="submit" value="Edytuj"
+                   ng-click="editDataAccount(); closeThisDialog(0);">
+            <input style="margin-right: 1.5px; float:left;" class="submitDelete" type="submit" value="Anuluj"
+                   ng-click="closeThisDialog(0);">
+        </script>
+        <script type="text/ng-template" id="EditTeam">
+            <h1>Edycja teamu.</h1>
+            <input style="width: 99.5%" class="inputDocument" type="text" ng-model="edit.NameTeam" placeholder="Wprowadź imie.">
+            <input style="width: 50%; background-color:#23AD21" class="submitConfirmDialog" type="submit" value="Edytuj"
+                   ng-click="editDataAccount(); closeThisDialog(0);">
+            <input style="margin-right: 1.5px; float:left;" class="submitDelete" type="submit" value="Anuluj"
+                   ng-click="closeThisDialog(0);">
+        </script>
+        <script type="text/ng-template" id="response">
+            <h1 style="font-size: 25px;">{{response}} {{response2}}</h1>
+            <input style="background-color:#23AD21;" class="submitSuccess" type="submit" value="Ok"
+                   ng-click="closeThisDialog(0);">
+        </script>
+
+
+    </div>
+</div>
+</div>

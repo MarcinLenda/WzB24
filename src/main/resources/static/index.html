@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="description" content="">
+    <meta name="author" content="Marcin Lenda">
+    <link rel="icon" href="favicon.ico">
+    <title>WzB</title>
+
+    <script src="bower_components/angular/angular.min.js"></script>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Kreon|Roboto+Condensed" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="css/owl.carousel.css" rel="stylesheet">
+    <link href="css/owl.theme.default.min.css" rel="stylesheet">
+    <link href="css/tablesort.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link href="bower_components/bower_components/angucomplete-alt/angucomplete-alt.css">
+    <link href="bower_components/ng-dialog/css/ngDialog.css" rel="stylesheet">
+    <link href="bower_components/ng-dialog/css/ngDialog-theme-default.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Libre+Baskerville" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          rel="stylesheet">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <script type="text/javascript">
+        function onclickHandler() {
+            alert('Wyszukiwanie dokumentu WZ:' +
+                    '-wielkość liter nie ma znaczenia na wynik wyszukiwania,' +
+                    '-polskie znaki mają wpływ na rezultat zapytania,');
+        }
+    </script>
+    <style>
+        [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+            display: none !important;
+        }
+    </style>
+    <script src="js/App.js"></script>
+</head>
+
+
+<body id="page-top" ng-app="myApp" ng-controller="MainController" class="ng-cloak">
+
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container" id="snow">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a ng-show="authenticated" class="navbar-brand page-scroll" href="#/home"><img src="images/5wzb24.png" alt="WzB"></a>
+            <img ng-show="authenticated" src="images/fsign.gif" alt="HTML5 Icon" style="width:78px;height:78px;">
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" ng-controller="LoginCtrl">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="hidden">
+                    <a href="#page-top"></a>
+                </li>
+                <li ng-show="authenticated">
+                    <a class="page-scroll" href="#/home">O WzB <md-icon md-svg-src='images/icons/about.svg'></md-icon></a>
+                </li>
+                <li ng-show="authenticated">
+                    <a class="page-scroll" href="#/search">Szukaj WZ  <md-icon md-svg-src='images/icons/loop.svg'></md-icon></a>
+                </li>
+                <li ng-show="authenticated">
+                    <a class="page-scroll" href="#/account">Moje konto <md-icon md-svg-src='images/icons/my_account.svg'></md-icon></a>
+                </li>
+                <li ng-show="authenticated">
+                    <a class="page-scroll" href="#/all_items">RF <md-icon md-svg-src='images/icons/rf.svg'></md-icon></a>
+                </li>
+                <li ng-show="userRoles">
+                    <a class="page-scroll" href="#/admin">Administracja <md-icon md-svg-src='images/icons/admin.svg'></md-icon></a>
+                </li>
+                <li ng-show="authenticated">
+                    <a class="page-scroll" href="" ng-click="logout()">Wyloguj <md-icon md-svg-src='images/icons/logout.svg' style="color:red;"></md-icon></a>
+                </li>
+
+            </ul>
+        </div>
+
+    </div>
+
+</nav>
+
+<div id="wrapper">
+    <div id="test" ng-view></div>
+
+</div>
+
+
+<section class="dark-bg short-section stats-bar" ng-submit="info()" ng-show="authenticated">
+    <div class="container text-center">
+        <div class="row">
+            <div class="col-md-3 mb-sm-30">
+                <div class="counter-item">
+                    <h2 class="stat-number" data-n={{howManyTraders}}>0</h2>
+                    <h6>Zarejestrowanych handlowców</h6>
+                </div>
+            </div>
+            <div class="col-md-3 mb-sm-30">
+                <div class="counter-item">
+                    <h2 class="stat-number" data-n={{howManyClient}}>0</h2>
+                    <h6>Klientów</h6>
+                </div>
+            </div>
+            <div class="col-md-3 mb-sm-30">
+                <div class="counter-item">
+                    <h2 class="stat-number" data-n={{howManyDocument}}>0</h2>
+                    <h6>Nieodebranych dokumentów WZ</h6>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<p id="back-top">
+    <a href="#top"><i class="fa fa-angle-up"></i></a>
+</p>
+
+<footer>
+    <div class="container text-center">
+        <p>Designed by <a href=""><span>Pro</span>mar</a></p>
+    </div>
+</footer>
+
+
+<!-- Bootstrap core JavaScript
+    ================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+
+<script src="bower_components/bower_components/fusioncharts/fusioncharts.js"></script>
+<script src="https://code.angularjs.org/1.4.0-beta.5/i18n/angular-locale_pl-pl.js"></script>
+<script src="js/library/bower_components/angular-tablesort/js/angular-tablesort.js"></script>
+
+
+
+
+<script src="js/library/bootstrap.min.js"></script>
+<script src="js/library/owl.carousel.min.js"></script>
+<script src="js/library/cbpAnimatedHeader.js"></script>
+<script src="js/library/jquery.appear.js"></script>
+<script src="js/library/SmoothScroll.min.js"></script>
+<script src="js/library/mooz.themes.scripts.js"></script>
+
+<script src="bower_components/angular-resource/angular-resource.min.js"></script>
+<script src="bower_components/angular-route/angular-route.min.js"></script>
+<script src="bower_components/angular-aria/angular-aria.min.js"></script>
+<script src="bower_components/angular-animate/angular-animate.min.js"></script>
+<script src="bower_components/angular-material/angular-material.min.js"></script>
+<script src="bower_components/angular-messages/angular-messages.min.js"></script>
+<script src="bower_components/angular-timer/dist/angular-timer.min.js"></script>
+<script src="bower_components/moment/min/moment.min.js"></script>
+<script src="bower_components/moment/min/locales.min.js"></script>
+<script src="bower_components/humanize-duration/humanize-duration.js"></script>
+<script src="bower_components/ng-dialog/js/ngDialog.min.js"></script>
+<script src="bower_components/bower_components/angucomplete-alt/dist/angucomplete-alt.min.js"></script>
+
+<script src="bower_components/bower_components/fusioncharts/angular-fusioncharts.js"></script>
+<script src="bower_components/bower_components/fusioncharts/themes/fusioncharts.theme.ocean.js"></script>
+<script src="bower_components/bower_components/fusioncharts/themes/fusioncharts.theme.carbon.js"></script>
+<script src="bower_components/bower_components/fusioncharts/themes/fusioncharts.theme.fint.js"></script>
+<script src="bower_components/bower_components/fusioncharts/themes/fusioncharts.theme.zune.js"></script>
+<script src="bower_components/angular-file-upload/dist/angular-file-upload.js"></script>
+
+
+<script src="js/App.js"></script>
+<script src="js/controller/AddDocumentController.js"></script>
+<script src="js/controller/MainControllerController.js"></script>
+<script src="js/controller/FindDocumentController.js"></script>
+<script src="js/controller/ShowAllDocumentsController.js"></script>
+<script src="js/controller/ClientController.js"></script>
+<script src="js/controller/TraderController.js"></script>
+<script src="js/controller/AdminController.js"></script>
+<script src="js/controller/LoginController.js"></script>
+<script src="js/controller/Main_Account_Controller.js"></script>
+<script src="js/controller/UserAccount.js"></script>
+<script src="js/controller/HistoryCtrl.js"></script>
+<script src="js/controller/ItemsCtrl.js"></script>
+
+
+
+<script src="js/controller/LoginController.js"></script>
+<script src="js/controller/RegisterController.js"></script>
+<script src="js/service/ClientService.js"></script>
+<script src="js/service/TraderService.js"></script>
+<script src="js/service/UserService.js"></script>
+<script src="js/service/AuthenticatedService.js"></script>
+<script src="js/directive/ConfirmDelete.js"></script>
+<script src="js/service/DocumentService.js"></script>
+<script src="js/service/ItemsService.js"></script>
+<script src="js/controller/StatisticsCtrl.js"></script>
+<script src="js/controller/UploadController.js"></script>
+
+<script src="js/config.js"></script>
+
+
+</body>
+
+</html>

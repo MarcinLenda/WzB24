@@ -1,0 +1,24 @@
+<div class="container">
+    <div class="slider-container">
+        <div class="intro-text">
+
+            <div class="intro-heading" style="font-size: 35px; letter-spacing: 1px;">{{statisticsText}}</div>
+
+            <div>
+                <div fusioncharts
+
+                     width="1000"
+                     height="400"
+                     type="column2d"
+                     dataSource="{{myDataSource}}">
+                </div>
+            </div>
+            <p><a class="btn btn-default" ng-click="updateMyChartData()">Click me to change data</a></p>
+            <div class="intro-heading" style="font-size: 20px; letter-spacing: 1px; margin-bottom: 1px; float: left;">
+                Ilość zamówień: {{test2}}  </div>
+            <div style="clear: both;"></div>
+            <div class="intro-heading" style="font-size: 20px; letter-spacing: 1px; float: left;">
+               Suma wszystkich zamówień: {{test}} zł.</div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,63 @@
+<div class="container">
+    <div class="slider-container">
+        <div class="intro-text">
+            <div class="intro-lead-in">Wszystkie dokumenty w archiwum:</div>
+            <div id="showDocument">
+                <table class="table" ts-wrapper>
+                    <thead>
+                    <tr>
+
+                        <th>Numer WZ</th>
+                        <th ts-criteria="subProcess|parseInt">Podproces</th>
+                        <th ts-criteria="client|lowercase">Klient</th>
+                        <th ts-criteria="clientNumber|parseInt">Numer klienta</th>
+                        <th ts-criteria="traderName|lowercase">Handlowiec</th>
+                        <th ts-criteria="date|parseInt">Data zatwierdzenia</th>
+                        <th>Zwłoka</th>
+                        <th ts-criteria="">ADMIN</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="document in documents" ts-repeat>
+                        <td>{{document.numberWZ}}</td>
+                        <td>{{document.subProcess}}</td>
+                        <td>{{document.client}}</td>
+                        <td>{{document.clientNumber}}</td>
+                        <td>{{document.traderName}}</td>
+                        <td>{{document.date | date:'MM/dd/yyyy - h:mma'}}</td>
+                        <td><timer start-time="document.date">{{days}} dni </timer></td>
+                        <td class="delete"><input class="adminSubmit" type="submit" value="Usuń" ng-click="editData.documents = document; clickToDelete();">
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <a href="#/admin">
+                    <img src="images/icons/back.png">
+                </a>
+            </div>
+        </div>
+
+
+        <script type="text/ng-template" id="showDelete">
+            <h1>Czy na pewno chcesz usunąć dokument?</h1>
+            <input class="submitConfirmDialog" type="submit" value="Tak"
+                   ng-click="closeThisDialog(0); deleteDocument();">
+            <input class="submitDelete" type="submit" value="Nie" ng-click="closeThisDialog(0)">
+        </script>
+        <script type="text/ng-template" id="allDocumentDelete">
+            <h1>Dokument został usunięty pomyślnie!</h1>
+            <input style="margin-left: 100px; margin-top: 5px;" class="submitConfirmDialog" type="submit" value="Ok"
+                   ng-click="reloadRoute(); closeThisDialog(0);">
+        </script>
+        <script type="text/ng-template" id="error">
+            <h1>Wystąpił błąd</h1>
+            <input style="margin-left: 100px; margin-top: 5px;" class="submitSuccess" type="submit" value="Ok"
+                   ng-click="closeThisDialog(0);">
+        </script>
+
+        </div>
+    </div>
+</div>

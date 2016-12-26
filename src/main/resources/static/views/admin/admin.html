@@ -1,0 +1,54 @@
+<div class="container">
+    <div class="slider-container">
+        <div class="intro-text">
+
+
+
+            <div  ng-show="userRoles" >
+                <img ng-show="load" style="font-size: 10px; padding-top: 80px;" src="../images/gears.svg">
+            <div ng-show="showInfo">
+                <div class="intro-heading">Panel administracyjny</div>
+
+
+                <div id="adminPanel">
+
+                    <a href="#/addDocument"><input type="submit" class="submitAdmin" value="Dodaj dokument WZ"></a>
+
+                    <a href="#/client"><input type="submit" class="submitAdmin" value="Klienci"></a>
+
+                    <a href="#/trader"><input type="submit" class="submitAdmin" value="Handlowcy"></a>
+
+                    <a href="#/correct_document" ng-show="correct==0"><input type="submit" class="submitAdmin"
+                                                                             value="Korekty"></a>
+
+                    <a href="#/correct_document" ng-show="correct>0"><input ng-click="findAllCorrect()"
+                                                                            style="background-color: #FF0000"
+                                                                            type="submit" class="submitAdmin"
+                                                                            value="Korekty"></a>
+
+                    <a href="#/accept_account" ng-show="accountToActive==0"><input ng-click="ShowAllNotActiveAccount()"
+                                                                                   type="submit" class="submitAdmin"
+                                                                                   value="Aktywuj konto"></a>
+
+                    <a href="#/accept_account" ng-show="accountToActive>0"><input ng-click="ShowAllNotActiveAccount()"
+                                                                                  style="background-color: #FF0000"
+                                                                                  type="submit" class="submitAdmin"
+                                                                                  value="Aktywuj konto"></a>
+
+                    <a href="#/block_account"><input type="submit" class="submitAdmin" value="Zarządzanie kontami"></a>
+
+                    <a href="#/show_documents"><input type="submit" class="submitAdmin" value="Podgląd dokumentów"></a>
+
+                    <a href="#/history"><input type="submit" class="submitAdmin" value="Historia"></a>
+
+                    <a href="#/items" ng-controller="Statistics" ><input type="submit" class="submitAdmin" value="Rezerwacje fizyczne"></a>
+
+                </div>
+            </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>

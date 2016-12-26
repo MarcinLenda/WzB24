@@ -1,0 +1,58 @@
+<div class="container">
+    <div class="slider-container">
+        <div class="intro-text">
+
+
+            <div id="login">
+                <div id="Header">
+                    <h1>Zaloguj</h1>
+                </div>
+                <md-content layout="column" md-theme="docs-dark" layout-padding="">
+                    <form name="projectForm" ng-submit="controller.login()" >
+                        <md-input-container class="md-block" flex-gt-sm="">
+                            <label>E-mail</label>
+                            <input required name="mail" ng-model="controller.credentials.username">
+                            <div ng-messages="projectForm.mail.$error">
+                                <div ng-message="required">Podaj e-mail.</div>
+                            </div>
+                        </md-input-container>
+
+                        <md-input-container class="md-block" flex-gt-sm="">
+                            <label>Hasło</label>
+                            <input ng-minlength="3" required type="password" name="password"
+                                   ng-model="controller.credentials.password">
+
+
+                            <div ng-messages="projectForm.password.$error">
+                                <div ng-message="required">Podaj hasło.</div>
+                                <div ng-show="projectForm.password.$invalid && projectForm.password.$touched">
+                                    <small style="color:rgb(221,44,0); display: block; text-align: center">Hasło mu
+                                        się skłądać minimalnie z 5 znaków.
+                                    </small>
+                                </div>
+                            </div>
+                        </md-input-container>
+                        <input class="page-scroll btn btn-xl" type="submit" value="Zaloguj">
+                        <a href="#/register">Rejestracja</a>
+                    </form>
+
+
+                    <div ng-show="loginError">
+                        <small style="color:rgb(221,44,0); display: block; text-align: center; font-size: 18px;">
+                            Dane do konta są niepoprawne.
+                        </small>
+                    </div>
+
+                </md-content>
+
+            </div>
+            <script type="text/ng-template" id="errorLogin">
+                <h1>Nieprawidłowe dane.</h1>
+                <p>Sprawdź, czy podałeś dobry login lub hasło.</p>
+                <input style="background-color:rgb(221,44,0);" class="submitSuccess" type="submit" value="Ok"
+                       ng-click="closeThisDialog(0);">
+            </script>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,128 @@
+<div class="container">
+    <div class="slider-container">
+        <div class="intro-text">
+            <img ng-show="load" style="font-size: 10px; padding-top: 80px;" src="../images/gears.svg">
+
+            <div ng-show="showInfo">
+                <h1>Zawansowane szukanie</h1>
+
+                <div id="adminPanel" style="width: 300px; height: 200px; border: none;  margin-bottom: 25px;">
+                    <div style="text-align: center;">
+                   <input style="color:#FFFFFF; width: 150px; float: left;" class="submit" type="submit"
+                               value="Proces"
+                               ng-click="showNumber()">
+                        <input style="color:#FFFFFF; width: 150px; float: left;" class="submit" type="submit"
+                               value="Klient"
+                               ng-click="showClient()">
+                        <input style="color:#FFFFFF; width: 150px; float: left;" class="submit" type="submit"
+                               value="Handlowiec"
+                               ng-click="showTrader()">
+                        <input style="color:#FFFFFF; width: 150px; float: left;" class="submit" type="submit"
+                               value="Dostawca"
+                               ng-click="showProvider()">
+                        <div style="clear: both;"></div>
+                        <input style="color:#FFFFFF; width: 150px; float: left;" class="submit" type="submit"
+                               value="TOK"
+                               ng-click="showTeam()">
+                        <input style="color:#FFFFFF; width: 150px; float: left;" class="submit" type="submit"
+                               value="KBN"
+                               ng-click="showKBN()">
+                        <input style="color:#FFFFFF; width: 150px; float: left;" class="submit" type="submit"
+                               value="DZIAL"
+                               ng-click="showBusiness()">
+                        <input style="color:#FFFFFF; width: 150px; float: left;" class="submit" type="submit"
+                               value="DATA"
+                               ng-click="showDate()">
+                    </div>
+                </div>
+
+                <div style="clear:both;" ng-show="filterNameClient">
+                  <input style="font-size: 20px;" type="text" ng-model="search.clientName"
+                           placeholder="Wprowadź nazwe klienta.">
+                </div>
+                <div style="clear:both;" ng-show="filterNameTrader">
+                    <input style="font-size: 20px;" type="text" ng-model="search.traderName"
+                           placeholder="Wprowadź nazwe handlowca.">
+                </div>
+                <div style="clear:both;" ng-show="filterNameTeam">
+                    <input style="font-size: 20px;" type="text" ng-model="search.nameTeam"
+                           placeholder="Wprowadź nazwe teamu.">
+                </div>
+                <div style="clear:both;" ng-show="filterProvider">
+                    <input style="font-size: 20px;" type="text" ng-model="search.provider"
+                           placeholder="Wprowadź dostawce.">
+                </div>
+                <div style="clear:both;" ng-show="filterDate">
+                    <input style="font-size: 20px;" type="text" ng-model="search.date" placeholder="Wprowadź date.">
+                </div>
+                <div style="clear:both;" ng-show="filterNumberPro">
+                    <input style="font-size: 20px;" type="text" ng-model="search.numberPro"
+                           placeholder="Wprowadź proces.">
+                </div>
+                <div style="clear:both;" ng-show="filterKBN">
+                    <input style="font-size: 20px;" type="text" ng-model="search.kbn" placeholder="Wprowadź KBN.">
+                </div>
+                <div style="clear:both;" ng-show="filterBusinessSector">
+                    <input style="font-size: 20px;" type="text" ng-model="search.businessSector"
+                           placeholder="Wprowadź dział.">
+                </div>
+
+                <div id="showDocument">
+
+                    <table class="table" ts-wrapper>
+                        <thead>
+                        <tr ng-show="editOff">
+                            <th>#</th>
+                            <th>Numer procesu</th>
+                            <th>Opis towaru</th>
+                            <th style="text-align: center;" ts-criteria="clientName|lowercase">Klient</th>
+                            <th style="text-align: center;" ts-criteria="traderName|lowercase">Handlowiec</th>
+                            <th ts-criteria="nameTeam|lowercase">TOK</th>
+                            <th ts-criteria="kbn|lowercase">KBN</th>
+                            <th ts-criteria="provider|lowercase">Dostawca</th>
+                            <th ts-criteria="businessSector|lowercase">Dział</th>
+                            <th ts-criteria="dateAccepted|date">ZWŁOKA</th>
+                            <th>Szt.</th>
+                            <th ts-criteria="priceItem|parseFloat">Cena (netto)</th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-show="editOff" ng-repeat="item in listItems | filter:search" ts-repeat
+                            ng-click="editData.items = item; showEdit();">
+                            <td>{{$index +1}}</td>
+                            <td>{{item.numberPro}}</td>
+                            <td>{{item.contentItem}}</td>
+                            <td>{{item.clientName}}</td>
+                            <td>{{item.traderName}}</td>
+                            <td>{{item.nameTeam}}</td>
+                            <td>{{item.kbn}}</td>
+                            <td>{{item.provider}}</td>
+                            <td>{{item.businessSector}}</td>
+                            <td ng-if="item.delay<14" style="background: #18F73E">
+                                <timer start-time="item.dateAccepted">{{days}} dni</timer>
+                            </td>
+                            <td ng-if="item.delay>14" style="background: #FFF726">
+                                <timer start-time="item.dateAccepted">{{days}} dni</timer>
+                            </td>
+                            <td ng-if="item.delay>31" style="background: #FF7800">
+                                <timer start-time="item.dateAccepted">{{days}} dni</timer>
+                            </td>
+                            <td ng-if="item.delay>60" style="background: #FF0000">
+                                <timer start-time="item.dateAccepted">{{days}} dni</timer>
+                            </td>
+                            <td>{{item.pieces}}</td>
+                            <td>{{item.allPrice * item.pieces | currency}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+</div>
+</div>
