@@ -2,306 +2,358 @@
  * Created by Promar on 28.10.2016.
  */
 
-app.service('documentWZ', function ($rootScope, $http, ngDialog, HOST) {
+app.service('documentWZ', function ($rootScope, $http, $route, $uibModal,HOST) {
 
-    var self = this;
-    $rootScope.responseFromServer = '';
-    $rootScope.showInfo = false;
-    $rootScope.notFindByTrader = false;
-    $rootScope.notFindByNumberWZ = false;
-    $rootScope.notFindByClienName = false;
-    $rootScope.notFindByClientNumber = false;
-    $rootScope.notFindByNameTeam = false;
-
-    this.addWZ = function (numberWZ, subProcess, client, traderName,
-                           date) {
-
-        console.log('w service'+ date);
-        $http({
-            method: 'POST',
-            url: HOST + '/saveDocument',
-            data: {
-                "numberWZ": numberWZ,
-                "subProcess": subProcess,
-                "client": client,
-                "traderName": traderName,
-                "date": date
-            },
-            headers: {'Content-type': 'application/json'}
-        })
-            .success(function (data) {
-                $rootScope.successDocument = data.Success;
-                $rootScope.errorDocument = data.Error;
-                $rootScope.responseFromServer = '';
-
-                if ($rootScope.errorDocument == 'ExistsDocument') {
-                    $rootScope.successDocument = '';
-                    $rootScope.errorDocument = '';
-                    ngDialog.open({
-                        template: 'errorAdd',
-                        controller: 'DocumentOperation',
-                        className: 'ngdialog-theme-default'
-                    });
-                }
-                else {
-                    $rootScope.responseFromServer = "Dodałeś dokument WZ do bazy danych.";
-                    ngDialog.open({
-                        template: 'addDocument',
-                        controller: 'DocumentOperation',
-                        className: 'ngdialog-theme-default'
-                    });
-                }
-
-
-            }).error(function (data) {
-            $rootScope.responseFromServer = data.message;
-            ngDialog.open({
-                template: 'errorAddDocument',
-                controller: 'DocumentOperation',
-                className: 'ngdialog-theme-default'
-            });
-        });
-    };
-
-    this.findDocumentByNumberWZ = function (numberWZ, subPro) {
         $rootScope.showInfo = false;
-        $rootScope.documents = [];
-        $http({
-            method: 'POST',
-            url: HOST + '/findByNumber',
-            data: {
-                "numberWZ": numberWZ,
-                "subPro": subPro
-            },
-            headers: {'Content-type': 'application/json'}
-        }).success(function (data) {
-            $rootScope.notFindByTrader = false;
-            $rootScope.notFindByClienName = false;
-            $rootScope.notFindByClientNumber = false;
-            $rootScope.notFindByNameTeam = false;
+        $rootScope.errorCodeSearchDocument = false;
 
+        $rootScope.reloadRoute = function () {
+            $route.reload();
+        };
 
-            if (data.length == 0) {
-                $rootScope.notFindByNumberWZ = true;
-            } else {
-                $rootScope.documents.push(data);
-                $rootScope.notFindByNumberWZ = false;
-            }
+        this.addWZ = function (numberWZ, subProcess, client, traderName,
+                               date) {
+            $http({
+                method: 'POST',
+                url: HOST + '/saveDocument',
+                data: {
+                    "numberWZ": numberWZ,
+                    "subProcess": subProcess,
+                    "client": client,
+                    "traderName": traderName,
+                    "date": date
+                },
+                headers: {'Content-type': 'application/json'}
+            })
+                .then(function successCallback(response) {
 
+                    $rootScope.titleModal = 'Dodano dokument';
+                    $rootScope.responseModalBody = 'Dodano nowy dokument WZ: '+numberWZ+
+                        ' / '+subProcess+ ' do bazy danych.';
 
-        }).error(function (data) {
-            $rootScope.notFindByNumberWZ = true;
+                    var modalInstance = $uibModal.open({
+                        templateUrl: 'updateResponseFromServer.html',
+                        controller: 'ModalInstanceCtrl2',
+                        controllerAs: '$ctrl'
+                    });
 
-        });
-    };
+                    modalInstance.result.then(function (selectedItem) {
+                    }, function () {
+                        console.log('Anulowano');
+                    });
+                    $rootScope.reloadRoute();
 
-    this.findByClientName = function (client) {
-        $rootScope.documents = [];
+                }, function errorCallback(response) {
+                    if (angular.equals(response.data.errorCode, 'DOCUMENT_ALREADY_EXISTS')) {
+                        $rootScope.titleModal = 'Błąd dodawanie dokumentu';
+                        $rootScope.responseModalBody = 'Wybrany numer WZ: '+numberWZ+
+                            ' / '+subProcess+' istnieje w bazie danych.';
+                    } else {
+                        $rootScope.titleModal = 'Błąd dodawanie dokumentu: ' + numberWZ;
+                        $rootScope.responseModalBody = 'Sprawdź połączenie z internetem lub skontaktuj się z administratorem.';
+                    }
 
-        $http({
-            method: 'POST',
-            url: HOST + '/findByClient',
-            data: {
-                "abbreviationName":client
-            },
-            headers: {'Content-type': 'application/json'},
-        }).success(function (data) {
-            $rootScope.documents = data;
-            $rootScope.notFindByTrader = false;
-            $rootScope.notFindByNumberWZ = false;
-            $rootScope.notFindByClientNumber = false;
-            $rootScope.notFindByNameTeam = false;
-            if (data.length == 0) {
-                $rootScope.notFindByClienName = true;
-            } else {
-                $rootScope.notFindByClienName = false;
-            }
+                    var modalInstance = $uibModal.open({
+                        templateUrl: 'updateResponseFromServer.html',
+                        controller: 'ModalInstanceCtrl2',
+                        controllerAs: '$ctrl'
+                    });
 
-        }).error(function (data) {
-            ngDialog.open({
-                template: 'errorFindDocument',
-                controller: 'findDocument',
-                className: 'ngdialog-theme-default'
+                    modalInstance.result.then(function (selectedItem) {
+                    }, function () {
+                        console.log('Anulowano');
+                    });
+                });
+        };
+
+        this.findDocumentByNumberWZ = function (numberWZ, subPro) {
+            $rootScope.showInfo = false;
+            $rootScope.documentSearch = [];
+            $http({
+                method: 'POST',
+                url: HOST + '/findByNumber',
+                data: {
+                    "numberWZ": numberWZ,
+                    "subPro": subPro
+                },
+                headers: {'Content-type': 'application/json'}
+            }).then(function successCallback(response) {
+                $rootScope.errorCodeSearchDocument = false;
+                $rootScope.documentSearch.push(response.data);
+
+            }, function errorCallback(response) {
+                if (angular.equals(response.data.errorCode, 'DOCUMENT_NOT_FOUND')) {
+                    $rootScope.errorCodeSearchDocument = true;
+                } else {
+
+                    $rootScope.titleModal = 'Błąd';
+                    $rootScope.responseModalBody = 'Sprawdź połączenie z internetem lub skontaktuj się z administratorem.';
+
+                    var modalInstance = $uibModal.open({
+                        templateUrl: 'updateResponseFromServer.html',
+                        controller: 'ModalInstanceCtrl2',
+                        controllerAs: '$ctrl'
+                    });
+
+                    modalInstance.result.then(function (selectedItem) {
+                    }, function () {
+                        console.log('Anulowano');
+                    });
+                }
             });
 
-        });
-    };
+        };
 
-    this.findByClientNr = function (clientNumber) {
-        $rootScope.documents = [];
+        this.findByClientName = function (client) {
+            $rootScope.documentSearch = [];
 
-        $http({
-            method: 'POST',
-            url: HOST + '/findByClientNumber',
-            data: {
+            $http({
+                method: 'POST',
+                url: HOST + '/findByClient',
+                data: {
+                    "abbreviationName": client
+                },
+                headers: {'Content-type': 'application/json'},
+            }).then(function successCallback(response) {
 
-                "findClientNumber": clientNumber
-            },
+                $rootScope.documentSearch = response.data;
+                if ($rootScope.documentSearch.length != 0) {
+                    $rootScope.errorCodeSearchDocument = false;
+                } else {
+                    $rootScope.errorCodeSearchDocument = true;
+                }
 
-            headers: {'Content-type': 'application/json'},
-        }).success(function (data) {
-            $rootScope.documents = data;
-            $rootScope.notFindByTrader = false;
-            $rootScope.notFindByNumberWZ = false;
-            $rootScope.notFindByClienName = false;
-            $rootScope.notFindByNameTeam = false;
+            }, function errorCallback(response) {
+                $rootScope.titleModal = 'Błąd';
+                $rootScope.responseModalBody = 'Sprawdź połączenie z internetem lub skontaktuj się z administratorem.';
 
-            if (data.length == 0) {
-                $rootScope.notFindByClientNumber = true;
-            } else {
-                $rootScope.notFindByClientNumber = false;
-            }
+                var modalInstance = $uibModal.open({
+                    templateUrl: 'updateResponseFromServer.html',
+                    controller: 'ModalInstanceCtrl2',
+                    controllerAs: '$ctrl'
+                });
 
-        }).error(function (data) {
-            ngDialog.open({
-                template: 'errorFindDocument',
-                controller: 'findDocument',
-                className: 'ngdialog-theme-default'
+                modalInstance.result.then(function (selectedItem) {
+                }, function () {
+                    console.log('Anulowano');
+                });
             });
 
-        });
-    };
+        };
 
-    this.findByTrader = function (traderName) {
-        $rootScope.documents = [];
+        this.findByClientNr = function (clientNumber) {
+            $rootScope.documentSearch = [];
 
-        $http({
-            method: 'POST',
-            url: HOST + '/findByTraderName',
-            data: traderName,
+            $http({
+                method: 'POST',
+                url: HOST + '/findByClientNumber',
+                data: {
 
-            headers: {'Content-type': 'application/json'},
-        }).success(function (data) {
-            $rootScope.documents = data;
-            $rootScope.notFindByNumberWZ = false;
-            $rootScope.notFindByClienName = false;
-            $rootScope.notFindByClientNumber = false;
-            $rootScope.notFindByNameTeam = false;
+                    "findClientNumber": clientNumber
+                },
+
+                headers: {'Content-type': 'application/json'},
+            }).then(function successCallback(response) {
+
+                $rootScope.documentSearch = response.data;
+                if ($rootScope.documentSearch.length != 0) {
+                    $rootScope.errorCodeSearchDocument = false;
+                } else {
+                    $rootScope.errorCodeSearchDocument = true;
+                }
+
+            }, function errorCallback(response) {
+                $rootScope.titleModal = 'Błąd';
+                $rootScope.responseModalBody = 'Sprawdź połączenie z internetem lub skontaktuj się z administratorem.';
+
+                var modalInstance = $uibModal.open({
+                    templateUrl: 'updateResponseFromServer.html',
+                    controller: 'ModalInstanceCtrl2',
+                    controllerAs: '$ctrl'
+                });
+
+                modalInstance.result.then(function (selectedItem) {
+                }, function () {
+                    console.log('Anulowano');
+                });
+            });
+        };
+
+        this.findByTrader = function (traderName) {
+            $rootScope.documentSearch = [];
+
+            $http({
+                method: 'POST',
+                url: HOST + '/findByTraderName',
+                data: traderName,
+
+                headers: {'Content-type': 'application/json'},
+            }).then(function successCallback(response) {
+
+                $rootScope.documentSearch = response.data;
+                if ($rootScope.documentSearch.length != 0) {
+                    $rootScope.errorCodeSearchDocument = false;
+                } else {
+                    $rootScope.errorCodeSearchDocument = true;
+                }
+
+            }, function errorCallback(response) {
+                $rootScope.titleModal = 'Błąd';
+                $rootScope.responseModalBody = 'Sprawdź połączenie z internetem lub skontaktuj się z administratorem.';
+
+                var modalInstance = $uibModal.open({
+                    templateUrl: 'updateResponseFromServer.html',
+                    controller: 'ModalInstanceCtrl2',
+                    controllerAs: '$ctrl'
+                });
+
+                modalInstance.result.then(function (selectedItem) {
+                }, function () {
+                    console.log('Anulowano');
+                });
+            });
+        };
+
+        this.findByNameTeam = function (nameTeam) {
+            $rootScope.documentSearch = [];
+
+            $http({
+                method: 'POST',
+                url: HOST + '/find_nameteam',
+                data: nameTeam,
+                headers: {'Content-type': 'application/json'},
+            }).then(function successCallback(response) {
+
+                $rootScope.documentSearch = response.data;
+
+                if ($rootScope.documentSearch.length != 0) {
+                    $rootScope.errorCodeSearchDocument = false;
+                } else {
+                    $rootScope.errorCodeSearchDocument = true;
+                }
+
+            }, function errorCallback(response) {
+                $rootScope.titleModal = 'Błąd';
+                $rootScope.responseModalBody = 'Sprawdź połączenie z internetem lub skontaktuj się z administratorem.';
+
+                var modalInstance = $uibModal.open({
+                    templateUrl: 'updateResponseFromServer.html',
+                    controller: 'ModalInstanceCtrl2',
+                    controllerAs: '$ctrl'
+                });
+
+                modalInstance.result.then(function (selectedItem) {
+                }, function () {
+                    console.log('Anulowano');
+                });
+            });
+        };
 
 
-            if ($rootScope.documents.length == 0) {
-                $rootScope.notFindByTrader = true;
-            } else {
-                $rootScope.notFindByTrader = false;
-            }
+        this.deleteDocument = function (numberWZ, subProcess) {
+            $http({
+                method: 'DELETE',
+                url: HOST + '/deleteDocument',
+                data: {
+                    "numberWZ": numberWZ,
+                    "subPro": subProcess
+                },
+                headers: {'Content-type': 'application/json'},
+            }).then(function successCallback(response) {
 
-        }).error(function (data) {
-            ngDialog.open({
-                template: 'errorFindDocument',
-                controller: 'findDocument',
-                className: 'ngdialog-theme-default'
+                $rootScope.titleModal = 'Usunięto dokument';
+                $rootScope.responseModalBody = 'Dokument: '+numberWZ + ' / '+subProcess+' został usunięty pomyślnie.';
+
+                var modalInstance = $uibModal.open({
+                    templateUrl: 'updateResponseFromServer.html',
+                    controller: 'ModalInstanceCtrl2',
+                    controllerAs: '$ctrl'
+                });
+
+                modalInstance.result.then(function (selectedItem) {
+                }, function () {
+                    console.log('Anulowano');
+                });
+
+                $rootScope.reloadRoute();
+
+            }, function errorCallback(response) {
+
+                $rootScope.titleModal = 'Błąd';
+                $rootScope.responseModalBody = 'Sprawdź połączenie z internetem lub skontaktuj się z administratorem.';
+
+                var modalInstance = $uibModal.open({
+                    templateUrl: 'updateResponseFromServer.html',
+                    controller: 'ModalInstanceCtrl2',
+                    controllerAs: '$ctrl'
+                });
+
+                modalInstance.result.then(function (selectedItem) {
+                }, function () {
+                    console.log('Anulowano');
+                });
             });
 
-        });
-    };
-
-    this.findByNameTeam = function (nameTeam) {
-        $rootScope.documents = [];
-
-        $http({
-            method: 'POST',
-            url: HOST + '/find_nameteam',
-            data: nameTeam,
-            headers: {'Content-type': 'application/json'},
-        }).success(function (data) {
-            $rootScope.documents = data;
-            $rootScope.notFindByTrader = false;
-            $rootScope.notFindByNumberWZ = false;
-            $rootScope.notFindByClienName = false;
-            $rootScope.notFindByClientNumber = false;
-
-            if (data.length == 0) {
-                $rootScope.notFindByNameTeam = true;
-            } else {
-                $rootScope.notFindByNameTeam = false;
-            }
-
-        }).error(function (data) {
-            ngDialog.open({
-                template: 'errorFindDocument',
-                controller: 'findDocument',
-                className: 'ngdialog-theme-default'
-            });
-
-        });
-    };
+        };
 
 
-    this.deleteDocument = function (numberWZ, subProcess) {
-        $http({
-            method: 'DELETE',
-            url: HOST + '/deleteDocument',
-            data: {
-                "numberWZ": numberWZ,
-                "subPro": subProcess
-            },
-            headers: {'Content-type': 'application/json'},
-        }).success(function (data) {
+        this.correctWZ = function (numberWZ, subPro) {
             $rootScope.documents = [];
-            ngDialog.open({
-                template: 'deleteCorrect',
-                controller: 'AdminController',
-                className: 'ngdialog-theme-default'
-            });
+            $http({
+                method: 'PATCH',
+                url: HOST + '/by_correct',
+                data: {
+                    "numberWZ": numberWZ,
+                    "subPro": subPro
+                },
+                headers: {'Content-type': 'application/json'}
+            }).then(function successCallback(response) {
 
-        }).error(function (data) {
-            ngDialog.open({
-                template: 'errorFindDocument',
-                controller: 'findDocument',
-                className: 'ngdialog-theme-default'
-            });
+                $rootScope.titleModal = 'Korekta dokument';
+                $rootScope.responseModalBody = 'Dokument: '+numberWZ + ' / '+subPro+' został skorygowany pomyślnie.';
 
-        });
+                var modalInstance = $uibModal.open({
+                    templateUrl: 'updateResponseFromServer.html',
+                    controller: 'ModalInstanceCtrl2',
+                    controllerAs: '$ctrl'
+                });
+
+                modalInstance.result.then(function (selectedItem) {
+                }, function () {
+                    console.log('Anulowano');
+                });
+                $rootScope.reloadRoute();
+            }, function errorCallback(response) {
+
+                $rootScope.titleModal = 'Błąd';
+                $rootScope.responseModalBody = 'Sprawdź połączenie z internetem lub skontaktuj się z administratorem.';
+
+                var modalInstance = $uibModal.open({
+                    templateUrl: 'updateResponseFromServer.html',
+                    controller: 'ModalInstanceCtrl2',
+                    controllerAs: '$ctrl'
+                });
+
+                modalInstance.result.then(function (selectedItem) {
+                }, function () {
+                    console.log('Anulowano');
+                });
+            });
+        };
+
+    }
+);
+
+app.controller('ModalInstanceCtrl2', function ($uibModalInstance, $rootScope) {
+    var $ctrl = this;
+
+    $rootScope.orUser = true;
+
+    $ctrl.ok = function () {
+        $uibModalInstance.close();
     };
 
-    this.correctWZ = function (numberWZ, subPro) {
-        $rootScope.documents = [];
-        $http({
-            method: 'PATCH',
-            url: HOST + '/by_correct',
-            data: {
-                "numberWZ": numberWZ,
-                "subPro": subPro
-            },
-            headers: {'Content-type': 'application/json'}
-        }).success(function (data) {
-            ngDialog.open({
-                template: 'SuccessCorrect',
-                controller: 'findDocument',
-                className: 'ngdialog-theme-default'
-            });
-
-
-        }).error(function (data) {
-            ngDialog.open({
-                template: 'errorFindDocument',
-                controller: 'findDocument',
-                className: 'ngdialog-theme-default'
-            });
-        });
+    $ctrl.cancel = function () {
+        $uibModalInstance.dismiss('cancel');
     };
-
-    this.correctWZAll = function () {
-        $rootScope.documents = [];
-
-        $http({
-            method: 'GET',
-            url: HOST + '/find_correct',
-
-            headers: {'Content-type': 'application/json'},
-        }).success(function (data) {
-            $rootScope.documents = data;
-
-        }).error(function (data) {
-            ngDialog.open({
-                template: 'errorFindDocument',
-                controller: 'findDocument',
-                className: 'ngdialog-theme-default'
-            });
-
-        });
-
-    };
-
-
 });

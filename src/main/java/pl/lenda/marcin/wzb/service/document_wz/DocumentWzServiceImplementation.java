@@ -6,6 +6,7 @@ import pl.lenda.marcin.wzb.entity.DocumentWz;
 import pl.lenda.marcin.wzb.repository.DocumentWzRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by Promar on 28.10.2016.
@@ -28,7 +29,7 @@ public class DocumentWzServiceImplementation implements DocumentWzService {
     }
 
     @Override
-    public DocumentWz findByNumberWZAndSubProcess(String numberWZ, String subProcess) {
+    public Optional<DocumentWz> findByNumberWZAndSubProcess(String numberWZ, String subProcess) {
         return documentWzRepository.findByNumberWZAndSubProcess(numberWZ, subProcess);
     }
 

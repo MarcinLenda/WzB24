@@ -56,7 +56,7 @@ public class ItemsReservedCtrl {
         mongoTemplate.dropCollection("reserved_Items");
         mongoTemplate.dropCollection("itemsReserved");
 
-        String csvFile = "/home/ubuntu/WzB24/src/main/resources/static/rf_raport.csv";
+        String csvFile = "C:\\Users\\Promar\\Desktop\\WzB\\src\\main\\resources\\static\\rf_raport.csv";
         BufferedReader br = null;
         String line = "";
         String cvsSplitBy = ";";
@@ -145,6 +145,7 @@ public class ItemsReservedCtrl {
                 if (items[5].equals("")) {
                     items[5] = "Brak";
                 }
+                System.out.println(items[10]);
 
                 ItemsReserved _itemsReserved = new ItemsReserved();
                 //search name trader

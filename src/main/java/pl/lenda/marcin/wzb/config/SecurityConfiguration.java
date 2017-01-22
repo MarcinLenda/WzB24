@@ -47,6 +47,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/myAccount/user","/myAccount/find_by_email").permitAll()
                 .antMatchers("/login?logout").permitAll()
                 .antMatchers("/search").permitAll()
+                .antMatchers("/saveDocument").permitAll()
                 .antMatchers("/views/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()

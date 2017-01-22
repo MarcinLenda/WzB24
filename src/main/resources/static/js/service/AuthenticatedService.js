@@ -1,7 +1,7 @@
 /**
  * Created by Promar on 06.11.2016.
  */
-app.service('AuthenticatedService', function ($rootScope, $http, ngDialog, HOST) {
+app.service('AuthenticatedService', function ($rootScope, $http, HOST) {
 
     var self = this;
     $rootScope._username = '';
@@ -50,20 +50,7 @@ app.service('AuthenticatedService', function ($rootScope, $http, ngDialog, HOST)
     })();
 
 
-
-
-
-
-
-
-
     this.authenticatedUser = function(credentials, callback) {
-
-        // var headers = credentials ? {
-        //     authorization : "Basic "
-        //     + btoa(credentials.username + ":"
-        //         + credentials.password)
-        // } : {};
 
         var headers = {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -75,11 +62,9 @@ app.service('AuthenticatedService', function ($rootScope, $http, ngDialog, HOST)
             headers : headers
         }).then(function(response) {
             var data = response.data;
-            if (data.name) {
 
                 $rootScope.authenticated = true;
                 $rootScope._username = data.username;
-                $rootScope.admin = data && data.roles && data.roles.indexOf("ROLE_ADMIN")>-1;
 
                 $http({
                     method: 'GET',
@@ -90,20 +75,11 @@ app.service('AuthenticatedService', function ($rootScope, $http, ngDialog, HOST)
                     $rootScope.userRoles = false;
                 });
 
-        } else {
-            self.authenticated = false;
-            self.admin = false;
-        }
             callback && callback(true);
         }, function(err) {
             self.authenticated = false;
+            self.admin = false;
             callback && callback(false);
-
-            ngDialog.open({
-                template: 'errorLogin',
-                controller: 'LoginCtrl',
-                className: 'ngdialog-theme-default'
-            });
 
         });
     };

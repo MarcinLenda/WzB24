@@ -2,7 +2,7 @@
  * Created by Promar on 04.11.2016.
  */
 
-app.controller('AdminController', function ($scope, $http, $rootScope, $route, $location, $timeout, documentWZ, ngDialog, HOST) {
+app.controller('AdminController', function ($scope, $http, $rootScope, $route, $location, $timeout, documentWZ, HOST) {
 
     $scope.correct = '0';
     $scope.accountToActive = '0';
@@ -48,41 +48,5 @@ app.controller('AdminController', function ($scope, $http, $rootScope, $route, $
         }).error(function (data) {
         console.log('Nie udało się ');
     });
-
-    $rootScope.documents = [];
-    $http({
-        method: 'GET',
-        url: HOST + '/find_correct',
-
-        headers: {'Content-type': 'application/json'},
-    }).success(function (data) {
-        $rootScope.documents = data;
-
-
-    }).error(function (data) {
-        ngDialog.open({
-            template: 'errorFindDocument',
-            controller: 'findDocument',
-            className: 'ngdialog-theme-default'
-        });
-
-    });
-
-    $scope.clickToDelete = function () {
-        $rootScope.numberWZtoDelete = $scope.editData.documents.numberWZ;
-        $rootScope.subProDelete = $scope.editData.documents.subProcess;
-
-        ngDialog.open({
-            template: 'templateDelete',
-            controller: 'ShowAllDocuments',
-            className: 'ngdialog-theme-default'
-        });
-
-    };
-
-    $scope.deleteDocument = function () {
-        documentWZ.deleteDocument($scope.numberWZtoDelete, $scope.subProDelete);
-
-    };
 
 });

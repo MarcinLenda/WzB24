@@ -7,9 +7,10 @@ import pl.lenda.marcin.wzb.dto.DocumentWzDto;
 import pl.lenda.marcin.wzb.dto.TraderAccountDto;
 import pl.lenda.marcin.wzb.dto.UserAccountDto;
 import pl.lenda.marcin.wzb.entity.*;
-import pl.lenda.marcin.wzb.service.client_account.ClientAccountImplementation;
-import pl.lenda.marcin.wzb.service.trader.TraderServiceImplementation;
+import pl.lenda.marcin.wzb.service.client_account.ClientAccountService;
+import pl.lenda.marcin.wzb.service.trader.TraderService;
 
+import java.time.Instant;
 import java.util.Date;
 
 /**
@@ -19,9 +20,14 @@ import java.util.Date;
 public class ConvertTo {
 
     @Autowired
-    ClientAccountImplementation clientAccountImplementation;
+    private final ClientAccountService clientAccountService;
     @Autowired
-    TraderServiceImplementation traderServiceImplementation;
+    private final TraderService traderService;
+
+    public ConvertTo(ClientAccountService clientAccountService, TraderService traderService) {
+        this.clientAccountService = clientAccountService;
+        this.traderService = traderService;
+    }
 
     public DocumentWzDto convertDocumentToDto(DocumentWz documentWz){
         DocumentWzDto documentWzDto = new DocumentWzDto();
@@ -38,8 +44,8 @@ public class ConvertTo {
 
     public DocumentWz convertDocumentToEntity(DocumentWzDto documentWzDto){
         DocumentWz documentWz = new DocumentWz();
-        ClientAccount clientAccount = clientAccountImplementation.findByAbbreviationName(documentWzDto.getClient());
-        TraderAccount traderAccount = traderServiceImplementation.findBySurname(documentWzDto.getTraderName());
+        ClientAccount clientAccount = clientAccountService.findByAbbreviationName(documentWzDto.getClient()).get();
+        TraderAccount traderAccount = traderService.findBySurname(documentWzDto.getTraderName());
 
         documentWz.setNumberWZ(documentWzDto.getNumberWZ());
         documentWz.setSubProcess(documentWzDto.getSubProcess());
@@ -71,15 +77,23 @@ public class ConvertTo {
         return userAccount;
     }
 
-    public UserAccountDto converToUserAccountDto(UserAccount userAccount){
+    public UserAccountDto convertToUserAccountDto(UserAccount userAccount){
         UserAccountDto userAccountDto = new UserAccountDto();
         userAccountDto.setName(userAccount.getName());
         userAccountDto.setSurname(userAccount.getSurname());
         userAccountDto.setUsername(userAccount.getUsername());
-        userAccountDto.setPassword(userAccount.getPassword());
         userAccountDto.setNumberUser(userAccount.getNumberUser());
+        userAccountDto.setRole(userAccount.getRole());
+
+
+        String teamName = traderService
+                .findByTraderSurnameAndNumber(userAccount.getSurname(), userAccount.getNumberUser())
+                .map(TraderAccount::getNameTeam).orElseGet(() -> "X");
+        userAccountDto.setNameTeam(teamName);
+
         return userAccountDto;
     }
+
 
     public TraderAccount convertToTraderEntity(TraderAccountDto traderAccountDto){
         TraderAccount traderAccount = new TraderAccount();
@@ -90,8 +104,17 @@ public class ConvertTo {
         return traderAccount;
     }
 
+    public TraderAccountDto converToTraderDto(TraderAccount traderAccount){
+        TraderAccountDto traderAccountDto = new TraderAccountDto();
+        traderAccountDto.setName(traderAccount.getName());
+        traderAccountDto.setSurname(traderAccount.getSurname());
+        traderAccountDto.setNameTeam(traderAccount.getNameTeam());
+        traderAccountDto.setNumberTrader(traderAccount.getNumberTrader());
+        return traderAccountDto;
+    }
+
     public HistoryDeleteDocumentWz convertToHistoryDeleteDoc(String number, String subPro, String client, String trader,
-                                                             String username, Date date){
+                                                             String username){
 
         HistoryDeleteDocumentWz historyDeleteDocumentWz = new HistoryDeleteDocumentWz();
         historyDeleteDocumentWz.setNumberWZ(number);
@@ -99,7 +122,7 @@ public class ConvertTo {
         historyDeleteDocumentWz.setNameClient(client);
         historyDeleteDocumentWz.setNameTrader(trader);
         historyDeleteDocumentWz.setUser(username);
-        historyDeleteDocumentWz.setDate(new Date());
+        historyDeleteDocumentWz.setDate(Instant.now());
         return historyDeleteDocumentWz;
     }
 

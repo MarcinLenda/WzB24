@@ -1,8 +1,7 @@
 package pl.lenda.marcin.wzb.controller;
 
-import ch.qos.logback.classic.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -10,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.lenda.marcin.wzb.dto.*;
 import pl.lenda.marcin.wzb.entity.DocumentWz;
 import pl.lenda.marcin.wzb.entity.UserAccount;
+import pl.lenda.marcin.wzb.exception.DocumentWzException;
 import pl.lenda.marcin.wzb.repository.HistoryCorrectsDocumentRepository;
 import pl.lenda.marcin.wzb.repository.HistoryDeleteDocumentWzRepository;
 import pl.lenda.marcin.wzb.repository.ItemSearchRepository;
@@ -17,7 +17,9 @@ import pl.lenda.marcin.wzb.service.convert_class.ConvertTo;
 import pl.lenda.marcin.wzb.service.document_wz.DocumentWzServiceImplementation;
 import pl.lenda.marcin.wzb.service.user_account.UserAccountService;
 
+import javax.validation.Valid;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by Promar on 09.10.2016.
@@ -42,9 +44,7 @@ public class DocumentWZCtrl {
     HistoryDeleteDocumentWzRepository historyDeleteDocumentWzRepository;
     @Autowired
     HistoryCorrectsDocumentRepository historyCorrectsDocumentRepository;
-    protected final Logger log = (Logger) LoggerFactory.getLogger(getClass());
 
-    private final Map<String, Object> response = new LinkedHashMap<>();
 
     @Autowired
     public DocumentWZCtrl(DocumentWzServiceImplementation documentWzServiceImplementation) {
@@ -61,133 +61,131 @@ public class DocumentWZCtrl {
 
     @CrossOrigin(origins = "http://wzb24.pl")
     @Secured("ROLE_ADMIN")
+    @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(value = "/saveDocument")
-    public
-    @ResponseBody
-    Map<String, Object> createDocumentWz(@RequestBody DocumentWzDto documentWzDto) {
-        log.debug("Wykonuje operację ABCDE");
-        response.clear();
+    public void createDocumentWz(@RequestBody @Valid DocumentWzDto documentWzDto) {
+        Optional<DocumentWz> possibleDocument = documentWzServiceImplementation
+                .findByNumberWZAndSubProcess(documentWzDto.getNumberWZ(), documentWzDto.getSubProcess());
 
-        System.out.println("data: " + documentWzDto.getDate());
-        if (documentWzServiceImplementation.
-                findByNumberWZAndSubProcess(documentWzDto.getNumberWZ(), documentWzDto.getSubProcess()) != null) {
-            response.put("Error", "ExistsDocument");
-            return response;
+        if (possibleDocument.isPresent()) {
+            throw DocumentWzException.documentAlreadyExists();
         } else {
             documentWzServiceImplementation.createDocumentWz(convertTo.convertDocumentToEntity(documentWzDto));
-            response.put("Success", documentWzDto);
-            return response;
         }
-
     }
-
 
     @CrossOrigin(origins = "http://wzb24.pl")
     @Secured("ROLE_ADMIN")
     @RequestMapping(value = "/deleteDocument", method = RequestMethod.DELETE)
-    public void deleteDocument(@RequestBody DocumentWzToDeleteDto documentWzToDeleteDto) {
-        DocumentWz documentWz = documentWzServiceImplementation.findByNumberWZAndSubProcess(
+    public void deleteDocument(@RequestBody @Valid DocumentWzToDeleteDto documentWzToDeleteDto) {
+        Optional<DocumentWz> possibleDocument = documentWzServiceImplementation.findByNumberWZAndSubProcess(
                 documentWzToDeleteDto.getNumberWZ(), documentWzToDeleteDto.getSubPro());
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserAccount userAccount = userAccountService.findByUsername(authentication.getName());
+        //w momencie gdy optional ma w sobie to metodda mapa zamieniamy sobie go na inny
+        possibleDocument.map(document -> {
 
-        //save history, who delete document
-        historyDeleteDocumentWzRepository.save(convertTo.convertToHistoryDeleteDoc(documentWzToDeleteDto.getNumberWZ(), documentWzToDeleteDto.getSubPro(),
-                documentWz.getClient(), documentWz.getTraderName(), userAccount.getUsername(), new Date()));
-        documentWzServiceImplementation.removeDocumentWz(documentWz);
+            documentWzServiceImplementation.removeDocumentWz(document);
+
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            UserAccount userAccount = userAccountService.findByUsername(authentication.getName());
+
+            //save history, who delete document
+            historyDeleteDocumentWzRepository.save(convertTo.convertToHistoryDeleteDoc(documentWzToDeleteDto.getNumberWZ(),
+                    documentWzToDeleteDto.getSubPro(),
+                    document.getClient(), document.getTraderName(), userAccount.getUsername()));
+
+            return document;
+        })
+                //referencja do metody ktora powinna byc wykonana w metodzie get suppliera
+                .orElseThrow(DocumentWzException::documentNotFound);
+
     }
 
     @CrossOrigin(origins = "http://wzb24.pl")
-    @RequestMapping(value = "/findByNumber", method = RequestMethod.POST)
-    public
     @ResponseBody
-    DocumentWzDto findDocumentWz(@RequestBody FindByNumberWzDto findByNumberWzDto) {
-        DocumentWz byNumberWz = documentWzServiceImplementation.findByNumberWZAndSubProcess(
-                findByNumberWzDto.getNumberWZ(), findByNumberWzDto.getSubPro());
-
-        return convertTo.convertDocumentToDto(byNumberWz);
+    @RequestMapping(value = "/findByNumber", method = RequestMethod.POST)
+    public DocumentWzDto findDocumentWz(@RequestBody @Valid FindByNumberWzDto findByNumberWzDto) {
+        return documentWzServiceImplementation
+                .findByNumberWZAndSubProcess(findByNumberWzDto.getNumberWZ(), findByNumberWzDto.getSubPro())
+                .map(document -> convertTo.convertDocumentToDto(document))
+                .orElseThrow(DocumentWzException::documentNotFound);
     }
 
     @CrossOrigin(origins = "http://wzb24.pl")
     @RequestMapping(value = "/findByClient", method = RequestMethod.POST)
-    public List<DocumentWzDto> findByClient(@RequestBody DocumentWzAbbreviationNameDto documentWzAbbreviationNameDto) {
-        List<DocumentWz> listDocumentWZ;
-        List<DocumentWzDto> listDocumentWzDto = new ArrayList<>();
-        listDocumentWZ = documentWzServiceImplementation.findByAbbreviationName(documentWzAbbreviationNameDto.getAbbreviationName());
-
-        for (DocumentWz documentWz : listDocumentWZ) {
-            listDocumentWzDto.add(convertTo.convertDocumentToDto(documentWz));
-        }
-        return listDocumentWzDto;
+    public List<DocumentWzDto> findByClient(@RequestBody @Valid DocumentWzAbbreviationNameDto documentWzAbbreviationNameDto) {
+        return documentWzServiceImplementation
+                .findByAbbreviationName(documentWzAbbreviationNameDto.getAbbreviationName())
+                .stream()
+                .map(document -> convertTo.convertDocumentToDto(document))
+                .collect(Collectors.toList());
     }
 
     @CrossOrigin(origins = "http://wzb24.pl")
     @RequestMapping(value = "/findByClientNumber", method = RequestMethod.POST)
-    public List<DocumentWzDto> findByClientNumber(@RequestBody FindClientNumber findClientNumber) {
-        List<DocumentWz> listDocumentWZ;
-        List<DocumentWzDto> listDocumentWzDto = new ArrayList<>();
-        listDocumentWZ = documentWzServiceImplementation.findByNumberClient(findClientNumber.getFindClientNumber());
-
-        for (DocumentWz documentWz : listDocumentWZ) {
-            listDocumentWzDto.add(convertTo.convertDocumentToDto(documentWz));
-        }
-        return listDocumentWzDto;
+    public List<DocumentWzDto> findByClientNumber(@RequestBody @Valid FindClientNumber findClientNumber) {
+        return documentWzServiceImplementation.findByNumberClient(findClientNumber.getFindClientNumber())
+                .stream()
+                .map(documentWz -> convertTo.convertDocumentToDto(documentWz))
+                .collect(Collectors.toList());
     }
 
     @CrossOrigin(origins = "http://wzb24.pl")
     @RequestMapping(value = "/findByTraderName", method = RequestMethod.POST)
-    public List<DocumentWzDto> findByTraderName(@RequestBody String traderName) {
-        List<DocumentWz> listDocumentWZ;
-        List<DocumentWzDto> listDocumentWzDto = new ArrayList<>();
-        listDocumentWZ = documentWzServiceImplementation.findByNameTrader(traderName);
-
-        for (DocumentWz documentWz : listDocumentWZ) {
-            listDocumentWzDto.add(convertTo.convertDocumentToDto(documentWz));
-        }
-        return listDocumentWzDto;
+    public List<DocumentWzDto> findByTraderName(@RequestBody @Valid String traderName) {
+        return documentWzServiceImplementation.findByNameTrader(traderName)
+                .stream()
+                .map(documentWz -> convertTo.convertDocumentToDto(documentWz))
+                .collect(Collectors.toList());
     }
 
     @CrossOrigin(origins = "http://wzb24.pl")
     @RequestMapping(value = "/showAllDocuments", method = RequestMethod.GET)
     public List<DocumentWzDto> findAll() {
-        List<DocumentWzDto> listDocumentWzDto = new ArrayList<>();
-        List<DocumentWz> listDocumentWZ = documentWzServiceImplementation.showAllDocument();
-
-        for (DocumentWz documentWz : listDocumentWZ) {
-
-            listDocumentWzDto.add(convertTo.convertDocumentToDto(documentWz));
-        }
-        return listDocumentWzDto;
+        return documentWzServiceImplementation.showAllDocument()
+                .stream()
+                .map(documentWz -> convertTo.convertDocumentToDto(documentWz))
+                .collect(Collectors.toList());
     }
 
     @CrossOrigin(origins = "http://wzb24.pl")
     @RequestMapping(value = "/by_correct", method = RequestMethod.PATCH)
-    public void correctBy(@RequestBody FindByNumberWzDto findByNumberWzDto) {
-        DocumentWz byNumberWz = documentWzServiceImplementation.findByNumberWZAndSubProcess(
+    public void correctBy(@RequestBody @Valid FindByNumberWzDto findByNumberWzDto) {
+        Optional<DocumentWz> possibleDocumentToCorrect = documentWzServiceImplementation.findByNumberWZAndSubProcess(
                 findByNumberWzDto.getNumberWZ(), findByNumberWzDto.getSubPro());
-        byNumberWz.setBeCorrects(true);
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserAccount userAccount = userAccountService.findByUsername(authentication.getName());
+        possibleDocumentToCorrect.map(documentWz ->{
+            documentWz.setBeCorrects(true);
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            UserAccount userAccount = userAccountService.findByUsername(authentication.getName());
 
-        //save information who accept correct document
-        historyCorrectsDocumentRepository.save(convertTo.convertToHistoryCorrectDoc(byNumberWz.getNumberWZ(), byNumberWz.getSubProcess(),
-                byNumberWz.getClient(), byNumberWz.getTraderName(), userAccount.getUsername(), new Date()));
-        documentWzServiceImplementation.createDocumentWz(byNumberWz);
+            //save information who accept correct document
+            historyCorrectsDocumentRepository.save(convertTo.convertToHistoryCorrectDoc(documentWz.getNumberWZ(), documentWz.getSubProcess(),
+                    documentWz.getClient(), documentWz.getTraderName(), userAccount.getUsername(), new Date()));
+            documentWzServiceImplementation.createDocumentWz(documentWz);
+            return documentWz;
+        }).orElseThrow(DocumentWzException::documentNotFound);
+
     }
 
     @CrossOrigin(origins = "http://wzb24.pl")
     @RequestMapping(value = "/find_correct", method = RequestMethod.GET)
-    public List<DocumentWz> findCorrectionDocument() {
-        return documentWzServiceImplementation.listByCorrectionDocuments();
+    public List<DocumentWzDto> findCorrectionDocument() {
+        return documentWzServiceImplementation
+                .listByCorrectionDocuments()
+                .stream()
+                .map(documentWz -> convertTo.convertDocumentToDto(documentWz))
+                .collect(Collectors.toList());
     }
 
     @CrossOrigin(origins = "http://wzb24.pl")
     @RequestMapping(value = "/find_nameteam", method = RequestMethod.POST)
-    public
     @ResponseBody
-    List<DocumentWz> findByNameTeam(@RequestBody String nameTeam) {
-        return documentWzServiceImplementation.findByNameTeam(nameTeam);
+    public List<DocumentWzDto> findByNameTeam(@RequestBody @Valid String nameTeam) {
+        return documentWzServiceImplementation
+                .findByNameTeam(nameTeam)
+                .stream()
+                .map(documentWz -> convertTo.convertDocumentToDto(documentWz))
+                .collect(Collectors.toList());
     }
 }

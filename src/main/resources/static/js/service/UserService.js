@@ -2,71 +2,166 @@
  * Created by Promar on 03.11.2016.
  */
 
-app.service('UserAccountService', function ($rootScope, $http, ngDialog, HOST) {
+app.service('UserAccountService', function ($rootScope, $route, $http, $uibModal, HOST) {
 
 
+        $rootScope.reloadRoute = function () {
+            $route.reload();
+        };
 
-    this.doneActiveAccount = function (username) {
-        $rootScope.documents = [];
-        $http({
-            method: 'PATCH',
-            url: HOST + '/myAccount/make_active_account',
-            data: {
-                "username": username
-            },
-            headers: {'Content-type': 'application/json'}
-        }).success(function (data) {
-            ngDialog.open({
-                template: 'successActiveAccount',
-                controller: 'MainAccountCtrl',
-                className: 'ngdialog-theme-default'
+        this.doneActiveAccount = function (username) {
+
+            $http({
+                method: 'PATCH',
+                url: HOST + '/myAccount/make_active_account',
+                data: {
+                    "username": username
+                },
+                headers: {'Content-type': 'application/json'}
+            }).then(function successCallback(response) {
+                $rootScope.titleModal = 'Aktywacja konta: ';
+                $rootScope.responseModalBody = 'Konto: '+ username +' zostało aktywowane. ';
+
+                var modalInstance = $uibModal.open({
+                    templateUrl: 'updateResponseFromServer.html',
+                    controller: 'ModalInstanceCtrl',
+                    controllerAs: '$ctrl',
+                    resolve: {
+                        entity: function () {
+                            return username;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function (selectedItem) {
+                }, function () {
+                    console.log('Anulowano');
+                });
+                $rootScope.reloadRoute();
+
+            }, function errorCallback(response) {
+                $rootScope.titleModal = 'Błąd atkywacji';
+                $rootScope.responseModalBody = 'Sprawdź połączenie z internetem lub skontaktuj się administratorem.';
+
+                var modalInstance = $uibModal.open({
+                    templateUrl: 'updateResponseFromServer.html',
+                    controller: 'ModalInstanceCtrl',
+                    controllerAs: '$ctrl',
+                    resolve: {
+                        entity: function () {
+                            return username;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function (selectedItem) {
+                }, function () {
+                    console.log('Anulowano');
+                });
             });
+        };
 
-        }).error(function (data) {
 
-        });
-    };
+        this.doneBlockAccount = function (username) {
 
-    this.doneBlockAccount = function (username) {
-        $rootScope.documents = [];
-        $http({
-            method: 'PATCH',
-            url: HOST + '/myAccount/block_account',
-            data: {
-                "username": username
-            },
-            headers: {'Content-type': 'application/json'}
-        }).success(function (data) {
-            ngDialog.open({
-                template: 'successBlock',
-                controller: 'MainAccountCtrl',
-                className: 'ngdialog-theme-default'
+            $http({
+                method: 'PATCH',
+                url: HOST + '/myAccount/block_account',
+                data: {
+                    "username": username
+                },
+                headers: {'Content-type': 'application/json'}
+            }).then(function successCallback(response) {
+                $rootScope.titleModal = 'Blokada konta: ' + username;
+                $rootScope.responseModalBody = 'Konto zostało zablokowane. Użytkownik nie będzie mógł korzystać z WzB24 ' +
+                    'do momentu ponownego aktywowania konta.';
+
+                var modalInstance = $uibModal.open({
+                    templateUrl: 'updateResponseFromServer.html',
+                    controller: 'ModalInstanceCtrl',
+                    controllerAs: '$ctrl',
+                    resolve: {
+                        entity: function () {
+                            return username;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function (selectedItem) {
+                }, function () {
+                    console.log('Anulowano');
+                });
+                $rootScope.reloadRoute();
+
+            }, function errorCallback(response) {
+                $rootScope.titleModal = 'Błąd blokowania';
+                $rootScope.responseModalBody = 'Sprawdź połączenie z internetem lub skontaktuj się administratorem.';
+
+                var modalInstance = $uibModal.open({
+                    templateUrl: 'updateResponseFromServer.html',
+                    controller: 'ModalInstanceCtrl',
+                    controllerAs: '$ctrl',
+                    resolve: {
+                        entity: function () {
+                            return username;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function (selectedItem) {
+                }, function () {
+                    console.log('Anulowano');
+                });
+
             });
+        };
 
-        }).error(function (data) {
 
-        });
-    };
+        this.doneDeleteAccount = function (username) {
 
-    this.doneDeleteAccount = function (username) {
-        $rootScope.documents = [];
-        $http({
-            method: 'DELETE',
-            url: HOST + '/myAccount//remove',
-            data: {
-                "username": username
-            },
-            headers: {'Content-type': 'application/json'}
-        }).success(function (data) {
-            ngDialog.open({
-                template: 'successDelete',
-                controller: 'MainAccountCtrl',
-                className: 'ngdialog-theme-default'
+            $http({
+                method: 'DELETE',
+                url: HOST + '/myAccount//remove',
+                data: {
+                    "username": username
+                },
+                headers: {'Content-type': 'application/json'}
+            }).then(function successCallback(response) {
+                $rootScope.titleModal = 'Usunięcie konta: ' + username;
+                $rootScope.responseModalBody = 'Konto zostało usunięte trwale z aplikacji.';
+
+                var modalInstance = $uibModal.open({
+                    templateUrl: 'updateResponseFromServer.html',
+                    controller: 'ModalInstanceCtrl',
+                    controllerAs: '$ctrl',
+                    resolve: {
+                        entity: function () {
+                            return username;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function (selectedItem) {
+                }, function () {
+                    console.log('Anulowano');
+                });
+                $rootScope.reloadRoute();
+
+            }, function errorCallback(response) {
+                $rootScope.titleModal = 'Błąd usuwania';
+                $rootScope.responseModalBody = 'Sprawdź połączenie z internetem lub skontaktuj się administratorem.';
+
+                var modalInstance = $uibModal.open({
+                    templateUrl: 'updateResponseFromServer.html',
+                    controller: 'ModalInstanceCtrl',
+                    controllerAs: '$ctrl',
+                    resolve: {
+                        entity: function () {
+                            return username;
+                        }
+                    }
+                });
             });
-
-        }).error(function (data) {
-
-        });
-    };
-
-});
+        };
+}
+);

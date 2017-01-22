@@ -5,7 +5,7 @@
             <div ng-show="showInfo">
 
                 <form div="form" class="topBefore" style="font-size:20px; color: #ffffff;">
-                    <h1>Wyszukaj po:  <img src="images/icons/loupe.png"> </h1>
+                    <h1>Wyszukaj po: <img src="images/icons/loupe.png"></h1>
 
 
                     <p onclick="onclickHandler();">Kliknij ten akapit a wyświetli się pomoc!</p>
@@ -49,7 +49,8 @@
 
                             <input class="submit" type="submit" value="Szukaj" ng-click="findByClient()">
                             <div>
-                                <img style="margin-top: 5px;" ng-show="clientSpin" style="font-size: 10px; padding-top: 80px;" src="../images/icons/spin.svg">
+                                <img style="margin-top: 5px;" ng-show="clientSpin"
+                                     style="font-size: 10px; padding-top: 80px;" src="../images/icons/spin.svg">
                                 <p ng-bind="message"></p>
                             </div>
 
@@ -81,7 +82,8 @@
                             </angucomplete-alt>
                             <input class="submit" type="submit" value="Szukaj" ng-click="findByTrader()">
                             <div>
-                                <img style="margin-top: 5px;" ng-show="clientSpin" style="font-size: 10px; padding-top: 80px;" src="../images/icons/spin.svg">
+                                <img style="margin-top: 5px;" ng-show="clientSpin"
+                                     style="font-size: 10px; padding-top: 80px;" src="../images/icons/spin.svg">
                                 <p ng-bind="message"></p>
                             </div>
 
@@ -103,18 +105,28 @@
                         <tr>
 
                             <th class="menu_t " style="background-color: #1C1D21">Numer WZ</th>
-                            <th class="menu_t " style="background-color: #1C1D21" ts-criteria="subProcess|parseInt">Pod proces</th>
-                            <th class="menu_t " style="background-color: #1C1D21" ts-criteria="client|lowercase">Klient</th>
-                            <th class="menu_t " style="background-color: #1C1D21" ts-criteria="clientNumber|parseInt">Numer klienta</th>
-                            <th class="menu_t " style="background-color: #1C1D21" ts-criteria="traderName|lowercase">Handlowiec</th>
-                            <th class="menu_t " style="background-color: #1C1D21" ts-criteria="date|parseInt">Data zatwierdzenia</th>
+                            <th class="menu_t " style="background-color: #1C1D21" ts-criteria="subProcess|parseInt">Pod
+                                proces
+                            </th>
+                            <th class="menu_t " style="background-color: #1C1D21" ts-criteria="client|lowercase">
+                                Klient
+                            </th>
+                            <th class="menu_t " style="background-color: #1C1D21" ts-criteria="clientNumber|parseInt">
+                                Numer klienta
+                            </th>
+                            <th class="menu_t " style="background-color: #1C1D21" ts-criteria="traderName|lowercase">
+                                Handlowiec
+                            </th>
+                            <th class="menu_t " style="background-color: #1C1D21" ts-criteria="date|parseInt">Data
+                                zatwierdzenia
+                            </th>
                             <th class="menu_t " style="background-color: #1C1D21">Zwłoka</th>
                             <th class="menu_t " style="background-color: #1C1D21">Korekta</th>
                             <th class="menu_t " ng-show="userRoles" style="background-color: #1C1D21">ADMIN</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr ng-repeat="document in documents" ts-repeat>
+                        <tr ng-repeat="document in documentSearch" ts-repeat>
 
                             <td>{{document.numberWZ}}</td>
                             <td>{{document.subProcess}}</td>
@@ -129,7 +141,7 @@
                             <td class="delete" ng-show="document.beCorrects==false">
 
                                 <input class="adminSubmit" type="submit" value="TAK"
-                                       ng-click="editData.documents = document; correctBy();">
+                                       ng-click="correctBy(document)">
 
                             </td>
                             <td ng-show="document.beCorrects==true">
@@ -137,24 +149,12 @@
                             </td>
 
                             <td class="delete" ng-show="userRoles"><input class="adminSubmit" type="submit" value="Usuń"
-                                                                          ng-click="editData.documents = document; clickToDelete();">
+                                                                          ng-click="clickToDelete(document);">
                             </td>
                         </tr>
-                        <div style="font-size: 30px;" ng-show="notFindByTrader">Nie ma żadnych dokumentów w bazie danych
-                            podanego handlowca.
-                        </div>
-                        <div style="font-size: 30px;" ng-show="notFindByNumberWZ">Nie znaleziono dokumentu
-                            WZ o podanym numerze.
 
-                        </div>
-                        <div style="font-size: 30px;" ng-show="notFindByClienName">Nie znaleziono klienta w bazie
-                            danych.
-
-                        </div>
-                        <div style="font-size: 30px;" ng-show="notFindByClientNumber">Nie znaleziono klienta w bazie
-                            danych.
-                        </div>
-                        <div style="font-size: 30px;" ng-show="notFindByNameTeam">Nie znaleziono podanego TOK-u.
+                        <div style="font-size: 30px;color:#FF0000;" ng-show="errorCodeSearchDocument">
+                            Nie znaleziono wyniku dla zapytania
                         </div>
                         </tbody>
 
@@ -163,36 +163,6 @@
 
             </div>
 
-            <script type="text/ng-template" id="AreYouSureDeleteDocument">
-                <h1>Czy na pewno chcesz usunąć dokument?</h1>
-                <input class="submitConfirmDialog" type="submit" value="Tak"
-                       ng-click="closeThisDialog(0); deleteDocument();">
-                <input class="submitDelete" type="submit" value="Nie" ng-click="closeThisDialog(0)">
-            </script>
-
-            <script type="text/ng-template" id="ByCorrect">
-                <h1>Zatwierdzić korekte?</h1>
-                <input class="submitConfirmDialog" type="submit" value="Tak"
-                       ng-click="closeThisDialog(0); correctDone(); ">
-                <input class="submitDelete" type="submit" value="Nie" ng-click="closeThisDialog(0)">
-            </script>
-            <script type="text/ng-template" id="SuccessCorrect">
-                <h1>Korekta zatwierdzona!</h1>
-                <input style="width: 408px; margin-top: 5px;" class="submitConfirmDialog" type="submit" value="Ok"
-                       ng-click="closeThisDialog(0)">
-            </script>
-
-            <script type="text/ng-template" id="successDeleteDocument">
-                <h1>Dokument został usunięty pomyślnie!</h1>
-                <input style="width: 408px; margin-top: 5px;" class="submitConfirmDialog" type="submit" value="Ok"
-                       ng-click="reloadRoute(); closeThisDialog(0);">
-            </script>
-            <script type="text/ng-template" id="errorFindDocument">
-                <h1>Wystąpił błąd podczas szukania WZ.</h1>
-                <p>Brak połączenia z serwerem.</p>
-                <input style="background-color:rgb(221,44,0);" class="submitSuccess" type="submit" value="Ok"
-                       ng-click="closeThisDialog(0);">
-            </script>
         </div>
     </div>
 

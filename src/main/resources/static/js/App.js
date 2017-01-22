@@ -5,12 +5,19 @@
 
 
 var app = angular.module('myApp', [
-    'ngRoute', 'ngResource', 'ngDialog', 'tableSort', 'ngMaterial', 'ngMessages', 'timer', 'config', 'angucomplete-alt',
-    'ng-fusioncharts', 'angularFileUpload'
+    'ngRoute', 'ngResource', 'tableSort', 'ngMaterial', 'ngMessages', 'timer', 'config', 'angucomplete-alt',
+     'angularFileUpload', 'ui.bootstrap'
 
 
 ])
-    .factory('httpInterceptor', function ($q, $rootScope, $location) {
+    .constant("APPLICATION_ERROR_CODES", {
+        // General error codes
+        DOCUMENT_NOT_FOUND: "Nie znaleziono żadnego wyniku !",
+        ACCOUNT_USERNAME_ALREADY_EXISTS: "USERNAME_ALREADY_EXISTS"
+
+    })
+    .factory('httpInterceptor', [ '$q', '$rootScope', '$location', 'APPLICATION_ERROR_CODES',
+        function ($q, $rootScope, $location, APPLICATION_ERROR_CODES) {
         return {
             request: function (config) {
                 return config || $q.when(config)
@@ -18,23 +25,39 @@ var app = angular.module('myApp', [
             response: function (response) {
                 return response || $q.when(response);
             },
-            responseError: function (response) {
-                if (response.status === 401) {
+            responseError: function (rejection) {
+                if (rejection.status === 401) {
                     //here I preserve login page
-                    if ($location.absUrl() != 'http://wzb24.pl/#/after_register' &&
+                    if( $location.absUrl() == 'http://wzb24.pl/#/login'){
+                        $location.url('/login');
+
+                    } else if ($location.absUrl() != 'http://wzb24.pl/#/after_register' &&
                         $location.absUrl() != 'http://wzb24.pl/#/login') {
                         $rootScope.authenticated = false;
                         $rootScope.userRoles = false;
                         $location.url('/main');
                         $rootScope.$broadcast('error');
-                    } else if (response.status === 403) {
-                        $location.url('/access_denied');
                     }
-                    return $q.reject(response);
+
+                    return $q.reject(rejection);
+                } else if (rejection.status === 403) {
+                    $location.url('/access_denied');
+                } else {
+                    if(rejection.status >= 400) {
+                        var errorCode = rejection.data.errorCode;
+                        var msg = APPLICATION_ERROR_CODES[errorCode];
+                        if(APPLICATION_ERROR_CODES.ACCOUNT_USERNAME_ALREADY_EXISTS == errorCode){
+                            $rootScope.userAlreadyExists = true;
+                            $rootScope.reponseError = true;
+                        }
+                        $rootScope.errorMessage = msg;
+                    }
                 }
+
+                return $q.reject(rejection);
             }
-        };
-    })
+        }
+    }])
     .config(function ($routeProvider, $httpProvider) {
 
         $routeProvider
@@ -52,7 +75,7 @@ var app = angular.module('myApp', [
             })
             .when('/search', {
                 templateUrl: 'views/find_document.html',
-                controller: 'findDocument'
+                controller: 'documentCtrl'
             })
             .when('/addDocument', {
                 templateUrl: 'views/admin/add/add_document.html',
@@ -68,7 +91,7 @@ var app = angular.module('myApp', [
             })
             .when('/show_documents', {
                 templateUrl: 'views/admin/show_all/show_documents.html',
-                controller: 'ShowAllDocuments'
+                controller: 'documentCtrl'
             })
             .when('/add_client', {
                 templateUrl: 'views/admin/add/add_client.html',
@@ -80,7 +103,7 @@ var app = angular.module('myApp', [
             })
             .when('/correct_document', {
                 templateUrl: 'views/admin/show_all/correct_document.html',
-                controller: 'AdminController'
+                controller: 'documentCtrl'
             })
             .when('/login', {
                 templateUrl: 'views/login.html',
@@ -145,7 +168,7 @@ var app = angular.module('myApp', [
             })
             .when('/items', {
                 templateUrl: 'views/items/items_menu.html',
-                controller: 'Statistics'
+                controller: ''
             })
             .when('/save_item', {
                 templateUrl: 'views/items/add_items.html',
@@ -162,24 +185,7 @@ var app = angular.module('myApp', [
             .when('/under_construction', {
                 templateUrl: 'views/items/under_construction.html',
                 controller: 'LoginCtrl'
-            })
-            .when('/advanced_search', {
-                templateUrl: 'views/items/advanced_search_items.html',
-                controller: 'ItemsOperation'
-            })
-            .when('/statistics', {
-                templateUrl: 'views/items/statistics.html',
-                controller: 'Statistics'
-            })
-            .when('/minimenu', {
-                templateUrl: 'views/items/ItemsMiniMenu.html',
-                controller: 'Statistics'
-            })
-            .when('/allTeam', {
-                templateUrl: 'views/items/allTeam.html',
-                controller: 'Statistics'
-            })
-            .when('/update_items', {
+            }).when('/update_items', {
                 templateUrl: 'views/items/update_items.html',
                 controller: 'UploadController'
             })

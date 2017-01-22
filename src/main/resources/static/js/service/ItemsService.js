@@ -5,6 +5,7 @@
 app.service('ItemsService', function ($rootScope, $http, HOST) {
 
 
+
     this.findAllItems = function () {
         $http({
             method: 'GET',
@@ -13,8 +14,7 @@ app.service('ItemsService', function ($rootScope, $http, HOST) {
         })
             .success(function (data) {
                 $rootScope.listItems = data;
-                console.log('dzialam');
-                angular.forEach($rootScope.listItems, function(value, key) {
+                angular.forEach($rootScope.listItems, function (value, key) {
                     console.log(key + ': ' + value.dateUpdate);
                 });
 
@@ -22,6 +22,24 @@ app.service('ItemsService', function ($rootScope, $http, HOST) {
             $rootScope.listClient = 'Nie udało się pobrać listy handlowców.'
         });
 
+
+    };
+
+    this.myRf = function () {
+        $rootScope.resultListRf = [];
+
+        $http({
+            method: 'GET',
+            url: HOST + '/findItemBy_nameTrader',
+            headers: {'Content-type': 'application/json'}
+        })
+            .success(function (data) {
+                $rootScope.resultListRf = data;
+
+
+            }).error(function (data) {
+            console.log('Nie udało się pobrać listy RF ');
+        });
 
     };
 

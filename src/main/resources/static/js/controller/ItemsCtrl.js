@@ -1,14 +1,13 @@
 /**
  * Created by Promar on 26.11.2016.
  */
-app.controller('ItemsOperation', ['$scope', '$rootScope', '$http', '$window', '$route', '$timeout', 'ItemsService', 'HOST', 'ngDialog', function ($scope, $rootScope, $http, $window, $route, $timeout, ItemsService, HOST, ngDialog) {
+app.controller('ItemsOperation', ['$scope', '$rootScope', '$http', '$window', '$route', '$timeout', 'ItemsService', 'HOST', 'ItemsService', function ($scope, $rootScope, $http, $window, $route, $timeout, ItemsService, HOST) {
 
     $scope.form = {};
     $scope.listItems = '';
     $rootScope.listClient = '';
     $scope.resultListClient = [];
     $scope.resultListTrader = [];
-    $rootScope.resultListRf = []
     $scope.load = true;
     $scope.filterNameClient = false;
     $scope.filterNameTrader = false;
@@ -21,6 +20,9 @@ app.controller('ItemsOperation', ['$scope', '$rootScope', '$http', '$window', '$
     $rootScope.itemsLength = 0;
     $rootScope.text = new Date();
 
+    $scope.reloadRoute = function () {
+        $route.reload();
+    };
 
     $scope.changeStatusItem = function () {
 
@@ -33,27 +35,23 @@ app.controller('ItemsOperation', ['$scope', '$rootScope', '$http', '$window', '$
             headers: {'Content-type': 'application/json'}
         })
             .success(function (data) {
-                console.log('aktualizacja itemu');
+                ngDialog.open({
+                    template: 'changeStatus',
+                    controller: 'ItemsOperation',
+                    className: 'ngdialog-theme-default'
+                });
 
             }).error(function (data) {
-            console.log('Nie udało się pobrać listy RF ');
+            ngDialog.open({
+                template: 'changeStatusError',
+                controller: 'ItemsOperation',
+                className: 'ngdialog-theme-default'
+            });
         });
     };
 
     $scope.myRf = function () {
-
-        $http({
-            method: 'GET',
-            url: HOST + '/findItemBy_nameTrader',
-            headers: {'Content-type': 'application/json'}
-        })
-            .success(function (data) {
-                $rootScope.resultListRf = data;
-
-            }).error(function (data) {
-            console.log('Nie udało się pobrać listy RF ');
-        });
-
+        ItemsService.myRf();
     };
 
     $scope.showNumber = function() {

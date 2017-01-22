@@ -2,13 +2,13 @@
  * Created by Promar on 03.11.2016.
  */
 
-app.controller('ClientOperation', ['$scope', '$rootScope', '$http','$route', 'ClientService', 'HOST', 'ngDialog', function ($scope, $rootScope, $http, $route, ClientService, HOST, ngDialog) {
+app.controller('ClientOperation', ['$scope', '$rootScope', '$http', '$route', '$uibModal', 'ClientService', 'HOST', function ($scope, $rootScope, $http, $route, $uibModal, ClientService, HOST) {
 
     $scope.form = {};
     $scope.clients = [];
-    $scope.editData = {};
+    $rootScope.edit = {};
     $scope.names = ["STA", "STB", "STC",
-        "STE", "STX"];
+        "STE", "STG", "STX"];
 
     $http({
         method: 'GET',
@@ -43,27 +43,160 @@ app.controller('ClientOperation', ['$scope', '$rootScope', '$http','$route', 'Cl
             nameTeam = 'STC';
         } else if ($scope.nameTeam == 'STE') {
             nameTeam = 'STE';
-        }else{
+        } else if ($scope.nameTeam == 'STG') {
+            nameTeam = 'STG';
+        } else {
             nameTeam = 'STX'
         }
 
         ClientService.addClient(nameClient, numberClient, nameTeam, abbreviationNameClient);
     };
 
-    $scope.deleteClient = function () {
-        $rootScope.nameClient = $scope.editData.accounts.name;
-        $rootScope.numberClient = $scope.editData.accounts.numberClient;
+    $scope.deleteClient = function (account) {
+        $rootScope.titleModal = 'Usuwanie klienta ';
+        $rootScope.responseModalBody = 'Czy chcesz usunąć klienta: "' + account.name + '" ?';
 
-        ngDialog.open({
-            template: 'DeleteClient',
-            controller: 'ClientOperation',
-            className: 'ngdialog-theme-default'
+
+        var modalInstance = $uibModal.open({
+            templateUrl: 'modalQuestion.html',
+            controller: 'ModalInstanceCtrl2',
+            controllerAs: '$ctrl'
+        });
+
+        modalInstance.result.then(function (selectedItem) {
+            ClientService.deleteClient(account.numberClient, account.name);
+        }, function () {
+            console.log('Anulowano');
         });
     };
 
-    $scope.deleteClientConfirm = function () {
+    $scope.editNameClient = function (account) {
+        $rootScope.titleModal = 'Edycja nazwy klienta';
+        $rootScope.edit.update = '';
 
-        ClientService.deleteClient($rootScope.nameClient ,$rootScope.numberClient);
+        var modalInstance = $uibModal.open({
+            templateUrl: 'updateDataAccount.html',
+            controller: 'ModalInstanceCtrl',
+            controllerAs: '$ctrl',
+            resolve: {
+                entity: function () {
+                    return account;
+                }
+            }
+        });
+
+        modalInstance.result.then(function (selectedItem) {
+            selectedItem.name = $rootScope.edit.update;
+            $scope.editClient(selectedItem);
+        }, function () {
+            console.log('Anulowano');
+        });
+    };
+
+    $scope.editNumberClient = function (account) {
+        $rootScope.titleModal = 'Edycja numeru klienta';
+        $rootScope.edit.update = '';
+
+        var modalInstance = $uibModal.open({
+            templateUrl: 'updateDataAccount.html',
+            controller: 'ModalInstanceCtrl',
+            controllerAs: '$ctrl',
+            resolve: {
+                entity: function () {
+                    return account;
+                }
+            }
+        });
+
+        modalInstance.result.then(function (selectedItem) {
+            selectedItem.newNumberClient = $rootScope.edit.update;
+            $scope.editClient(selectedItem);
+        }, function () {
+            console.log('Anulowano');
+        });
+    };
+
+    $scope.editNameTeamClient = function (account) {
+        $rootScope.titleModal = 'Edycja TOK-u';
+        $rootScope.edit.update = '';
+
+        var modalInstance = $uibModal.open({
+            templateUrl: 'updateDataAccount.html',
+            controller: 'ModalInstanceCtrl',
+            controllerAs: '$ctrl',
+            resolve: {
+                entity: function () {
+                    return account;
+                }
+            }
+        });
+
+        modalInstance.result.then(function (selectedItem) {
+            selectedItem.nameTeam = $rootScope.edit.update;
+            $scope.editClient(selectedItem);
+        }, function () {
+            console.log('Anulowano');
+        });
+    };
+
+    $scope.editClient = function (account) {
+
+        $http({
+            method: 'POST',
+            url: HOST + '/edit_client',
+            data: account,
+            headers: {'Content-type': 'application/json'}
+        }).then(function successCallback(response) {
+
+            $rootScope.titleModal = 'Edycja klienta';
+            $rootScope.responseModalBody = 'Wartość pola klienta "'+account.name+'" została zautkualizowana pomyślnie.';
+
+            var modalInstance = $uibModal.open({
+                templateUrl: 'updateResponseFromServer.html',
+                controller: 'ModalInstanceCtrl',
+                controllerAs: '$ctrl',
+                resolve: {
+                    entity: function () {
+                        return account;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (selectedItem) {
+            }, function () {
+                console.log('Anulowano');
+            });
+            $scope.reloadRoute();
+
+        }, function errorCallback(response) {
+            $rootScope.titleModal = 'Błąd edycji';
+
+            if (angular.equals(response.data.errorCode, 'NUMBER_ALREADY_EXISTS')) {
+                $rootScope.responseModalBody = 'Podany numer klienta jest już zajęty.';
+
+            } else if (angular.equals(response.data.errorCode, 'TEAM_NOT_FOUND_TEAM')) {
+                $rootScope.responseModalBody = 'Podany TOK nie istnieje.';
+            } else {
+                $rootScope.responseModalBody = 'Sprawdź połączenie z internetem lub skontaktuj się z administratorem.';
+            }
+
+            var modalInstance = $uibModal.open({
+                templateUrl: 'updateResponseFromServer.html',
+                controller: 'ModalInstanceCtrl',
+                controllerAs: '$ctrl',
+                resolve: {
+                    entity: function () {
+                        return account;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (selectedItem) {
+            }, function () {
+                console.log('Anulowano');
+            });
+            $scope.reloadRoute();
+        });
     };
 
 }]);

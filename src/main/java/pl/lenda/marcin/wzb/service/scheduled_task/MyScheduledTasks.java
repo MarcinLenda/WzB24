@@ -1,22 +1,23 @@
 //package pl.lenda.marcin.wzb.service.scheduled_task;
 //
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.scheduling.annotation.Scheduled;
-//import org.springframework.stereotype.Component;
-//import pl.lenda.marcin.wzb.entity.DocumentWz;
-//import pl.lenda.marcin.wzb.entity.Mail;
-//import pl.lenda.marcin.wzb.entity.TraderAccount;
-//import pl.lenda.marcin.wzb.entity.UserAccount;
-//import pl.lenda.marcin.wzb.service.document_wz.DocumentWzService;
-//import pl.lenda.marcin.wzb.service.mail.MailService;
-//import pl.lenda.marcin.wzb.service.trader.TraderService;
-//import pl.lenda.marcin.wzb.service.user_account.UserAccountService;
+//        import org.springframework.beans.factory.annotation.Autowired;
+//        import org.springframework.scheduling.annotation.Scheduled;
+//        import org.springframework.stereotype.Component;
+//        import pl.lenda.marcin.wzb.entity.DocumentWz;
+//        import pl.lenda.marcin.wzb.entity.Mail;
+//        import pl.lenda.marcin.wzb.entity.TraderAccount;
+//        import pl.lenda.marcin.wzb.entity.UserAccount;
+//        import pl.lenda.marcin.wzb.service.document_wz.DocumentWzService;
+//        import pl.lenda.marcin.wzb.service.mail.MailService;
+//        import pl.lenda.marcin.wzb.service.trader.TraderService;
+//        import pl.lenda.marcin.wzb.service.user_account.UserAccountService;
 //
-//import javax.mail.MessagingException;
-//import java.text.SimpleDateFormat;
-//import java.util.ArrayList;
-//import java.util.Date;
-//import java.util.List;
+//        import javax.mail.MessagingException;
+//        import java.text.SimpleDateFormat;
+//        import java.util.ArrayList;
+//        import java.util.Date;
+//        import java.util.List;
+//        import java.util.Optional;
 //
 ///**
 // * Created by Promar on 04.11.2016.
@@ -50,10 +51,11 @@
 //        List<TraderAccount> traderAccounts = new ArrayList<>();
 //        for (UserAccount user : userAccounts) {
 //
+//            Optional<TraderAccount> traderAccount = traderService.findByNumberTrader(user.getNumberUser());
 //
-//            if (traderService.findByTraderSurnameAndNumber(user.getSurname(), user.getNumberUser()) != null) {
-//                traderAccounts.add(traderService.findByTraderSurnameAndNumber(user.getSurname(), user.getNumberUser()));
-//                System.out.println("Znalazłem handlowca: "+traderService.findByTraderSurnameAndNumber(user.getSurname(), user.getNumberUser()));
+//            if (traderAccount.isPresent()) {
+//                traderAccounts.add(traderAccount.get());
+//                System.out.println("Znalazłem handlowca: "+traderAccount);
 //            }
 //        }
 //        System.out.println(traderAccounts.toString());
@@ -245,11 +247,10 @@
 //                    mail.setSubject("Nieodebrane dokumenty WZ:"+howManyDocumentsToSend + " " +traderAccounts.get(i).getName() +" "
 //                            + traderAccounts.get(i).getSurname().toString());
 //                    mail.setContent(content);
-//                    String to = userAccountService.findByNameAndSurname(traderAccounts.get(i).getName(),
-//                            traderAccounts.get(i).getSurname()).getUsername();
+//                    String to = userAccountService.findByNumberUser(traderAccounts.get(i).getNumberTrader()).getUsername();
 //                    System.out.println("Wiadomosc ma zostac wyslana do: "+to);
 //                    mail.setFrom("wzbims@gmail.com");
-//                    mailService.mailSend(to, mail.getFrom(), mail.getSubject(), mail.getContent());
+//                    mailService.mailSend("777marcinlenda777@gmail.com", mail.getFrom(), mail.getSubject(), mail.getContent());
 //                }
 //                documentsWZ.clear();
 //                content = "";

@@ -20,8 +20,6 @@
     <link href="css/tablesort.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
     <link href="bower_components/bower_components/angucomplete-alt/angucomplete-alt.css">
-    <link href="bower_components/ng-dialog/css/ngDialog.css" rel="stylesheet">
-    <link href="bower_components/ng-dialog/css/ngDialog-theme-default.css" rel="stylesheet">
     <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.css">
     <link href="https://fonts.googleapis.com/css?family=Libre+Baskerville" rel="stylesheet">
 
@@ -62,7 +60,7 @@
                 <span class="icon-bar"></span>
             </button>
             <a ng-show="authenticated" class="navbar-brand page-scroll" href="#/home"><img src="images/5wzb24.png" alt="WzB"></a>
-            <img ng-show="authenticated" src="images/fsign.gif" alt="HTML5 Icon" style="width:78px;height:78px;">
+
         </div>
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" ng-controller="LoginCtrl">
@@ -144,7 +142,7 @@
     ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
 
-<script src="bower_components/bower_components/fusioncharts/fusioncharts.js"></script>
+
 <script src="https://code.angularjs.org/1.4.0-beta.5/i18n/angular-locale_pl-pl.js"></script>
 <script src="js/library/bower_components/angular-tablesort/js/angular-tablesort.js"></script>
 
@@ -168,27 +166,21 @@
 <script src="bower_components/moment/min/moment.min.js"></script>
 <script src="bower_components/moment/min/locales.min.js"></script>
 <script src="bower_components/humanize-duration/humanize-duration.js"></script>
-<script src="bower_components/ng-dialog/js/ngDialog.min.js"></script>
 <script src="bower_components/bower_components/angucomplete-alt/dist/angucomplete-alt.min.js"></script>
-
-<script src="bower_components/bower_components/fusioncharts/angular-fusioncharts.js"></script>
-<script src="bower_components/bower_components/fusioncharts/themes/fusioncharts.theme.ocean.js"></script>
-<script src="bower_components/bower_components/fusioncharts/themes/fusioncharts.theme.carbon.js"></script>
-<script src="bower_components/bower_components/fusioncharts/themes/fusioncharts.theme.fint.js"></script>
-<script src="bower_components/bower_components/fusioncharts/themes/fusioncharts.theme.zune.js"></script>
 <script src="bower_components/angular-file-upload/dist/angular-file-upload.js"></script>
+<script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
+<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
 
 
 <script src="js/App.js"></script>
 <script src="js/controller/AddDocumentController.js"></script>
 <script src="js/controller/MainControllerController.js"></script>
-<script src="js/controller/FindDocumentController.js"></script>
-<script src="js/controller/ShowAllDocumentsController.js"></script>
+<script src="js/controller/DocumentWzCtrl.js"></script>
 <script src="js/controller/ClientController.js"></script>
 <script src="js/controller/TraderController.js"></script>
 <script src="js/controller/AdminController.js"></script>
 <script src="js/controller/LoginController.js"></script>
-<script src="js/controller/Main_Account_Controller.js"></script>
+<script src="js/controller/ManagementAccountsCtrl.js"></script>
 <script src="js/controller/UserAccount.js"></script>
 <script src="js/controller/HistoryCtrl.js"></script>
 <script src="js/controller/ItemsCtrl.js"></script>
@@ -204,11 +196,52 @@
 <script src="js/directive/ConfirmDelete.js"></script>
 <script src="js/service/DocumentService.js"></script>
 <script src="js/service/ItemsService.js"></script>
-<script src="js/controller/StatisticsCtrl.js"></script>
 <script src="js/controller/UploadController.js"></script>
 
 <script src="js/config.js"></script>
 
+
+
+
+<script type="text/ng-template" id="updateDataAccount.html">
+    <div class="modal-header">
+        <h3 class="modal-title">{{titleModal}}</h3>
+    </div>
+    <div class="modal-body">
+        <input style="background-color: #e7e7e7; color:black;" type="text" name="name" ng-model="edit.update"
+               placeholder="Wprowadź nową wartość" required>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" type="button" ng-click="editDataAccount(); $ctrl.ok()">OK</button>
+        <button class="btn btn-warning" type="button" ng-click="$ctrl.cancel()">Cancel</button>
+    </div>
+</script>
+
+<script type="text/ng-template" id="updateResponseFromServer.html">
+    <div class="modal-header">
+        <h3 class="modal-title" style="text-align: center;">{{titleModal}}</h3>
+    </div>
+    <div class="modal-body">
+        {{responseModalBody}}
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" type="button" ng-click="editDataAccount(); $ctrl.ok()">OK</button>
+    </div>
+</script>
+
+<script type="text/ng-template" id="modalQuestion.html">
+    <div class="modal-header">
+        <h3 class="modal-title" style="text-align: center;">{{titleModal}}</h3>
+    </div>
+    <div class="modal-body">
+        {{responseModalBody}}
+    </div>
+    <div class="modal-footer">
+        <button ng-show="orAdmin" class="btn btn-primary" type="button" ng-click="$ctrl.ok()">Tak</button>
+        <button ng-show="orUser" class="btn btn-primary" type="button" ng-click="$ctrl.ok()">Tak</button>
+        <button class="btn btn-warning" type="button" ng-click="$ctrl.cancel()">Nie</button>
+    </div>
+</script>
 
 </body>
 

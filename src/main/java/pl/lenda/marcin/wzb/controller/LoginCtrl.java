@@ -21,7 +21,6 @@ import pl.lenda.marcin.wzb.service.user_account.UserAccountService;
 public class LoginCtrl {
 
 
-    //a
     @Autowired
     UserAccountService userAccountService;
     @Autowired
@@ -38,7 +37,7 @@ public class LoginCtrl {
     public ResponseEntity<UserAccountDto> success() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserAccount userAccount = userAccountService.findByUsername(authentication.getName());
-        UserAccountDto userAccountDto = convertTo.converToUserAccountDto(userAccount);
+        UserAccountDto userAccountDto = convertTo.convertToUserAccountDto(userAccount);
         return ResponseEntity.status(HttpStatus.OK).body(userAccountDto);
     }
 }

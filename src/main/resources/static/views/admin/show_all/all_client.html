@@ -3,6 +3,9 @@
         <div class="intro-text">
 
             <div class="intro-heading">Klienci</div>
+            <div style="margin: 0 auto;">
+                <input style="font-size: 20px;" type="text" ng-model="search.$" placeholder="Jakiego klienta szukasz...">
+            </div>
             <div id="showDocument">
                 <table class="table" ts-wrapper>
                     <thead>
@@ -15,12 +18,12 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="client in clients" ts-repeat>
-                        <td>{{client.name}}</td>
-                        <td>{{client.numberClient}}</td>
-                        <td>{{client.nameTeam}}</td>
+                    <tr ng-repeat="client in clients | filter:search" ts-repeat>
+                        <td ng-click="editNameClient(client)">{{client.name}}</td>
+                        <td ng-click="editNumberClient(client)">{{client.numberClient}}</td>
+                        <td ng-click="editNameTeamClient(client)">{{client.nameTeam}}</td>
                         <td class="active_account"><input style="background-color:rgb(221,44,0);width: 95px;" class="adminSubmit" type="submit" value="Usuń"
-                                                          ng-click="editData.accounts = client; deleteClient();">
+                                                          ng-click="deleteClient(client)">
                         </td>
                     </tr>
                     </tbody>

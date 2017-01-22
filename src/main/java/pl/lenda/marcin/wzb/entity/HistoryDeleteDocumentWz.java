@@ -3,6 +3,7 @@ package pl.lenda.marcin.wzb.entity;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.Instant;
 import java.util.Date;
 
 /**
@@ -74,6 +75,10 @@ public class HistoryDeleteDocumentWz {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public void setDate(Instant date) {
+        this.date = Date.from(date);
     }
 
     public String getUser() {

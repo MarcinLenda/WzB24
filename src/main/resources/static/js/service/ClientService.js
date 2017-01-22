@@ -2,92 +2,69 @@
  * Created by Promar on 03.11.2016.
  */
 
-app.service('ClientService', function ($rootScope, $http, ngDialog, HOST) {
+app.service('ClientService', function ($rootScope, $http, $route, $uibModal, HOST) {
 
-    $rootScope.responseFromServer = '';
+
+
+    $rootScope.reloadRoute = function () {
+        $route.reload();
+    };
 
     this.addClient = function (name, numberClient, nameTeam, abbreviationNameClient) {
 
         $http({
-            method: 'POST',
-            url: HOST + '/save_client',
-            data: {
-                "name": name,
-                "numberClient": numberClient,
-                "nameTeam": nameTeam,
-                "abbreviationName": abbreviationNameClient
-            },
-            headers: {'Content-type': 'application/json'}
-        })
-            .success(function (data) {
-                $rootScope.success = data.Success;
-                $rootScope.error = data.Error;
-                $rootScope.responseList = data;
+        method: 'POST',
+        url: HOST + '/save_client',
+        data: {
+            "name": name,
+            "numberClient": numberClient,
+            "nameTeam": nameTeam,
+            "abbreviationName": abbreviationNameClient
+        },
+        headers: {'Content-type': 'application/json'}
+    })
+        .then(function successCallback(response) {
+                $rootScope.titleModal = 'Dodano klienta ';
+                $rootScope.responseModalBody = 'Klient: '+ name +' został dodany do bazy danych. ';
 
+                var modalInstance = $uibModal.open({
+                    templateUrl: 'updateResponseFromServer.html',
+                    controller: 'ModalInstanceCtrl2',
+                    controllerAs: '$ctrl'
 
-                    angular.forEach($rootScope.responseList, function (value, key) {
+                });
 
-                      $rootScope.name = value.name;
+                modalInstance.result.then(function (selectedItem) {
+                }, function () {
+                    console.log('Anulowano');
+                });
+                $rootScope.reloadRoute();
 
-                    });
+            }, function errorCallback(response) {
 
-                if ($rootScope.error == 'ExistsClient') {
-                    $rootScope.success = '';
-                    $rootScope.error =  '';
-                    ngDialog.open({
-                        template: 'errorClient',
-                        controller: 'ClientOperation',
-                        className: 'ngdialog-theme-default'
-                    });
-
-                } else if ($rootScope.error == 'ExistsClientNr') {
-                    $rootScope.success = '';
-                    $rootScope.error =  '';
-                    ngDialog.open({
-                        template: 'errorClientNumber',
-                        controller: 'ClientOperation',
-                        className: 'ngdialog-theme-default'
-                    });
-                } else if ($rootScope.error == 'NumberLength'){
-                    $rootScope.success = '';
-                    $rootScope.error =  '';
-                    ngDialog.open({
-                        template: 'errorClientNumberLength',
-                        controller: 'ClientOperation',
-                        className: 'ngdialog-theme-default'
-                    });
-                } else if($rootScope.error == 'ExistsAbbreviation'){
-                    $rootScope.success = '';
-                    $rootScope.error =  '';
-                    ngDialog.open({
-                        template: 'errorExistsAbbreviation',
-                        controller: 'ClientOperation',
-                        className: 'ngdialog-theme-default'
-                    });
-                } else {
-                    $rootScope.success = '';
-                    $rootScope.error =  '';
-                    $rootScope.responseFromServer = 'Dodałeś pomyślnie klienta o naziwe: ' + $rootScope.name;
-                    ngDialog.open({
-                        template: 'addClient',
-                        controller: 'ClientOperation',
-                        className: 'ngdialog-theme-default'
-                    });
+                $rootScope.titleModal = 'Błąd dodawania';
+                if(angular.equals(response.data.errorCode, 'CLIENT_ALREADY_EXISTS')) {
+                    $rootScope.responseModalBody = 'Klient "'+name+'" istnieje. Podany skrót lub numer klienta istnieje już w bazie danych.';
+                }else{
+                    $rootScope.responseModalBody = 'Sprawdź połączenie z internetem lub spróbuj później.';
                 }
+                var modalInstance = $uibModal.open({
+                    templateUrl: 'updateResponseFromServer.html',
+                    controller: 'ModalInstanceCtrl2',
+                    controllerAs: '$ctrl'
+
+                });
+
+                modalInstance.result.then(function (selectedItem) {
+                }, function () {
+                    console.log('Anulowano');
+                });
 
 
-            }).error(function (data) {
-
-            ngDialog.open({
-                template: 'errorAddClient',
-                controller: 'ClientOperation',
-                className: 'ngdialog-theme-default'
             });
+};
 
-        });
-    };
-
-    this.deleteClient = function (name, numberClient) {
+    this.deleteClient = function (numberClient ,name) {
 
         $http({
             method: 'DELETE',
@@ -95,27 +72,51 @@ app.service('ClientService', function ($rootScope, $http, ngDialog, HOST) {
             data:
             {
                 "name":name,
-                "number": numberClient
+                "numberClient": numberClient
             },
             headers: {'Content-type': 'application/json'}
         })
-            .success(function (data) {
+            .then(function successCallback(response) {
+                $rootScope.titleModal = 'Usunięto klienta ';
+                $rootScope.responseModalBody = 'Klient: "'+ name +'" został usnięty z bazy danych. ';
 
-                    ngDialog.open({
-                        template: 'DeleteClientInfo',
-                        controller: 'ClientOperation',
-                        className: 'ngdialog-theme-default'
-                    });
+                var modalInstance = $uibModal.open({
+                    templateUrl: 'updateResponseFromServer.html',
+                    controller: 'ModalInstanceCtrl2',
+                    controllerAs: '$ctrl'
+
+                });
+
+                modalInstance.result.then(function (selectedItem) {
+                }, function () {
+                    console.log('Anulowano');
+                });
+                $rootScope.reloadRoute();
+
+            }, function errorCallback(response) {
+
+                if(angular.equals(response.data.errorCode, 'CLIENT_HAS_DOCUMENT')) {
+                        $rootScope.titleModal = 'Błąd usuwania ';
+                        $rootScope.responseModalBody = 'Do podanego klienta istnieją przypisane dokumentu WZ w bazie danych.' +
+                            ' Usunięcie klienta jest niemożliwe. ';
+                }else{
+                    $rootScope.titleModal = 'Błąd usuwania ';
+                    $rootScope.responseModalBody = 'Klient nie został usunięty. Sprawdź połączenie z internetem lub' +
+                        'skontaktuj się administratorem.';
                 }
-            ).error(function (data) {
+                var modalInstance = $uibModal.open({
+                    templateUrl: 'updateResponseFromServer.html',
+                    controller: 'ModalInstanceCtrl2',
+                    controllerAs: '$ctrl'
 
-            ngDialog.open({
-                template: 'errorAddTrader',
-                controller: 'ClientOperation',
-                className: 'ngdialog-theme-default'
+                });
+
+                modalInstance.result.then(function (selectedItem) {
+                }, function () {
+                    console.log('Anulowano');
+                });
+                $rootScope.reloadRoute();
+
             });
-
-        });
-
     };
 });

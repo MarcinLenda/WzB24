@@ -2,7 +2,10 @@
  * Created by Promar on 06.11.2016.
  */
 
+
+
 app.controller('RegisterCtrl', function ($scope, $http, $location, HOST) {
+
 
     $scope.registerResponse = {};
 
@@ -12,78 +15,56 @@ app.controller('RegisterCtrl', function ($scope, $http, $location, HOST) {
     $scope.userAlreadyExists = false;
     $scope.numberAlreadyExists = false;
     $scope.wrongPass = false;
-    $scope.numberStart0= false;
+    $scope.numberStart0 = false;
 
     $scope.registerUser = function () {
 
-        $http({
-            method: 'POST',
-            url: HOST + '/myAccount/create_account',
-            data: {
-                "username": $scope.register.email,
-                "password": $scope.register.password,
-                "confirmPassword": $scope.register.passwordConfirm,
-                "name": $scope.register.name,
-                "surname": $scope.register.surname,
-                "numberUser": $scope.register.number
+        if($scope.register.number.indexOf(0) == -1 && $scope.register.password == $scope.register.passwordConfirm) {
 
-            },
-            headers: {'Content-type': 'application/json'}
-        })
-            .success(function (data) {
-                $scope.success = data.Success;
-                $scope.error = data.Error;
-                $scope.listError = data;
+            $http({
+                method: 'POST',
+                url: HOST + '/myAccount/create_account',
+                data: {
+                    "username": $scope.register.email,
+                    "password": $scope.register.password,
+                    "confirmPassword": $scope.register.passwordConfirm,
+                    "name": $scope.register.name,
+                    "surname": $scope.register.surname,
+                    "numberUser": $scope.register.number
+
+                },
+                headers: {'Content-type': 'application/json'}
+            }).then(function successCallback(response) {
+
+                $location.path("/after_register");
 
 
 
-                if ($scope.error == 'ExistsUser') {
-
-                    angular.forEach($scope.listError, function (value, key) {
-                        $scope.userAlreadyExists = false;
-                        $scope.numberAlreadyExisits = false;
-                        $scope.wrongPass = false;
-                        $scope.numberStart0= false;
-                        $scope.reponseError = false;
-                        if (value == 'ExistsUser') {
-                            $scope.userAlreadyExists = true;
-                            $scope.reponseError = true;
-                        }
-
-                    });
-               }
-                if ($scope.error == 'WrongPass') {
-                    $scope.wrongPass = true;
-                    $scope.reponseError = true;
+            }, function errorCallback(response) {
+                if ('USERNAME_ALREADY_EXISTS' == response.data.errorCode) {
+                    $scope.userAlreadyExists = true;
                     $scope.numberAlreadyExists = false;
+                    $scope.reponseError = true;
+                    $scope.numberStart0 = false;
+                    $scope.wrongPass = false;
+                }
+
+                if ('NUMBER_EMPLOYEE_EXISTS' == response.data.errorCode) {
                     $scope.userAlreadyExists = false;
-                    $scope.numberStart0= false;
-                }
-
-                if ($scope.error == 'ExistsNumber') {
                     $scope.numberAlreadyExists = true;
-                    $scope.userAlreadyExisits = false;
-                    $scope.wrongPass = false;
-                    $scope.numberStart0= false;
                     $scope.reponseError = true;
-                }
-
-                if ($scope.error == 'Start_with_0') {
-                    $scope.numberAlreadyExists = false;
-                    $scope.userAlreadyExisits = false;
+                    $scope.numberStart0 = false;
                     $scope.wrongPass = false;
-                    $scope.numberStart0= true;
-                    $scope.reponseError = true;                }
-
-                if ($scope.success == 'Create') {
-                    $location.path("/after_register");
-
                 }
 
-            }).error(function (data) {
-            $scope.showError.push("Problem połączenia z serwerem.");
-
-        });
+            });
+        }else if($scope.register.number.indexOf(0) == 0){
+            $scope.wrongPass = false;
+            $scope.numberStart0 = true;
+        }else{
+            $scope.wrongPass = true;
+            $scope.numberStart0 = false;
+        }
     }
 })
     .config(function ($mdThemingProvider) {

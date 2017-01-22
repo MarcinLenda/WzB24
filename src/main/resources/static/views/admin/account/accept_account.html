@@ -29,7 +29,7 @@
                             Zatwierdź</th>
                         <th>
                             <md-icon md-svg-src='images/icons/role.svg' style="color: #e7e7e7;"></md-icon>
-                            Uprawnienia
+                            Usuwanie konta
                         </th>
 
                     </tr>
@@ -40,11 +40,11 @@
                         <td>{{account.name}}</td>
                         <td>{{account.surname}}</td>
                         <td>{{account.numberUser}}</td>
-                        <td class="active_account"><input class="adminSubmit" type="submit" value="Aktywuj konto"
-                                                          ng-click="editData.accounts = account; activeAccount();">
-                        <td ng-show="account.role=='USER'" class="active_account"><input class="adminSubmit"
-                                                                                         type="submit" value="Podnieś"
-                                                                                         ng-click="editData.accounts = account; giveRoleAdmin();">
+                        <td class="active_account" ><input class="button_management" type="submit" value="Aktywuj konto"
+                                                          ng-click="activeThisAccount(account)">
+                        <td ng-show="account.role=='USER'"><input style="background-color: rgb(221,44,0);;" class="button_management"
+                                                                                         type="submit" value="Usuń"
+                                                                                         ng-click="deleteAccount(account)">
                         </td>
                         <td style="color:rgb(221,44,0);" ng-show="account.role=='ADMIN'"><b>ADMIN</b></td>
                     </tr>
@@ -58,24 +58,6 @@
             </div>
 
         </div>
-        <script type="text/ng-template" id="Active">
-            <h1>Aktywować konto?</h1>
-            <input class="submitConfirmDialog" type="submit" value="Tak"
-                   ng-click="closeThisDialog(0); activeThisAccount(); ">
-            <input class="submitDelete" type="submit" value="Nie" ng-click="closeThisDialog(0)">
-        </script>
-        <script type="text/ng-template" id="Admin">
-            <h1>Czy nadać uprawnienia administratora?</h1>
-            <input class="submitConfirmDialog" type="submit" value="Tak"
-                   ng-click="closeThisDialog(0); confirmGiveRoleAdmin();">
-            <input class="submitDelete" type="submit" value="Nie" ng-click="closeThisDialog(0)">
-        </script>
-        <script type="text/ng-template" id="successActiveAccount">
-            <h1>Aktywacja zakończona sukcesem!</h1>
-            <input style="background-color: #23AD21;" class="submitSuccess" type="submit" value="Aktywowano konto!"
-                   ng-click="reloadRoute(); closeThisDialog(0);">
-
-        </script>
 
     </div>
 </div>

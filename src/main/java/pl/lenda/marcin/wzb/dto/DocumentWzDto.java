@@ -11,15 +11,14 @@ import java.util.Date;
 
 public class DocumentWzDto {
 
-
-    @NotNull(message = "nie moze byc puste")
+    @NotNull
     private String numberWZ;
-
-    @NotNull(message = "nie moze byc subprocess")
+    @NotNull
     private String subProcess;
-
-    @NotNull(message = "nie moze byc client")
+    @NotNull
     private String client;
+    @NotNull
+    private String traderName;
 
     private String clientNumber;
 
@@ -27,8 +26,7 @@ public class DocumentWzDto {
 
     private String nameTeam;
 
-    private String traderName;
-
+    @NotNull
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private Date date;
 

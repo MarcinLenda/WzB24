@@ -3,6 +3,7 @@ package pl.lenda.marcin.wzb.service.document_wz;
 import pl.lenda.marcin.wzb.entity.DocumentWz;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by Promar on 28.10.2016.
@@ -11,7 +12,7 @@ public interface DocumentWzService {
 
     DocumentWz createDocumentWz(DocumentWz documentWz);
 
-    DocumentWz findByNumberWZAndSubProcess(String numberWZ, String subProcess);
+    Optional<DocumentWz> findByNumberWZAndSubProcess(String numberWZ, String subProcess);
 
     List<DocumentWz> findByAbbreviationName(String abbreviationName);
 

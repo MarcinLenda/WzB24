@@ -19,7 +19,7 @@ public class UserAccountDto {
     private String confirmPassword;
     @NotNull
     private String numberUser;
-    @NotNull
+
     private String nameTeam;
 
     private String role;

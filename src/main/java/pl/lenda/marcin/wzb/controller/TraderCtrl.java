@@ -7,14 +7,14 @@ import pl.lenda.marcin.wzb.dto.FindTraderAccount;
 import pl.lenda.marcin.wzb.dto.TraderAccountDto;
 import pl.lenda.marcin.wzb.dto.TraderToDeleteDto;
 import pl.lenda.marcin.wzb.entity.TraderAccount;
-import pl.lenda.marcin.wzb.repository.TraderAccountRepository;
 import pl.lenda.marcin.wzb.service.convert_class.ConvertTo;
 import pl.lenda.marcin.wzb.service.trader.TraderService;
+import pl.lenda.marcin.wzb.service.validate.ValidateTrader;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Created by Promar on 03.11.2016.
@@ -22,50 +22,39 @@ import java.util.Map;
 @RestController
 public class TraderCtrl {
 
-    private final Map<String, Object> response = new LinkedHashMap<>();
+
 
     @Autowired
     private TraderService traderService;
     @Autowired
-    private ConvertTo convertTo;
+    private ValidateTrader validateTrader;
     @Autowired
-    private TraderAccountRepository traderAccountRepository;
+    private ConvertTo convertTo;
+
 
 
     @CrossOrigin(origins = "http://wzb24.pl")
     @Secured("ROLE_ADMIN")
     @RequestMapping(value = "/save_trader", method = RequestMethod.POST)
-    public Map<String, Object> saveTrader(@RequestBody TraderAccountDto traderAccountDto){
-        response.clear();
-        if(traderService.findByTraderSurnameAndNumber(traderAccountDto.getSurname(),
-                traderAccountDto.getNumberTrader())!= null){
-            response.put("Error", "ExistsTrader");
-            return response;
-        }else if(traderService.findByNumberTrader(traderAccountDto.getNumberTrader()) != null){
-            response.put("Error", "ExistsTrader");
-            return response;
-        }
-
-        else{
-            traderService.createTrader(convertTo.convertToTraderEntity(traderAccountDto));
-            response.put("Success", traderAccountDto);
-            return response;
-        }
+    public void saveTrader(@RequestBody @Valid TraderAccountDto traderAccountDto){
+        traderService.createTrader(validateTrader.traderValidate(traderAccountDto));
     }
 
     @CrossOrigin(origins = "http://wzb24.pl")
     @RequestMapping(value = "/all_trader", method = RequestMethod.GET)
-    public List<TraderAccount> findAllTrader(){
-        List listTrader = new ArrayList();
-        return listTrader = traderService.findAllTrader();
+    public List<TraderAccountDto> findAllTrader(){
+        return traderService.findAllTrader()
+                .stream()
+                .map(traderAccountDto -> convertTo.converToTraderDto(traderAccountDto))
+                .collect(Collectors.toList());
     }
 
     @CrossOrigin(origins = "http://wzb24.pl")
     @RequestMapping(value = "/find_trader", method = RequestMethod.POST)
-    public TraderAccount findTrader(@RequestBody FindTraderAccount findTraderAccount){
-        TraderAccount traderAccount = traderService.findByTraderSurnameAndNumber(
+    public TraderAccountDto findTrader(@RequestBody FindTraderAccount findTraderAccount){
+        Optional<TraderAccount> traderAccount = traderService.findByTraderSurnameAndNumber(
                 findTraderAccount.getSurname(), findTraderAccount.getNumberTrader());
-        return traderAccount;
+        return convertTo.converToTraderDto(traderAccount.get());
     }
 
 
@@ -73,9 +62,17 @@ public class TraderCtrl {
     @Secured("ROLE_ADMIN")
     @RequestMapping(value = "/delete_trader", method = RequestMethod.DELETE)
     public void deleteTraderAccount(@RequestBody TraderToDeleteDto traderToDeleteDto){
-        TraderAccount traderAccount = traderService.findByTraderSurnameAndNumber(traderToDeleteDto.getSurname(),
-                traderToDeleteDto.getNumberTrader());
+        traderService
+                .findByNumberTrader(traderToDeleteDto.getNumberTrader())
+                .ifPresent(traderAccount -> traderService.deleteTrader(traderAccount));
+    }
 
-        traderService.deleteTrader(traderAccount);
+
+    @CrossOrigin(origins = "http://wzb24.pl")
+    @Secured("ROLE_ADMIN")
+    @RequestMapping(value = "/edit_trader", method = RequestMethod.POST)
+    public void editTrader(@RequestBody TraderAccountDto traderAccountDto){
+        TraderAccount traderAccount = traderService.findByNumberTrader(traderAccountDto.getNumberTrader()).get();
+        traderService.createTrader(validateTrader.traderAccountDataCheck(traderAccount, traderAccountDto));
     }
 }

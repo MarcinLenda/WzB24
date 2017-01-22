@@ -49,7 +49,7 @@ public class MongoUserDetailsService implements UserDetailsService {
                 List<HistoryLoggedAppIn> historyLoggedAppIn = historyLoggedInService.findByUsername(userDetails.getUsername());
                 whoLogged.setHowManyTimesLoggedIn(historyLoggedAppIn.size() +1);
             } else {
-                whoLogged.setHowManyTimesLoggedIn(whoLogged.getHowManyTimesLoggedIn() + 1);
+                whoLogged.setHowManyTimesLoggedIn(1);
 
             }
 

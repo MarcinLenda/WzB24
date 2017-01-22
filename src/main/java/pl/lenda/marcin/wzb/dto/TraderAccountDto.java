@@ -1,26 +1,31 @@
 package pl.lenda.marcin.wzb.dto;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * Created by Promar on 03.11.2016.
  */
 public class TraderAccountDto {
-
+    @NotNull
     private String name;
-
+    @NotNull
     private String surname;
-
+    @NotNull
     private String nameTeam;
-
+    @NotNull
     private String numberTrader;
+
+    private String newNumberTrader;
 
     public TraderAccountDto(){
     }
 
-    public TraderAccountDto(String name, String surname, String nameTeam, String numberTrader) {
+    public TraderAccountDto(String name, String surname, String nameTeam, String numberTrader, String newNumberTrader) {
         this.name = name;
         this.surname = surname;
         this.nameTeam = nameTeam;
         this.numberTrader = numberTrader;
+        this.newNumberTrader = newNumberTrader;
     }
 
     public String getName() {
@@ -55,12 +60,11 @@ public class TraderAccountDto {
         this.numberTrader = numberTrader;
     }
 
-    @Override
-    public String toString() {
-        return "TraderAccountDto{" +
-                "name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", nameTeam='" + nameTeam + '\'' +
-                '}';
+    public String getNewNumberTrader() {
+        return newNumberTrader;
+    }
+
+    public void setNewNumberTrader(String newNumberTrader) {
+        this.newNumberTrader = newNumberTrader;
     }
 }

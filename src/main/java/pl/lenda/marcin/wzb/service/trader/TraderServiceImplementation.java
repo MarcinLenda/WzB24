@@ -6,6 +6,7 @@ import pl.lenda.marcin.wzb.entity.TraderAccount;
 import pl.lenda.marcin.wzb.repository.TraderAccountRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by Promar on 03.11.2016.
@@ -28,7 +29,7 @@ public class TraderServiceImplementation implements TraderService {
     }
 
     @Override
-    public TraderAccount findByTraderSurnameAndNumber(String surname, String numberTrader) {
+    public Optional<TraderAccount> findByTraderSurnameAndNumber(String surname, String numberTrader) {
         return traderAccountRepository.findBySurnameAndNumberTrader(surname, numberTrader);
     }
 
@@ -38,7 +39,7 @@ public class TraderServiceImplementation implements TraderService {
     }
 
     @Override
-    public TraderAccount findByNumberTrader(String numberTrader) {
+    public Optional<TraderAccount> findByNumberTrader(String numberTrader) {
         return traderAccountRepository.findByNumberTrader(numberTrader);
     }
 

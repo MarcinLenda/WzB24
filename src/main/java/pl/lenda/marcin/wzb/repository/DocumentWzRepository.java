@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import pl.lenda.marcin.wzb.entity.DocumentWz;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by Promar on 09.10.2016.
@@ -12,7 +13,7 @@ import java.util.List;
 @Repository
 public interface DocumentWzRepository extends MongoRepository<DocumentWz, String> {
 
-    DocumentWz findByNumberWZAndSubProcess(String numberWZ, String subProcess);
+    Optional<DocumentWz> findByNumberWZAndSubProcess(String numberWZ, String subProcess);
 
     List<DocumentWz> findByClientIgnoreCase(String client);
 

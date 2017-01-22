@@ -7,9 +7,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.lenda.marcin.wzb.dto.ChangePasswordDto;
+import pl.lenda.marcin.wzb.dto.UserAccountActiveOrRemoveDto;
 import pl.lenda.marcin.wzb.entity.UserAccount;
 import pl.lenda.marcin.wzb.repository.UserAccountRepository;
+import pl.lenda.marcin.wzb.service.mail.MailService;
 
+import javax.mail.MessagingException;
 import java.util.Collection;
 import java.util.List;
 
@@ -23,6 +26,8 @@ public class UserAccountImplementation implements UserAccountService{
     UserAccountRepository userAccountRepository;
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Autowired
+    MailService mailService;
 
     @Override
     public void registerNewUser(UserAccount newUserAccount) {
@@ -42,6 +47,7 @@ public class UserAccountImplementation implements UserAccountService{
     public UserAccount findByUsername(String username) {
         return userAccountRepository.findByUsername(username);
     }
+
 
     @Override
     public UserAccount editData(UserAccount userAccount) {
@@ -91,8 +97,11 @@ public class UserAccountImplementation implements UserAccountService{
     }
 
     @Override
-    public void makeActiveAccount(UserAccount userAccount) {
-        userAccountRepository.save(userAccount);
+    public void makeActiveAccount(UserAccountActiveOrRemoveDto userAccount) throws MessagingException {
+        UserAccount userAccountSearch = userAccountRepository.findByUsername(userAccount.getUsername());
+        userAccountSearch.setActive(true);
+        userAccountRepository.save(userAccountSearch);
+        mailService.mailConfirmAccount(userAccount.getUsername(), userAccountSearch.getName(), userAccountSearch.getSurname(), userAccount.getUsername(), userAccountSearch.getNumberUser());
     }
 
     @Override

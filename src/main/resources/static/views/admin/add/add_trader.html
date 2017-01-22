@@ -5,10 +5,10 @@
             <form id="form" class="topBefore" ng-submit="createTrader()">
                 <h1>Dodwanie handlowca</h1>
 
-                <input name="nameTrader" type="text"    ng-model="form.nameTrader" placeholder="Imię">
-                <input name="surnameTrader" type="text" ng-model="form.surnameTrader" placeholder="Nazwisko" />
-                <input name="numberTrader" type="text" ng-model="form.numberTrader" placeholder="Numer handlowca" />
-                <select ng-model="nameTeam" ng-options="x for x in names | orderBy"></select>
+                <input name="nameTrader" type="text"    ng-model="form.nameTrader" placeholder="Imię" required>
+                <input name="surnameTrader" type="text" ng-model="form.surnameTrader" placeholder="Nazwisko" required>
+                <input name="numberTrader" type="text" ng-model="form.numberTrader" placeholder="Numer handlowca" required>
+                <select ng-model="nameTeam" ng-options="x for x in names | orderBy" required></select>
                 <!--
                 -->
                 <input id="submit" type="submit" value="Dodaj">

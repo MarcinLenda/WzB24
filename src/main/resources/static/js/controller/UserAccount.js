@@ -2,7 +2,7 @@
  * Created by Promar on 10.11.2016.
  */
 
-app.controller('UserAccount', function ($scope, $http, $rootScope, $location, $timeout, documentWZ, ngDialog, HOST) {
+app.controller('UserAccount', function ($scope, $http, $rootScope, $location, $timeout, documentWZ, $uibModal, HOST) {
 
     $scope.username = $rootScope._username;
     $scope.infoUsers = '';
@@ -14,7 +14,6 @@ app.controller('UserAccount', function ($scope, $http, $rootScope, $location, $t
         $scope.showInfo = true;
         $scope.load = false;
     }, 900);
-
 
 
     $scope.isViewLoading = false;
@@ -41,11 +40,6 @@ app.controller('UserAccount', function ($scope, $http, $rootScope, $location, $t
 
 
         }).error(function (data) {
-        ngDialog.open({
-            template: 'errorAccountUser',
-            controller: 'UserAccount',
-            className: 'ngdialog-theme-default'
-        });
 
     });
 
@@ -54,65 +48,67 @@ app.controller('UserAccount', function ($scope, $http, $rootScope, $location, $t
 
         documentWZ.findByTrader($scope.infoUsers.surname);
 
-    }
+    };
 
     $scope.changePassword = function () {
 
-        $http({
-            method: 'POST',
-            url: HOST + '/myAccount/change_password',
-            data: {
-                "oldPassword": $scope.password.old,
-                "newPassword": $scope.password.new,
-                "confirmNewPassword": $scope.password.newConfirm,
-                "username": $scope.username
+        if ($scope.password.new == $scope.password.newConfirm) {
+
+            $http({
+                method: 'POST',
+                url: HOST + '/myAccount/change_password',
+                data: {
+                    "oldPassword": $scope.password.old,
+                    "newPassword": $scope.password.new,
+                    "confirmNewPassword": $scope.password.newConfirm,
+                    "username": $scope.username
 
 
-            },
-            headers: {'Content-type': 'application/json'}
-        })
-            .success(function (data) {
-                $scope.listError = data;
-                $scope.success = data.Success;
-                $scope.error = data.Error;
-                $scope.wrongPass = false;
-                $scope.diffPass = false;
+                },
+                headers: {'Content-type': 'application/json'}
+            }).then(function successCallback(response) {
 
-                if ($scope.success == 'newPass') {
+                $rootScope.titleModal = 'Hasło zmienione';
+                $rootScope.responseModalBody = 'Twoje hasło zostało zmienione. Przy próbie następnego logowania użyj ' +
+                    'nowego hasła.';
 
-                    ngDialog.open({
-                        template: 'successAccountUser',
-                        controller: 'UserAccount',
-                        className: 'ngdialog-theme-default'
-                    });
-                    $location.path("/account");
-                }
-
-                angular.forEach($scope.listError, function (value, key) {
-                    $scope.wrongPass = false;
-                    $scope.diffPass = false;
-
-                    if (value == 'wrongPass') {
-                        $scope.wrongPass = true;
-
-                    } else if (value == 'diffPass') {
-                        $scope.diffPass = true;
-                    }
-
+                var modalInstance = $uibModal.open({
+                    templateUrl: 'updateResponseFromServer.html',
+                    controller: 'ModalInstanceCtrl2',
+                    controllerAs: '$ctrl'
                 });
 
+                modalInstance.result.then(function (selectedItem) {
+                }, function () {
+                    console.log('Anulowano');
+                });
 
-            }).error(function (data) {
+                $location.path("/account");
 
-            ngDialog.open({
-                template: 'errorAccountUser',
-                controller: 'UserAccount',
-                className: 'ngdialog-theme-default'
+
+            }, function errorCallback(response) {
+
+                if ('WRONG_PASSWORD' == response.data.errorCode) {
+                    $scope.wrongPass = true;
+                }
+                $rootScope.titleModal = 'Błąd zmiany hasła';
+                $rootScope.responseModalBody = 'Twoje hasło nie zostało zmienione. Skontaktuj się z administratorem.' +
+                    'nowego hasła.';
+
+                var modalInstance = $uibModal.open({
+                    templateUrl: 'updateResponseFromServer.html',
+                    controller: 'ModalInstanceCtrl2',
+                    controllerAs: '$ctrl'
+                });
+
+                modalInstance.result.then(function (selectedItem) {
+                }, function () {
+                    console.log('Anulowano');
+                });
+
             });
-
-        });
-
+        } else {
+            $scope.diffPass = true;
+        }
     };
-
-
 });

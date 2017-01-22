@@ -3,12 +3,12 @@
         <div class="intro-text">
 
             <form id="form" class="topBefore" ng-submit="createAccountClient()">
-                <h1>Dodwanie klienta</h1>
+                <h1>Dodawanie klienta</h1>
 
                 <input name="nameClient" type="text" ng-model="form.nameClient" placeholder="Nazwa klienta">
                 <input name="nameClient" type="text" ng-model="form.abbreviationName" placeholder="Skrót">
-                <input name="numberClient" required type="text" ng-model="form.numberClient" placeholder="Numer klienta" />
-                <select ng-model="nameTeam" ng-options="x for x in names | orderBy"></select>
+                <input name="numberClient" type="text" ng-model="form.numberClient" placeholder="Numer klienta" required />
+                <select name="nameTeam"  ng-options="x for x in names | orderBy" ng-model="nameTeam"></select>
                 <!--
                 -->
                 <input id="submit" type="submit" value="Dodaj">

@@ -719,12 +719,12 @@ Option Admin
     width: 80px;
     background-color: #5D5D5F;
 }
-.active_account .adminSubmit {
+.button_management  {
     width: 150px;
     background-color: #23AD21;
 }
 
-.active_account .adminSubmit:hover {
+.button_management :hover {
     width: 150px;
     background-color: #5D5D5F;
 }

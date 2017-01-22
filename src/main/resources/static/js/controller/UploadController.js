@@ -2,7 +2,7 @@
  * Created by Promar on 11.12.2016.
  */
 
-app.controller('UploadController', function($scope, $rootScope, $route, FileUploader, HOST, $http, ngDialog) {
+app.controller('UploadController', function($scope, $rootScope, $route, FileUploader, HOST, $http) {
 
     $rootScope.lastDateUpdate = '';
     $rootScope.dateUpdate = $rootScope.lastDateUpdate;

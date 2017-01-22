@@ -50,25 +50,13 @@ app.controller('DocumentOperation', ['$scope', '$http', '$window', '$route','$fi
     });
 
 
-    $scope.clearInput = function () {
-
-        $scope.form.numberWZ = '';
-        $scope.form.subProcess = '';
-        $scope.form.nameClient = '';
-        $scope.form.numberClient = '';
-        $scope.form.nameTrader = '';
-        $scope.form.date = '';
-    };
-
     $scope.createDocument = function () {
 
         var numberWZ = $scope.form.numberWZ;
         var subProcess = $scope.form.subProcess;
-        var client = $scope.nameClients;
-        var nameTrader = $scope.myTrader;
+        var client = $scope.form.nameClients;
+        var nameTrader = $scope.form.myTrader;
         var date = new Date($scope.form.date);
-
-
 
         documentWZ.addWZ(numberWZ, subProcess, client, nameTrader, date);
     };

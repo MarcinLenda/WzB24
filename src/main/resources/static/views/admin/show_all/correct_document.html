@@ -20,7 +20,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="document in documents" ts-repeat>
+                    <tr ng-repeat="document in documentsByCorrect" ts-repeat>
 
                         <td>{{document.numberWZ}}</td>
                         <td>{{document.subProcess}}</td>
@@ -42,7 +42,7 @@
                         </td>
 
                         <td class="delete"><input class="adminSubmit" type="submit" value="Usuń"
-                                                  ng-click="editData.documents = document; clickToDelete();">
+                                                  ng-click="clickToDelete(document)">
                         </td>
                     </tr>
                     </tbody>
@@ -53,23 +53,6 @@
                     <img src="images/icons/back.png">
                 </a>
             </div>
-
-            <script type="text/ng-template" id="templateDelete">
-                <h1>Czy na pewno chcesz usunąć dokument?</h1>
-                <input class="submitConfirmDialog" type="submit" value="Tak"
-                       ng-click="closeThisDialog(0); deleteDocument();">
-                <input class="submitDelete" type="submit" value="Nie" ng-click="closeThisDialog(0)">
-            </script>
-            <script type="text/ng-template" id="deleteCorrect">
-                <h1>Dokument został usunięty pomyślnie!</h1>
-                <input style="margin-left: 100px; margin-top: 5px;" class="submitConfirmDialog" type="submit" value="Ok"
-                       ng-click="reloadRoute(); closeThisDialog(0);">
-            </script>
-            <script type="text/ng-template" id="error">
-                <h1>Wystąpił błąd</h1>
-                <input style="margin-left: 100px; margin-top: 5px;" class="submitSuccess" type="submit" value="Ok"
-                       ng-click="closeThisDialog(0);">
-            </script>
 
         </div>
     </div>
