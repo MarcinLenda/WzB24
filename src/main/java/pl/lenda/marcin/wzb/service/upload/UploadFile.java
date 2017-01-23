@@ -25,7 +25,7 @@ public class UploadFile {
                 String filename = file.getOriginalFilename();
                 String path = "";
                 byte[] bytes = file.getBytes();
-                File serverFile = new File("/home/ubuntu/WzB24/src/main/static/rf_raport.csv" + "/"  + filename);
+                File serverFile = new File("/home/ubuntu/WzB24/src/main/static" + "/"  + filename);
 
                 path = "/images/"+filename;
 
