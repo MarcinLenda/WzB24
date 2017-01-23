@@ -56,7 +56,7 @@ public class ItemsReservedCtrl {
         mongoTemplate.dropCollection("reserved_Items");
         mongoTemplate.dropCollection("itemsReserved");
 
-        String csvFile = "C:\\Users\\Promar\\Desktop\\WzB\\src\\main\\resources\\static\\rf_raport.csv";
+        String csvFile = "/home/ubuntu/WzB/src/main/static/rf_raport.csv";
         BufferedReader br = null;
         String line = "";
         String cvsSplitBy = ";";
