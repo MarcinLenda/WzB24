@@ -1,14 +1,16 @@
 package pl.lenda.marcin.wzb.dto;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * Created by Promar on 10.11.2016.
  */
 public class ChangePasswordDto {
-
+    @NotNull
     private String oldPassword;
-
+    @NotNull
     private String newPassword;
-
+    @NotNull
     private String confirmNewPassword;
 
     private String username;

@@ -40,6 +40,6 @@ public class HistoryCtrl {
     @CrossOrigin(origins = "http://wzb24.pl")
     @RequestMapping(value = "/all_logged", method = RequestMethod.GET)
     public List<HistoryLoggedAppIn> showAllLoggedUser(){
-        return historyLoggedInService.findAll();
+        return historyLoggedInService.findLastLoggedIn();
     }
 }

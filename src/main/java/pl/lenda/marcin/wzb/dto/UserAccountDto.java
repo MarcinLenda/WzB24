@@ -7,15 +7,15 @@ import javax.validation.constraints.NotNull;
  */
 public class UserAccountDto {
 
-    @NotNull()
+    @NotNull
     private String username;
-    @NotNull()
+    @NotNull
     private String name;
-    @NotNull()
+    @NotNull
     private String surname;
-    @NotNull()
+    @NotNull
     private String password;
-    @NotNull()
+    @NotNull
     private String confirmPassword;
     @NotNull
     private String numberUser;

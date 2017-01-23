@@ -1,11 +1,14 @@
 package pl.lenda.marcin.wzb.dto;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * Created by Promar on 30.10.2016.
  */
 public class FindByNumberWzDto {
-
+    @NotNull
     private String numberWZ;
+    @NotNull
     private String subPro;
 
     public FindByNumberWzDto(){

@@ -133,7 +133,7 @@ public class AccountCtrl {
 
     @CrossOrigin(origins = "http://wzb24.pl")
     @RequestMapping(value = "/change_password", method = RequestMethod.POST)
-    public void changePassword(@RequestBody ChangePasswordDto changePasswordDto) {
+    public void changePassword(@RequestBody @Valid ChangePasswordDto changePasswordDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserAccount userAccount = userAccountService.findByUsername(authentication.getName());
         validateUserAccount.userAccountChangePassword(changePasswordDto, userAccount);

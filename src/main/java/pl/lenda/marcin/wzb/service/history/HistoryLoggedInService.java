@@ -13,6 +13,8 @@ public interface HistoryLoggedInService {
 
     List<HistoryLoggedAppIn> findByUsername(String username);
 
+    List<HistoryLoggedAppIn> findLastLoggedIn();
+
     List<HistoryLoggedAppIn> findAll();
 
 }
