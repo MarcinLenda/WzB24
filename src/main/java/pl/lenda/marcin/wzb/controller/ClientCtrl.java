@@ -45,7 +45,7 @@ public class ClientCtrl {
         clientAccountService.deleteAccountClient(clientAccount);
     }
 
-    @CrossOrigin(origins = "http://localhost:8080")
+    @CrossOrigin(origins = "http://wzb24.pl")
     @Secured("ROLE_ADMIN")
     @RequestMapping(value = "/edit_client", method = RequestMethod.POST)
     public void editClient(@RequestBody ClientAccountDto clientAccountDto){

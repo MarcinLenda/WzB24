@@ -27,7 +27,7 @@ public class UploadFile {
                 byte[] bytes = file.getBytes();
                 File serverFile = new File("/home/ubuntu/WzB24/src/main/resources/static" + "/"  + filename);
 
-                path = "/images/"+filename;
+
 
                 BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
                 stream.write(bytes);
