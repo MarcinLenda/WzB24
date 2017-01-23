@@ -249,8 +249,8 @@ public class MyScheduledTasks {
                     mail.setContent(content);
                     String to = userAccountService.findByNumberUser(traderAccounts.get(i).getNumberTrader()).getUsername();
                     System.out.println("Wiadomosc ma zostac wyslana do: "+to);
-                    mail.setFrom(to);
-                    mailService.mailSend("mlenda@bimsplus.com.pl", mail.getFrom(), mail.getSubject(), mail.getContent());
+                    mail.setFrom("wzbims@gmail.com");
+                    mailService.mailSend(to, mail.getFrom(), mail.getSubject(), mail.getContent());
                 }
                 documentsWZ.clear();
                 content = "";
