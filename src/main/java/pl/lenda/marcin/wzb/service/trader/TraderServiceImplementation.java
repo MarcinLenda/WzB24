@@ -34,7 +34,7 @@ public class TraderServiceImplementation implements TraderService {
     }
 
     @Override
-    public TraderAccount findBySurname(String surname) {
+    public Optional<TraderAccount> findBySurname(String surname) {
         return traderAccountRepository.findBySurname(surname);
     }
 

@@ -26,13 +26,13 @@ public class LoginCtrl {
     @Autowired
     ConvertTo convertTo;
 
-    @CrossOrigin(origins = "http://wzb24.pl")
+    @CrossOrigin(origins = "http://155.133.24.148:8080")
     @RequestMapping(path = "/unauthorized", method = RequestMethod.GET)
     public ResponseEntity<Void> login() {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
-    @CrossOrigin(origins = "http://wzb24.pl")
+    @CrossOrigin(origins = "http://155.133.24.148:8080")
     @RequestMapping(path = "/success", method = RequestMethod.GET)
     public ResponseEntity<UserAccountDto> success() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

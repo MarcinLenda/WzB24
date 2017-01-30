@@ -74,7 +74,7 @@
 //        String endContent =  " </table>\n" +
 //                "<p style=\"font-size: 17px; margin-top:15px;\"><b>Aktualizacja:</b> możesz sprawdzić listę swoich rezerwacji fizycznych poprzez wejście w moje konto i zakładkę RF."+
 //                "    <p style=\"font-size: 17px;\">Gdybyś miał zamiar zrobić korektę do któregoś z dokumentów poinformuj nas o tym na: <a\n" +
-//                "            href=\"http://wzb24.pl/#/login\">\n" +
+//                "            href=\"http://155.133.24.148:8080/#/login\">\n" +
 //                "        <input style=\"width:150px; margin-top: 30px;\" type=\"button\" value=\"WzB\">\n" +
 //                "    </a></p>\n" +
 //                "\n" +
@@ -250,7 +250,7 @@
 //                    String to = userAccountService.findByNumberUser(traderAccounts.get(i).getNumberTrader()).getUsername();
 //                    System.out.println("Wiadomosc ma zostac wyslana do: "+to);
 //                    mail.setFrom("wzbims@gmail.com");
-//                    mailService.mailSend(to, mail.getFrom(), mail.getSubject(), mail.getContent());
+//                    mailService.mailSend("java.promar@gmail.com", mail.getFrom(), mail.getSubject(), mail.getContent());
 //                }
 //                documentsWZ.clear();
 //                content = "";

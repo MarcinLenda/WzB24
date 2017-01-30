@@ -37,7 +37,7 @@ public class ItemsReservedCtrl {
     @Autowired
     MongoTemplate mongoTemplate;
 
-    @CrossOrigin(origins = "http://wzb24.pl")
+    @CrossOrigin(origins = "http://155.133.24.148:8080")
     @RequestMapping(value="/upload", method=RequestMethod.POST)
     public @ResponseBody
     void handleFileUpload(MultipartFile file){
@@ -46,7 +46,7 @@ public class ItemsReservedCtrl {
 
     }
 
-    @CrossOrigin(origins = "http://wzb24.pl")
+    @CrossOrigin(origins = "http://155.133.24.148:8080")
     @Secured("ROLE_ADMIN")
     @RequestMapping(value = "/save_items", method = RequestMethod.GET)
     public void saveItems() {
@@ -55,7 +55,7 @@ public class ItemsReservedCtrl {
         mongoTemplate.dropCollection("itemsReserved");
 
 
-        String csvFile = "/home/ubuntu/WzB24/src/main/resources/static/rf_raport.csv";
+        String csvFile = "/java/WzB24/src/main/resources/static/rf_raport.csv";
         BufferedReader br = null;
         String line = "";
         String cvsSplitBy = ";";
@@ -196,7 +196,7 @@ public class ItemsReservedCtrl {
 
     }
 
-    @CrossOrigin(origins = "http://wzb24.pl")
+    @CrossOrigin(origins = "http://155.133.24.148:8080")
     @RequestMapping(value = "/update_items", method = RequestMethod.POST)
     public boolean updateItems(@RequestBody ItemsReserverdFindByDto _itemsReserverdFindByDto) {
         ItemsReserved _itemsReserved = reserved_itemsService.findItem(_itemsReserverdFindByDto.getId());
@@ -207,26 +207,26 @@ public class ItemsReservedCtrl {
         return true;
     }
 
-    @CrossOrigin(origins = "http://wzb24.pl")
+    @CrossOrigin(origins = "http://155.133.24.148:8080")
     @RequestMapping(value = "/findAll_items", method = RequestMethod.GET)
     public List<ItemsReserved> allItems() {
         return reserved_itemsService.findAll();
     }
 
-    @CrossOrigin(origins = "http://wzb24.pl")
+    @CrossOrigin(origins = "http://155.133.24.148:8080")
     @RequestMapping(value = "/delete_items", method = RequestMethod.DELETE)
     public void deleteItems(@RequestBody ItemsReserverdFindByDto _itemsReserverdFindByDto) {
         ItemsReserved _itemsReserved = reserved_itemsService.findItem(_itemsReserverdFindByDto.getId());
         reserved_itemsService.delete(_itemsReserved);
     }
 
-    @CrossOrigin(origins = "http://wzb24.pl")
+    @CrossOrigin(origins = "http://155.133.24.148:8080")
     @RequestMapping(value = "/findItemBy_ID", method = RequestMethod.POST)
     public ItemsReserved allItems(@RequestBody ItemsReserverdFindByDto _itemsReserverdFindByDto) {
         return reserved_itemsService.findItem(_itemsReserverdFindByDto.getId());
     }
 
-    @CrossOrigin(origins = "http://wzb24.pl")
+    @CrossOrigin(origins = "http://155.133.24.148:8080")
     @RequestMapping(value = "/findItemBy_nameTrader", method = RequestMethod.GET)
     public List<ItemsReserved> allItemsTrader() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -236,7 +236,7 @@ public class ItemsReservedCtrl {
         return lista;
     }
 
-    @CrossOrigin(origins = "http://wzb24.pl")
+    @CrossOrigin(origins = "http://155.133.24.148:8080")
     @RequestMapping(value = "/item_change_status", method = RequestMethod.POST)
     public void changeStatusItem(@RequestBody ItemsReserverdFindByDto _itemsReserverdFindByDto) {
         ItemsReserved _itemsReserved = reserved_itemsService.findItem(_itemsReserverdFindByDto.getId());

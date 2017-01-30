@@ -10,6 +10,7 @@ import pl.lenda.marcin.wzb.entity.UserAccount;
 import pl.lenda.marcin.wzb.service.convert_class.ConvertTo;
 import pl.lenda.marcin.wzb.service.document_wz.DocumentWzService;
 import pl.lenda.marcin.wzb.service.edit_data.EditDataUserAccount;
+import pl.lenda.marcin.wzb.service.mail.MailService;
 import pl.lenda.marcin.wzb.service.trader.TraderService;
 import pl.lenda.marcin.wzb.service.user_account.UserAccountService;
 import pl.lenda.marcin.wzb.service.validate.ValidateUserAccount;
@@ -41,25 +42,27 @@ public class AccountCtrl {
     ValidateUserAccount validateUserAccount;
     @Autowired
     EditDataUserAccount editDataUserAccount;
+    @Autowired
+    MailService mailService;
 
 
 
     private final Map<String, Object> response = new LinkedHashMap<>();
 
-    @CrossOrigin(origins = "http://wzb24.pl")
+    @CrossOrigin(origins = "http://155.133.24.148:8080")
     @RequestMapping(value = "/create_account", method = RequestMethod.POST)
     public void createNewUser(@Valid @RequestBody UserAccountDto userAccountDto) {
         validateUserAccount.userAccountValidate(userAccountDto);
-        userAccountService.registerNewUser(convertTo.converToUserAccountEntity(userAccountDto));
+        userAccountService.registerNewUser(convertTo.convertToUserAccountEntity(userAccountDto));
     }
 
-    @CrossOrigin(origins = "http://wzb24.pl")
+    @CrossOrigin(origins = "http://155.133.24.148:8080")
     @RequestMapping("/user")
     public Principal user(Principal user) {
         return user;
     }
 
-    @CrossOrigin(origins = "http://wzb24.pl")
+    @CrossOrigin(origins = "http://155.133.24.148:8080")
     @Secured("ROLE_ADMIN")
     @RequestMapping(value = "/find_notactive_account", method = RequestMethod.GET)
     public List<UserAccountDto> findUserNotActive() {
@@ -68,7 +71,7 @@ public class AccountCtrl {
                 .collect(Collectors.toList());
     }
 
-    @CrossOrigin(origins = "http://wzb24.pl")
+    @CrossOrigin(origins = "http://155.133.24.148:8080")
     @Secured("ROLE_ADMIN")
     @RequestMapping(value = "/active_account", method = RequestMethod.GET)
     public List<UserAccountDto> findAllActiveAccount() {
@@ -77,14 +80,18 @@ public class AccountCtrl {
                 .collect(Collectors.toList());
     }
 
-    @CrossOrigin(origins = "http://wzb24.pl")
+    @CrossOrigin(origins = "http://155.133.24.148:8080")
     @Secured("ROLE_ADMIN")
     @RequestMapping(value = "/make_active_account", method = RequestMethod.PATCH)
     public void makeAccountActive(@RequestBody UserAccountActiveOrRemoveDto userAccountActiveOrRemoveDto) throws MessagingException {
-        userAccountService.makeActiveAccount(userAccountActiveOrRemoveDto);
+        UserAccount userAccount = userAccountService.findByUsername(userAccountActiveOrRemoveDto.getUsername());
+        userAccount.setActive(true);
+        userAccountService.makeActiveAccount(userAccount);
+        mailService.mailConfirmAccount(userAccount.getUsername(), userAccount.getName(), userAccount.getSurname(), userAccount.getUsername(), userAccount.getNumberUser());
+
     }
 
-    @CrossOrigin(origins = "http://wzb24.pl")
+    @CrossOrigin(origins = "http://155.133.24.148:8080")
     @Secured("ROLE_ADMIN")
     @RequestMapping(value = "/block_account", method = RequestMethod.PATCH)
     public void blockAccount(@RequestBody UserAccountActiveOrRemoveDto userAccountActiveOrRemoveDto) {
@@ -93,7 +100,7 @@ public class AccountCtrl {
         userAccountService.registerNewUser(userAccount);
     }
 
-    @CrossOrigin(origins = "http://wzb24.pl")
+    @CrossOrigin(origins = "http://155.133.24.148:8080")
     @Secured("ROLE_ADMIN")
     @RequestMapping(value = "/give_admin", method = RequestMethod.POST)
     public boolean giveRoleAdmin(@RequestBody String username) {
@@ -102,7 +109,7 @@ public class AccountCtrl {
         return userAccountService.updateRole(userAccount);
     }
 
-    @CrossOrigin(origins = "http://wzb24.pl")
+    @CrossOrigin(origins = "http://155.133.24.148:8080")
     @Secured("ROLE_ADMIN")
     @RequestMapping(value = "/give_user", method = RequestMethod.POST)
     public boolean giveRoleUser(@RequestBody String username) {
@@ -111,7 +118,7 @@ public class AccountCtrl {
         return userAccountService.updateRole(userAccount);
     }
 
-    @CrossOrigin(origins = "http://wzb24.pl")
+    @CrossOrigin(origins = "http://155.133.24.148:8080")
     @RequestMapping(value = "/role", method = RequestMethod.GET)
     public boolean getRole() {
         if (userAccountService.getRoleOfLoggedUser().equals("ROLE_ADMIN")) {
@@ -120,7 +127,7 @@ public class AccountCtrl {
         return false;
     }
 
-    @CrossOrigin(origins = "http://wzb24.pl")
+    @CrossOrigin(origins = "http://155.133.24.148:8080")
     @RequestMapping(value = "/user_info", method = RequestMethod.GET)
     public UserAccountDto userInfo() {
 
@@ -131,7 +138,7 @@ public class AccountCtrl {
         return userAccountDto;
     }
 
-    @CrossOrigin(origins = "http://wzb24.pl")
+    @CrossOrigin(origins = "http://155.133.24.148:8080")
     @RequestMapping(value = "/change_password", method = RequestMethod.POST)
     public void changePassword(@RequestBody @Valid ChangePasswordDto changePasswordDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -139,13 +146,13 @@ public class AccountCtrl {
         validateUserAccount.userAccountChangePassword(changePasswordDto, userAccount);
     }
 
-    @CrossOrigin(origins = "http://wzb24.pl")
+    @CrossOrigin(origins = "http://155.133.24.148:8080")
     @RequestMapping(value = "/reset_password", method = RequestMethod.POST)
     public void resetPassword(@RequestBody UpdateUserAccountDto updateUserAccountDto) {
         editDataUserAccount.resetPassword(updateUserAccountDto);
     }
 
-    @CrossOrigin(origins = "http://wzb24.pl")
+    @CrossOrigin(origins = "http://155.133.24.148:8080")
     @Secured("ROLE_ADMIN")
     @RequestMapping(value = "/remove", method = RequestMethod.DELETE)
     public void removeAccount(@RequestBody UserAccountActiveOrRemoveDto userAccountActiveOrRemoveDto) {
@@ -153,14 +160,14 @@ public class AccountCtrl {
         userAccountService.removeAccount(userAccount);
     }
 
-    @CrossOrigin(origins = "http://wzb24.pl")
+    @CrossOrigin(origins = "http://155.133.24.148:8080")
     @RequestMapping(value = "/find_user", method = RequestMethod.POST)
     public UserAccount findUserAccount(@RequestBody FindUserAccountDto findUserAccountDto) {
         UserAccount userAccount = userAccountService.findByUsername(findUserAccountDto.getUsername());
         return userAccount;
     }
 
-    @CrossOrigin(origins = "http://wzb24.pl")
+    @CrossOrigin(origins = "http://155.133.24.148:8080")
     @RequestMapping(value = "/edit_date", method = RequestMethod.POST)
     @Secured("ROLE_ADMIN")
     public void updateUserAccount(@RequestBody @Valid UpdateUserAccountDto updateUserAccountDto) {

@@ -34,10 +34,6 @@ public class MongoUserDetailsService implements UserDetailsService {
         UserAccount userAccount = getUserDetail(username);
         UserDetails userDetails = new User(userAccount.getUsername(), userAccount.getPassword(), getAuthorities(userAccount.getRole()));
 
-        if (userDetails != null) {
-
-
-
             UserAccount userAccount1 = userAccountRepository.findByUsername(username);
             HistoryLoggedAppIn whoLogged = new HistoryLoggedAppIn();
             whoLogged.setDateLogged(new Date());
@@ -55,7 +51,7 @@ public class MongoUserDetailsService implements UserDetailsService {
 
             historyLoggedInService.saveWhoLoggedIn(whoLogged);
 
-        }
+
 
         return userDetails;
     }

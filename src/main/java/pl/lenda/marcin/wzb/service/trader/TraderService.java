@@ -16,7 +16,7 @@ public interface TraderService {
 
     Optional<TraderAccount> findByTraderSurnameAndNumber(String surname , String numberTrader);
 
-    TraderAccount findBySurname(String surname);
+    Optional<TraderAccount> findBySurname(String surname);
 
     Optional<TraderAccount> findByNumberTrader(String numberTrader);
 

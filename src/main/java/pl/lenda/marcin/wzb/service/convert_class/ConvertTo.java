@@ -24,6 +24,7 @@ public class ConvertTo {
     @Autowired
     private final TraderService traderService;
 
+
     public ConvertTo(ClientAccountService clientAccountService, TraderService traderService) {
         this.clientAccountService = clientAccountService;
         this.traderService = traderService;
@@ -31,6 +32,7 @@ public class ConvertTo {
 
     public DocumentWzDto convertDocumentToDto(DocumentWz documentWz){
         DocumentWzDto documentWzDto = new DocumentWzDto();
+
         documentWzDto.setNumberWZ(documentWz.getNumberWZ());
         documentWzDto.setSubProcess(documentWz.getSubProcess());
         documentWzDto.setClient(documentWz.getClient());
@@ -39,13 +41,14 @@ public class ConvertTo {
         documentWzDto.setNameTeam(documentWz.getNameTeam());
         documentWzDto.setTraderName(documentWz.getTraderName());
         documentWzDto.setBeCorrects(documentWz.isBeCorrects());
+        documentWzDto.setAbbreviationName(documentWz.getAbbreviationName());
         return documentWzDto;
     }
 
     public DocumentWz convertDocumentToEntity(DocumentWzDto documentWzDto){
         DocumentWz documentWz = new DocumentWz();
         ClientAccount clientAccount = clientAccountService.findByAbbreviationName(documentWzDto.getClient()).get();
-        TraderAccount traderAccount = traderService.findBySurname(documentWzDto.getTraderName());
+        TraderAccount traderAccount = traderService.findBySurname(documentWzDto.getTraderName()).get();
 
         documentWz.setNumberWZ(documentWzDto.getNumberWZ());
         documentWz.setSubProcess(documentWzDto.getSubProcess());
@@ -61,14 +64,27 @@ public class ConvertTo {
 
     public ClientAccount convertClientAccountDtoToEntity(ClientAccountDto clientAccountDto){
         ClientAccount clientAccount = new ClientAccount();
+
         clientAccount.setNameTeam(clientAccountDto.getNameTeam());
         clientAccount.setName(clientAccountDto.getName());
         clientAccount.setNumberClient(clientAccountDto.getNumberClient());
+        clientAccount.setAbbreviationName(clientAccountDto.getAbbreviationName());
         return clientAccount;
     }
 
-    public UserAccount converToUserAccountEntity(UserAccountDto userAccountDto){
+    public ClientAccountDto convertClientEntityToDto(ClientAccount clientAccount){
+        ClientAccountDto clientAccountDto = new ClientAccountDto();
+
+        clientAccountDto.setNameTeam(clientAccount.getNameTeam());
+        clientAccountDto.setName(clientAccount.getName());
+        clientAccountDto.setAbbreviationName(clientAccount.getAbbreviationName());
+        clientAccountDto.setNumberClient(clientAccount.getNumberClient());
+        return clientAccountDto;
+    }
+
+    public UserAccount convertToUserAccountEntity(UserAccountDto userAccountDto){
         UserAccount userAccount = new UserAccount();
+
         userAccount.setName(userAccountDto.getName());
         userAccount.setSurname(userAccountDto.getSurname());
         userAccount.setUsername(userAccountDto.getUsername());
@@ -79,12 +95,12 @@ public class ConvertTo {
 
     public UserAccountDto convertToUserAccountDto(UserAccount userAccount){
         UserAccountDto userAccountDto = new UserAccountDto();
+
         userAccountDto.setName(userAccount.getName());
         userAccountDto.setSurname(userAccount.getSurname());
         userAccountDto.setUsername(userAccount.getUsername());
         userAccountDto.setNumberUser(userAccount.getNumberUser());
         userAccountDto.setRole(userAccount.getRole());
-
 
         String teamName = traderService
                 .findByTraderSurnameAndNumber(userAccount.getSurname(), userAccount.getNumberUser())
@@ -104,7 +120,7 @@ public class ConvertTo {
         return traderAccount;
     }
 
-    public TraderAccountDto converToTraderDto(TraderAccount traderAccount){
+    public TraderAccountDto convertToTraderDto(TraderAccount traderAccount){
         TraderAccountDto traderAccountDto = new TraderAccountDto();
         traderAccountDto.setName(traderAccount.getName());
         traderAccountDto.setSurname(traderAccount.getSurname());
@@ -127,7 +143,7 @@ public class ConvertTo {
     }
 
     public HistoryCorrectsDocument convertToHistoryCorrectDoc(String number, String subPro, String client, String trader,
-                                                              String username, Date date){
+                                                              String username){
 
         HistoryCorrectsDocument historyCorrectsDocument = new HistoryCorrectsDocument();
         historyCorrectsDocument.setNumberWZ(number);
