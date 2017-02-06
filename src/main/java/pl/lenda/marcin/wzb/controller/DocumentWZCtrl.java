@@ -51,7 +51,7 @@ public class DocumentWZCtrl {
         this.documentWzServiceImplementation = documentWzServiceImplementation;
     }
 
-    @CrossOrigin(origins = "http://localhost:8080")
+    @CrossOrigin(origins = "http://155.133.24.148:8080")
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     public
     @ResponseBody
@@ -59,7 +59,7 @@ public class DocumentWZCtrl {
         return itemSearchRepository.searchItems(value);
     }
 
-    @CrossOrigin(origins = "http://localhost:8080")
+    @CrossOrigin(origins = "http://155.133.24.148:8080")
     @Secured("ROLE_ADMIN")
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(value = "/saveDocument")
@@ -74,7 +74,7 @@ public class DocumentWZCtrl {
         }
     }
 
-    @CrossOrigin(origins = "http://localhost:8080")
+    @CrossOrigin(origins = "http://155.133.24.148:8080")
     @Secured("ROLE_ADMIN")
     @RequestMapping(value = "/deleteDocument", method = RequestMethod.DELETE)
     public void deleteDocument(@RequestBody @Valid DocumentWzToDeleteDto documentWzToDeleteDto) {
@@ -101,7 +101,7 @@ public class DocumentWZCtrl {
 
     }
 
-    @CrossOrigin(origins = "http://localhost:8080")
+    @CrossOrigin(origins = "http://155.133.24.148:8080")
     @ResponseBody
     @RequestMapping(value = "/findByNumber", method = RequestMethod.POST)
     public DocumentWzDto findDocumentWz(@RequestBody @Valid FindByNumberWzDto findByNumberWzDto) {
@@ -111,7 +111,7 @@ public class DocumentWZCtrl {
                 .orElseThrow(DocumentWzException::documentNotFound);
     }
 
-    @CrossOrigin(origins = "http://localhost:8080")
+    @CrossOrigin(origins = "http://155.133.24.148:8080")
     @RequestMapping(value = "/findByClient", method = RequestMethod.POST)
     public List<DocumentWzDto> findByClient(@RequestBody @Valid DocumentWzAbbreviationNameDto documentWzAbbreviationNameDto) {
         return documentWzServiceImplementation
@@ -121,7 +121,7 @@ public class DocumentWZCtrl {
                 .collect(Collectors.toList());
     }
 
-    @CrossOrigin(origins = "http://localhost:8080")
+    @CrossOrigin(origins = "http://155.133.24.148:8080")
     @RequestMapping(value = "/findByClientNumber", method = RequestMethod.POST)
     public List<DocumentWzDto> findByClientNumber(@RequestBody @Valid FindClientNumber findClientNumber) {
         return documentWzServiceImplementation.findByNumberClient(findClientNumber.getFindClientNumber())
@@ -130,7 +130,7 @@ public class DocumentWZCtrl {
                 .collect(Collectors.toList());
     }
 
-    @CrossOrigin(origins = "http://localhost:8080")
+    @CrossOrigin(origins = "http://155.133.24.148:8080")
     @RequestMapping(value = "/findByTraderName", method = RequestMethod.POST)
     public List<DocumentWzDto> findByTraderName(@RequestBody @Valid String traderName) {
         return documentWzServiceImplementation.findByNameTrader(traderName)
@@ -139,7 +139,7 @@ public class DocumentWZCtrl {
                 .collect(Collectors.toList());
     }
 
-    @CrossOrigin(origins = "http://localhost:8080")
+    @CrossOrigin(origins = "http://155.133.24.148:8080")
     @RequestMapping(value = "/showAllDocuments", method = RequestMethod.GET)
     public List<DocumentWzDto> findAll() {
         return documentWzServiceImplementation.showAllDocument()
@@ -148,7 +148,7 @@ public class DocumentWZCtrl {
                 .collect(Collectors.toList());
     }
 
-    @CrossOrigin(origins = "http://localhost:8080")
+    @CrossOrigin(origins = "http://155.133.24.148:8080")
     @RequestMapping(value = "/by_correct", method = RequestMethod.PATCH)
     public void correctBy(@RequestBody @Valid FindByNumberWzDto findByNumberWzDto) {
         Optional<DocumentWz> possibleDocumentToCorrect = documentWzServiceImplementation.findByNumberWZAndSubProcess(
@@ -168,7 +168,7 @@ public class DocumentWZCtrl {
 
     }
 
-    @CrossOrigin(origins = "http://localhost:8080")
+    @CrossOrigin(origins = "http://155.133.24.148:8080")
     @RequestMapping(value = "/find_correct", method = RequestMethod.GET)
     public List<DocumentWzDto> findCorrectionDocument() {
         return documentWzServiceImplementation
@@ -178,7 +178,7 @@ public class DocumentWZCtrl {
                 .collect(Collectors.toList());
     }
 
-    @CrossOrigin(origins = "http://localhost:8080")
+    @CrossOrigin(origins = "http://155.133.24.148:8080")
     @RequestMapping(value = "/find_nameteam", method = RequestMethod.POST)
     @ResponseBody
     public List<DocumentWzDto> findByNameTeam(@RequestBody @Valid String nameTeam) {

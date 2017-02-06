@@ -11,7 +11,7 @@ app.controller('UploadController', function($scope, $rootScope, $route, FileUplo
 
     $scope.uploader = new FileUploader(
         {
-            url: 'http://localhost:8080/upload'
+            url: 'http://155.133.24.148:8080/upload'
         }
     );
 
