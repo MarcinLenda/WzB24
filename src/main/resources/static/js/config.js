@@ -1,3 +1,3 @@
 angular.module('config', [])
     .constant('API_END_POINT','123456')
-    .constant('HOST','http://wzb24.pl');
+    .constant('HOST','http://localhost:8080');

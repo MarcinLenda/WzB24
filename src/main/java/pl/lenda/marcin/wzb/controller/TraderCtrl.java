@@ -33,33 +33,35 @@ public class TraderCtrl {
 
 
 
-    @CrossOrigin(origins = "http://wzb24.pl")
-    @Secured("ROLE_ADMIN")
+    @CrossOrigin(origins = "http://localhost:8080")
+    @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN","ROLE_MODERATOR"})
     @RequestMapping(value = "/save_trader", method = RequestMethod.POST)
     public void saveTrader(@RequestBody @Valid TraderAccountDto traderAccountDto){
         traderService.createTrader(validateTrader.traderValidate(traderAccountDto));
     }
 
-    @CrossOrigin(origins = "http://wzb24.pl")
+    @CrossOrigin(origins = "http://localhost:8080")
+    @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN","ROLE_MODERATOR"})
     @RequestMapping(value = "/all_trader", method = RequestMethod.GET)
     public List<TraderAccountDto> findAllTrader(){
         return traderService.findAllTrader()
                 .stream()
-                .map(traderAccountDto -> convertTo.converToTraderDto(traderAccountDto))
+                .map(traderAccountDto -> convertTo.convertToTraderDto(traderAccountDto))
                 .collect(Collectors.toList());
     }
 
-    @CrossOrigin(origins = "http://wzb24.pl")
+    @CrossOrigin(origins = "http://localhost:8080")
+    @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN","ROLE_MODERATOR","ROLE_SUPER_USER", "ROLE_USER"})
     @RequestMapping(value = "/find_trader", method = RequestMethod.POST)
     public TraderAccountDto findTrader(@RequestBody FindTraderAccount findTraderAccount){
         Optional<TraderAccount> traderAccount = traderService.findByTraderSurnameAndNumber(
                 findTraderAccount.getSurname(), findTraderAccount.getNumberTrader());
-        return convertTo.converToTraderDto(traderAccount.get());
+        return convertTo.convertToTraderDto(traderAccount.get());
     }
 
 
-    @CrossOrigin(origins = "http://wzb24.pl")
-    @Secured("ROLE_ADMIN")
+    @CrossOrigin(origins = "http://localhost:8080")
+    @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN"})
     @RequestMapping(value = "/delete_trader", method = RequestMethod.DELETE)
     public void deleteTraderAccount(@RequestBody TraderToDeleteDto traderToDeleteDto){
         traderService
@@ -68,8 +70,8 @@ public class TraderCtrl {
     }
 
 
-    @CrossOrigin(origins = "http://wzb24.pl")
-    @Secured("ROLE_ADMIN")
+    @CrossOrigin(origins = "http://localhost:8080")
+    @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN","ROLE_MODERATOR"})
     @RequestMapping(value = "/edit_trader", method = RequestMethod.POST)
     public void editTrader(@RequestBody TraderAccountDto traderAccountDto){
         TraderAccount traderAccount = traderService.findByNumberTrader(traderAccountDto.getNumberTrader()).get();

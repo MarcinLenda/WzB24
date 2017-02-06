@@ -27,7 +27,7 @@
                         <th>
                             <md-icon md-svg-src='images/icons/confirm.svg' style="color: #e7e7e7;"></md-icon>
                             Zatwierdź</th>
-                        <th>
+                        <th ng-show="roleSuperAdmin">
                             <md-icon md-svg-src='images/icons/role.svg' style="color: #e7e7e7;"></md-icon>
                             Usuwanie konta
                         </th>
@@ -41,8 +41,8 @@
                         <td>{{account.surname}}</td>
                         <td>{{account.numberUser}}</td>
                         <td class="active_account" ><input class="button_management" type="submit" value="Aktywuj konto"
-                                                          ng-click="activeThisAccount(account)">
-                        <td ng-show="account.role=='USER'"><input style="background-color: rgb(221,44,0);;" class="button_management"
+                                                          ng-click="activeAccount(account)">
+                        <td ng-show="roleSuperAdmin"><input style="background-color: rgb(221,44,0);;" class="button_management"
                                                                                          type="submit" value="Usuń"
                                                                                          ng-click="deleteAccount(account)">
                         </td>

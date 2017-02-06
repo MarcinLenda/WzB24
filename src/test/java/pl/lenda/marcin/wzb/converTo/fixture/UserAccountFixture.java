@@ -1,5 +1,6 @@
-package pl.lenda.marcin.wzb.security.fixture;
+package pl.lenda.marcin.wzb.converTo.fixture;
 
+import pl.lenda.marcin.wzb.dto.UserAccountDto;
 import pl.lenda.marcin.wzb.entity.UserAccount;
 
 /**
@@ -18,5 +19,16 @@ public class UserAccountFixture {
         userAccount.setId("1234");
 
         return userAccount;
+    }
+
+    public static UserAccountDto userAccountDto(){
+        UserAccountDto userAccountDto = new UserAccountDto();
+        userAccountDto.setName("Krzysztof");
+        userAccountDto.setSurname("Kramer");
+        userAccountDto.setUsername("kkramer@bimsplus.com.pl");
+        userAccountDto.setNumberUser("3767");
+        userAccountDto.setPassword("grzybek123");
+
+        return userAccountDto;
     }
 }

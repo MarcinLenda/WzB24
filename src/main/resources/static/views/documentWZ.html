@@ -8,8 +8,6 @@
                     <h1>Wyszukaj po: <img src="images/icons/loupe.png"></h1>
 
 
-                    <p onclick="onclickHandler();">Kliknij ten akapit a wyświetli się pomoc!</p>
-
                     <select ng-model="myVar" style="color:#6A735D;">
                         <option value="numberWZ">Numer WZ</option>
                         <option value="nameClient">Nazwa klienta</option>
@@ -38,7 +36,7 @@
                                               placeholder="Podaj nazwe klienta"
                                               pause="200"
                                               selected-object="nameClient"
-                                              local-data="names"
+                                              local-data="clients"
                                               search-fields="name"
                                               title-field="abbreviationName"
                                               minlength="3"
@@ -48,11 +46,6 @@
                             </angucomplete-alt>
 
                             <input class="submit" type="submit" value="Szukaj" ng-click="findByClient()">
-                            <div>
-                                <img style="margin-top: 5px;" ng-show="clientSpin"
-                                     style="font-size: 10px; padding-top: 80px;" src="../images/icons/spin.svg">
-                                <p ng-bind="message"></p>
-                            </div>
 
 
                         </div>
@@ -73,7 +66,7 @@
                                               placeholder="Podaj nazwe handlowca"
                                               pause="200"
                                               selected-object="nameTrader"
-                                              local-data="trader"
+                                              local-data="traders"
                                               search-fields="surname"
                                               title-field="surname"
                                               minlength="2"
@@ -81,11 +74,6 @@
                                               input-changed="inputChanged">
                             </angucomplete-alt>
                             <input class="submit" type="submit" value="Szukaj" ng-click="findByTrader()">
-                            <div>
-                                <img style="margin-top: 5px;" ng-show="clientSpin"
-                                     style="font-size: 10px; padding-top: 80px;" src="../images/icons/spin.svg">
-                                <p ng-bind="message"></p>
-                            </div>
 
                         </div>
                         <div ng-switch-when="nameTeam">
@@ -122,7 +110,7 @@
                             </th>
                             <th class="menu_t " style="background-color: #1C1D21">Zwłoka</th>
                             <th class="menu_t " style="background-color: #1C1D21">Korekta</th>
-                            <th class="menu_t " ng-show="userRoles" style="background-color: #1C1D21">ADMIN</th>
+                            <th class="menu_t "ng-show="roleSuperAdmin || roleAdmin" style="background-color: #1C1D21">ADMIN</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -148,7 +136,7 @@
                                 K
                             </td>
 
-                            <td class="delete" ng-show="userRoles"><input class="adminSubmit" type="submit" value="Usuń"
+                            <td class="delete" ng-show="roleSuperAdmin || roleAdmin"><input class="adminSubmit" type="submit" value="Usuń"
                                                                           ng-click="clickToDelete(document);">
                             </td>
                         </tr>

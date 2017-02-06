@@ -1,10 +1,8 @@
 package pl.lenda.marcin.wzb.service.user_account;
 
 import pl.lenda.marcin.wzb.dto.ChangePasswordDto;
-import pl.lenda.marcin.wzb.dto.UserAccountActiveOrRemoveDto;
 import pl.lenda.marcin.wzb.entity.UserAccount;
 
-import javax.mail.MessagingException;
 import java.util.List;
 
 /**
@@ -34,7 +32,7 @@ public interface UserAccountService {
 
     void removeAccount(UserAccount userAccount);
 
-    void makeActiveAccount(UserAccountActiveOrRemoveDto userAccount) throws MessagingException;
+    void makeActiveAccount(UserAccount userAccount);
 
     String getRoleOfLoggedUser();
 }

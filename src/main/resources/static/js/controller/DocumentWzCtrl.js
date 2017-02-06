@@ -1,192 +1,336 @@
 /**
- * Created by Promar on 12.10.2016.
+ * Created by Promar on 11.10.2016.
  */
 
-app.controller('documentCtrl', function ($scope, $http, $rootScope, $route, $location, $timeout, $interval, documentWZ, $uibModal, HOST) {
+app.controller('DocumentWzCtrl', ['$scope', '$rootScope', '$http', '$route', 'DocumentWzService', 'HOST', '$timeout', '$uibModal',
+    function ($scope, $rootScope, $http, $route, DocumentWzService, HOST, $timeout, $uibModal) {
 
-    $scope.form = {};
-    $scope.empty = [];
-    $scope.info = '';
-    $scope.editData = {};
-    $scope.showInfo = false;
-    $scope.load = true;
+        $scope.form = {};
+        $scope.listTrader = '';
+        $scope.listClient = '';
+        $scope.resultListClient = [];
+        $scope.resultListTrader = [];
+        $scope.showInfo = false;
+        $scope.load = true;
 
-    $scope.names = [];
-    $scope.trader = [];
-    $scope.clientSpin = false;
-    $scope.traderSpin = false;
-    $rootScope.documentSearch = [];
-
-
-    //--------------------------------------------------------------------------------------
-
-    $rootScope.documentsByCorrect = [];
-    $http({
-        method: 'GET',
-        url: HOST + '/find_correct',
-
-        headers: {'Content-type': 'application/json'},
-    }).success(function (data) {
-        $rootScope.documentsByCorrect = data;
+        $scope.reloadRoute = function () {
+            $route.reload();
+        };
 
 
-    }).error(function (data) {
-        ngDialog.open({
-            template: 'errorFindDocument',
-            controller: 'findDocument',
-            className: 'ngdialog-theme-default'
-        });
-
-    });
+        $timeout(function () {
+            $scope.showInfo = true;
+            $scope.load = false;
+        }, 1000);
 
 
-    $http({
-        method: 'GET',
-        url: HOST + '/all_client',
+        DocumentWzService.allDocuments()
+            .then(function successCallback(response) {
+                $scope.documents = response.data;
+            }, function errorCallback(response) {
 
-        headers: {'Content-type': 'application/json'},
-    }).success(function (data) {
-        $scope.names = data;
-
-    }).error(function (data) {
-        console.log('Nie udało pobrać się użytkowników.');
-
-    });
-
-    $http({
-        method: 'GET',
-        url: HOST + '/all_trader',
-
-        headers: {'Content-type': 'application/json'},
-    }).success(function (data) {
-        $scope.trader = data;
-
-    }).error(function (data) {
-        console.log('Nie udało pobrać się użytkowników.');
-
-    });
+            });
 
 
+        DocumentWzService.allDocumentsCorrect()
+            .then(function successCallback(response) {
+                $scope.documentsByCorrect = response.data;
+            }, function errorCallback(response) {
 
-    $scope.focusIn = function() {
-        $scope.clientSpin = true;
-        $scope.message = 'Kliknij na skrót klienta ...';
-
-    };
-    $scope.focusOut = function() {
-        $scope.clientSpin = false;
-        $scope.message = '';
-    };
+            });
 
 
+        DocumentWzService.allClient()
+            .then(function successCallback(response) {
+                $scope.clients = response.data;
+                angular.forEach($scope.clients, function (value, key) {
+                    $scope.resultListClient.push(value.abbreviationName);
+                });
+            }, function errorCallback(response) {
 
-    //_-----------------------------------------------------------------------
+            });
 
-    $timeout(function () {
-        $scope.showInfo = true;
-        $scope.load = false;
-    }, 900);
 
-    $scope.reloadRoute = function () {
-        $route.reload();
-    };
+        DocumentWzService.allTrader()
+            .then(function successCallback(response) {
+                $scope.trader = response.data;
 
-    $rootScope.documents = [];
+                angular.forEach($scope.trader, function (value, key) {
+                    $scope.resultListTrader.push(value.surname);
+                });
+            }, function errorCallback(response) {
 
-    $http({
-        method: 'GET',
-        url: HOST + '/showAllDocuments',
+            });
 
-        headers: {'Content-type': 'application/json'},
-    }).success(function (data) {
-        $scope.documents = data;
+        $scope.createDocument = function () {
+            var numberWZ = $scope.form.numberWZ;
+            var subProcess = $scope.form.subProcess;
+            var client = $scope.form.nameClients;
+            var nameTrader = $scope.form.myTrader;
+            var date = new Date($scope.form.date);
 
-    }).error(function (data) {
-        console.log('Nie udało się pobrać WZ');
+            DocumentWzService.addWZ(numberWZ, subProcess, client, nameTrader, date)
+                .then(function successCallback(response) {
 
-    });
+                    var modalInstance = $scope.openModal('updateResponseFromServer.html',
+                        'Dodano dokument',
+                    'Dodano nowy dokument WZ: ' + numberWZ +
+                    ' / ' + subProcess + ' do bazy danych.',
+                        {});
 
-    $scope.correctBy = function (document) {
-        $rootScope.titleModal = 'Korekta';
-        $rootScope.responseModalBody = 'Czy skorygować dokument: '+document.numberWZ+' / '+document.subProcess;
+                    modalInstance.result.then(function (modifiedAccount) {
+                    });
 
-        var modalInstance = $uibModal.open({
-            templateUrl: 'modalQuestion.html',
-            controller: 'ModalInstanceCtrl',
-            controllerAs: '$ctrl',
-            resolve: {
-                entity: function () {
-                    return document;
-                }
+                    $scope.reloadRoute();
+
+                }, function errorCallback(response) {
+                    $scope.errorMessage = '';
+                    if (angular.equals(response.data.errorCode, 'DOCUMENT_ALREADY_EXISTS')) {
+
+                        $scope.errorMessage = 'Wybrany numer WZ: ' + numberWZ +
+                            ' / ' + subProcess + ' istnieje w bazie danych.';
+                    } else {
+                        $scope.errorMessage = 'Sprawdź połączenie z internetem lub skontaktuj się z administratorem.';
+                    }
+
+                    var modalInstance = $scope.openModal('updateResponseFromServer.html',
+                        'Błąd',
+                        $scope.errorMessage,
+                        {});
+
+                    modalInstance.result.then(function (modifiedAccount) {
+                    });
+                });
+        };
+
+
+        $scope.findByNumber = function () {
+            $scope.documentSearch = [];
+            var numberWZ = $scope.form.numberDocument;
+            var subPro = $scope.form.subProcess;
+
+            DocumentWzService.findDocumentByNumberWZ(numberWZ, subPro)
+                .then(function successCallback(response) {
+                    $scope.errorCodeSearchDocument = false;
+                    $scope.documentSearch.push(response.data);
+
+                }, function errorCallback(response) {
+                    if (angular.equals(response.data.errorCode, 'DOCUMENT_NOT_FOUND')) {
+                        $scope.errorCodeSearchDocument = true;
+                    } else {
+                        var modalInstance = $scope.openModal('updateResponseFromServer.html',
+                            'Błąd',
+                            'Sprawdź połączenie z internetem lub skontaktuj się z administratorem.',
+                            {});
+
+                        modalInstance.result.then(function (modifiedAccount) {
+                        });
+                    }
+                });
+        };
+
+
+        $scope.findByClient = function () {
+            $scope.documentSearch = [];
+            var client = '';
+
+            if (this.nameClient != null) {
+                client = this.nameClient.title;
             }
-        });
 
-        modalInstance.result.then(function (selectedItem) {
-            documentWZ.correctWZ(selectedItem.numberWZ, selectedItem.subProcess);
-        }, function () {
-            console.log('Anulowano');
-        });
-    };
+            DocumentWzService.findByClientName(client)
+                .then(function successCallback(response) {
+                    $scope.documentSearch = response.data;
+                    $scope.responseDocument($scope.documentSearch, true);
 
-    $scope.clickToDelete = function (document) {
-        $rootScope.titleModal = 'Usuwanie dokumentu';
-        $rootScope.responseModalBody = 'Czy usunąć dokument: '+document.numberWZ+' / '+document.subProcess;
+                }, function errorCallback(response) {
+                    var modalInstance = $scope.openModal('updateResponseFromServer.html',
+                        'Błąd',
+                        'Sprawdź, czy wybrałeś poprawnie nazwę klienta lub,' +
+                        ' czy  połączenie z internetem. Jeżeli to nie pomoże, skontaktuj się z administratorem.',
+                        {});
 
-        var modalInstance = $uibModal.open({
-            templateUrl: 'modalQuestion.html',
-            controller: 'ModalInstanceCtrl',
-            controllerAs: '$ctrl',
-            resolve: {
-                entity: function () {
-                    return document;
-                }
+                    modalInstance.result.then(function (modifiedAccount) {
+                    });
+                });
+        };
+
+
+        $scope.findByClientNumber = function () {
+            $scope.documentSearch = [];
+            var numberClient = $scope.form.numberClient;
+            DocumentWzService.findByClientNr(numberClient)
+                .then(function successCallback(response) {
+                    $scope.documentSearch = response.data;
+                    $scope.responseDocument($scope.documentSearch, true);
+
+                }, function errorCallback(response) {
+                    var modalInstance = $scope.openModal('updateResponseFromServer.html',
+                        'Błąd',
+                        'Sprawdź, czy wybrałeś poprawnie numer klienta lub,' +
+                        ' czy posiadasz aktywne  połączenie z internetem. Jeżeli to nie pomoże, skontaktuj się z administratorem.',
+                        {});
+
+                    modalInstance.result.then(function (modifiedAccount) {
+                    });
+                });
+        };
+
+
+        $scope.findByTrader = function () {
+            $scope.documentSearch = [];
+
+            var traderName = '';
+            if (this.nameTrader != null) {
+                traderName = this.nameTrader.title;
             }
-        });
 
-        modalInstance.result.then(function (selectedItem) {
-            documentWZ.deleteDocument(selectedItem.numberWZ, selectedItem.subProcess);
-        }, function () {
-            console.log('Anulowano');
-        });
-    };
+            DocumentWzService.findByTrader(traderName)
+                .then(function successCallback(response) {
+                    $scope.documentSearch = response.data;
+                    $scope.responseDocument($scope.documentSearch, false);
 
-    $scope.findByNumber = function () {
-        var numberWZ = $scope.form.numberDocument;
-        var subPro = $scope.form.subProcess;
-        documentWZ.findDocumentByNumberWZ(numberWZ, subPro);
-    };
 
-    $scope.findByClient = function () {
-       var client = '';
-        if(this.nameClient != null) {
-            client = this.nameClient.title;
-        }
-        $scope.clientSpin = false;
-        $scope.message = '';
-        documentWZ.findByClientName(client);
+                }, function errorCallback(response) {
+                    var modalInstance = $scope.openModal('updateResponseFromServer.html',
+                        'Błąd',
+                        'Sprawdź, czy wybrałeś poprawnie handlowca lub,' +
+                        ' czy posiadasz aktywne  połączenie z internetem. Jeżeli to nie pomoże, skontaktuj się z administratorem.',
+                        {});
 
-    };
+                    modalInstance.result.then(function (modifiedAccount) {
+                    });
+                });
+        };
 
-    $scope.findByClientNumber = function () {
-        var numberClient = $scope.form.numberClient;
-        documentWZ.findByClientNr(numberClient);
-    };
 
-    $scope.findByTrader = function () {
-        var traderName = '';
-        if(this.nameTrader != null){
-            traderName = this.nameTrader.title;
-        }
-        $scope.clientSpin = false;
-        $scope.message = '';
+        $scope.findByNameTeam = function () {
+            $scope.documentSearch = [];
+            var nameTeam = $scope.form.nameTeam;
+            DocumentWzService.findByNameTeam(nameTeam)
+                .then(function successCallback(response) {
+                    $scope.documentSearch = response.data;
+                    $scope.responseDocument($scope.documentSearch, false);
 
-        documentWZ.findByTrader(traderName);
-    };
+                }, function errorCallback(response) {
+                    var modalInstance = $scope.openModal('updateResponseFromServer.html',
+                        'Błąd',
+                        'Sprawdź, czy wybrałeś poprawnie TOK lub,' +
+                        ' czy posiadasz aktywne  połączenie z internetem. Jeżeli to nie pomoże, skontaktuj się z administratorem.',
+                        {});
 
-    $scope.findByNameTeam = function () {
-        var nameTeam = $scope.form.nameTeam;
-        documentWZ.findByNameTeam(nameTeam);
+                    modalInstance.result.then(function (modifiedAccount) {
+                    });
+                });
+        };
 
-    };
 
-});
+        $scope.clickToDelete = function (document) {
+            var modalInstance = $scope.openModal('modalQuestion.html',
+                'Usuwanie dokumentu',
+                'Czy usunąć dokument: ' + document.numberWZ + ' / ' + document.subProcess,
+                document);
+
+            modalInstance.result.then(function (documentToDelete) {
+                DocumentWzService.deleteDocument(documentToDelete.numberWZ, documentToDelete.subProcess)
+                    .then(function successCallback(response) {
+
+                        var modalInstance = $scope.openModal('updateResponseFromServer.html',
+                            'Sukces',
+                            'Dokument: ' + documentToDelete.numberWZ + ' / ' + documentToDelete.subProcess + ' został usunięty pomyślnie.',
+                            {});
+
+                        modalInstance.result.then(function (modifiedAccount) {
+                        });
+                        $scope.reloadRoute();
+
+                    }, function errorCallback(response) {
+                        var modalInstance = $scope.openModal('updateResponseFromServer.html',
+                            'Błąd',
+                            'Doukment nie został usunięty. Sprawdź połączenie z internetem lub skontaktuj się z administratorem.',
+                            {});
+
+                        modalInstance.result.then(function (modifiedAccount) {
+                        });
+                    });
+            });
+        };
+
+        $scope.correctBy = function (document) {
+            var modalInstance = $scope.openModal('modalQuestion.html',
+                'Korekta',
+                'Czy skorygować dokument: ' + document.numberWZ + ' / ' + document.subProcess + ' ?',
+                document);
+
+            modalInstance.result.then(function (documentToCorrect) {
+                DocumentWzService.correctWZ(documentToCorrect.numberWZ, documentToCorrect.subProcess)
+                    .then(function successCallback(response) {
+
+                        var modalInstance = $scope.openModal('updateResponseFromServer.html',
+                            'Sukces',
+                            'Dokument: ' + documentToCorrect.numberWZ + ' / ' + documentToCorrect.subProcess + ' został skorygowany pomyślnie.',
+                            {});
+
+                        modalInstance.result.then(function (modifiedAccount) {
+                        });
+
+                        $scope.reloadRoute();
+                    }, function errorCallback(response) {
+                        var modalInstance = $scope.openModal('updateResponseFromServer.html',
+                            'Błąd',
+                            'Doukment nie został skorygowany. Sprawdź połączenie z internetem lub skontaktuj się z administratorem.',
+                            {});
+
+                        modalInstance.result.then(function (modifiedAccount) {
+                        });
+                    });
+
+            });
+        };
+
+
+        $scope.openModal = function (template, title, responseModalBody, entity) {
+            $rootScope.responseModalBody = responseModalBody;
+            $rootScope.titleModal = title;
+            return $uibModal.open({
+                templateUrl: template,
+                controller: 'ModalInstanceCtrlRole',
+                controllerAs: '$ctrl',
+                resolve: {
+                    title: function () {
+                        return title;
+                    },
+                    responseModalBody: function () {
+                        return responseModalBody;
+                    },
+                    entity: function () {
+                        return entity;
+                    }
+                }
+            });
+        };
+
+
+        $scope.responseDocument = function (documentSearch, orCheck) {
+            $scope.checkDocuments = documentSearch;
+            $scope.orCheck = orCheck;
+            if ($scope.checkDocuments.length > 3 && $scope.orCheck) {
+                var modalInstance = $scope.openModal('updateResponseFromServer.html',
+                    'Uwaga',
+                    'Ten klient posiada zbyt dużą ilość nieodebranych dokumentów.' +
+                    ' Prosimy o niezwłoczny kontakt z klientem.',
+                    {});
+
+                modalInstance.result.then(function (modifiedAccount) {
+                });
+            }
+
+            if (!angular.equals($scope.checkDocuments.length, 0)) {
+                $scope.errorCodeSearchDocument = false;
+            } else {
+                $scope.errorCodeSearchDocument = true;
+            }
+        };
+
+    }
+]);

@@ -2,45 +2,32 @@
  * Created by Promar on 22.11.2016.
  */
 
-app.controller('HistoryCtrl', ['$scope', '$http',
-    function ($scope, $http) {
+app.controller('HistoryCtrl', ['$scope', '$http', 'HistoryService',
+    function ($scope, $http, HistoryService) {
 
     $scope.deleteDocument = [];
     $scope.correctsDocument = [];
     $scope.loggedInUser = [];
 
-        $http({
-            method: 'GET',
-            url: '/all_deleteE'
-        }).success(function (data) {
-            $scope.deleteDocument = data;
+        HistoryService.historyAllDeleteDocument()
+            .then(function successCallback(response) {
+                $scope.deleteDocument = response.data;
+            }, function errorCallback(response) {
+                console.log('Error: history delete document');
+            });
 
-        }).error(function (data) {
-            console.log('Nie udało się pobrać WZ');
-
-        });
-
-        $http({
-            method: 'GET',
-            url: '/all_corrects'
-        }).success(function (data) {
-            $scope.correctsDocument = data;
-
-        }).error(function (data) {
-            console.log('Nie udało się pobrać WZ');
-
-        });
-
-        $http({
-            method: 'GET',
-            url: '/all_logged'
-        }).success(function (data) {
-            $scope.loggedInUser = data;
-
-        }).error(function (data) {
-            console.log('Nie udało się pobrać WZ');
-
-        });
+         HistoryService.historyAllDeleteDocument()
+             .then(function successCallback(response) {
+                 $scope.correctsDocument = response.data;
+             }, function errorCallback(response) {
+                 console.log('Error: history correct document');
+             });
 
 
+       HistoryService.historyAllLoggedUser()
+           .then(function successCallback(response) {
+               $scope.loggedInUser = response.data;
+           }, function errorCallback(response) {
+               console.log('Error: history logged users');
+           });
     }]);

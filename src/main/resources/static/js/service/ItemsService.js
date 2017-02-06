@@ -1,15 +1,23 @@
-/**
- * Created by Promar on 27.11.2016.
- */
-
 app.service('ItemsService', function ($rootScope, $http, HOST) {
 
+    var self = this;
 
 
-    this.findAllItems = function () {
+    self.statusItem = function (id) {
+        return  $http({
+            method: 'POST',
+            url: HOST + '/rf/item_change_status',
+            data: {
+                "id": id
+            },
+            headers: {'Content-type': 'application/json'}
+        });
+    };
+
+    self.findAllItems = function () {
         $http({
             method: 'GET',
-            url: HOST + '/findAll_items',
+            url: HOST + '/rf/findAll_items',
             headers: {'Content-type': 'application/json'}
         })
             .success(function (data) {
@@ -25,22 +33,21 @@ app.service('ItemsService', function ($rootScope, $http, HOST) {
 
     };
 
-    this.myRf = function () {
-        $rootScope.resultListRf = [];
-
-        $http({
+    self.myRf = function () {
+        return $http({
             method: 'GET',
-            url: HOST + '/findItemBy_nameTrader',
+            url: HOST + '/rf/findItemBy_nameTrader',
             headers: {'Content-type': 'application/json'}
-        })
-            .success(function (data) {
-                $rootScope.resultListRf = data;
-
-
-            }).error(function (data) {
-            console.log('Nie udało się pobrać listy RF ');
         });
+    };
 
+
+    self.allItems = function () {
+        return  $http({
+            method: 'GET',
+            url: HOST + '/rf/findAll_items',
+            headers: {'Content-type': 'application/json'}
+        });
     };
 
 

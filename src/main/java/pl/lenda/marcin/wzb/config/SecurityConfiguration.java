@@ -48,7 +48,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/login?logout").permitAll()
                 .antMatchers("/search").permitAll()
                 .antMatchers("/saveDocument").permitAll()
-                .antMatchers("/views/admin/**").hasRole("ADMIN")
+                .antMatchers("/views/admin/**").hasAnyRole("ADMIN", "SUPER_ADMIN", "MODERATOR")
                 .anyRequest().authenticated()
                 .and()
                 .csrf().disable();

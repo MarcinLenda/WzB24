@@ -2,201 +2,202 @@
  * Created by Promar on 03.11.2016.
  */
 
-app.controller('ClientOperation', ['$scope', '$rootScope', '$http', '$route', '$uibModal', 'ClientService', 'HOST', function ($scope, $rootScope, $http, $route, $uibModal, ClientService, HOST) {
+app.controller('ClientOperation', ['$scope', '$rootScope', '$http', '$route', '$uibModal', 'ClientService', 'HOST',
+    function ($scope, $rootScope, $http, $route, $uibModal, ClientService, HOST) {
 
-    $scope.form = {};
-    $scope.clients = [];
-    $rootScope.edit = {};
-    $scope.names = ["STA", "STB", "STC",
-        "STE", "STG", "STX"];
+        $scope.form = {};
+        $scope.clients = [];
+        $rootScope.edit = {};
+        $scope.names = ["STA", "STB", "STC",
+            "STE", "STG", "STX"];
 
-    $http({
-        method: 'GET',
-        url: HOST + '/all_client',
+        $scope.reloadRoute = function () {
+            $route.reload();
+        };
 
-        headers: {'Content-type': 'application/json'},
-    }).success(function (data) {
-        $scope.clients = data;
-
-
-    }).error(function (data) {
-        console.log('Nie udało się pobrać WZ');
-
-    });
-
-    $scope.reloadRoute = function () {
-        $route.reload();
-    };
-
-    $scope.createAccountClient = function () {
-
-        var nameClient = $scope.form.nameClient;
-        var numberClient = $scope.form.numberClient;
-        var abbreviationNameClient = $scope.form.abbreviationName;
-        var nameTeam;
-
-        if ($scope.nameTeam == 'STA') {
-            nameTeam = 'STA';
-        } else if ($scope.nameTeam == 'STB') {
-            nameTeam = 'STB';
-        } else if ($scope.nameTeam == 'STC') {
-            nameTeam = 'STC';
-        } else if ($scope.nameTeam == 'STE') {
-            nameTeam = 'STE';
-        } else if ($scope.nameTeam == 'STG') {
-            nameTeam = 'STG';
-        } else {
-            nameTeam = 'STX'
-        }
-
-        ClientService.addClient(nameClient, numberClient, nameTeam, abbreviationNameClient);
-    };
-
-    $scope.deleteClient = function (account) {
-        $rootScope.titleModal = 'Usuwanie klienta ';
-        $rootScope.responseModalBody = 'Czy chcesz usunąć klienta: "' + account.name + '" ?';
+        ClientService.allClient()
+            .then(function successCallback(response) {
+                $scope.clients = response.data;
+            }, function errorCallback(response) {
+                console.log('Error: all_client');
+            });
 
 
-        var modalInstance = $uibModal.open({
-            templateUrl: 'modalQuestion.html',
-            controller: 'ModalInstanceCtrl2',
-            controllerAs: '$ctrl'
-        });
+        $scope.createAccountClient = function () {
+            var nameClient = $scope.form.nameClient;
+            var numberClient = $scope.form.numberClient;
+            var abbreviationNameClient = $scope.form.abbreviationName;
+            var nameTeam = $scope.nameTeam;
 
-        modalInstance.result.then(function (selectedItem) {
-            ClientService.deleteClient(account.numberClient, account.name);
-        }, function () {
-            console.log('Anulowano');
-        });
-    };
+            ClientService.addClient(nameClient, numberClient, nameTeam, abbreviationNameClient)
+                .then(function successCallback(response) {
 
-    $scope.editNameClient = function (account) {
-        $rootScope.titleModal = 'Edycja nazwy klienta';
-        $rootScope.edit.update = '';
+                    var modalInstance = $scope.openModal('updateResponseFromServer.html',
+                        'Dodano klienta',
+                        'Klient: "' + nameClient + '" został dodany do bazy danych. ',
+                        {});
 
-        var modalInstance = $uibModal.open({
-            templateUrl: 'updateDataAccount.html',
-            controller: 'ModalInstanceCtrl',
-            controllerAs: '$ctrl',
-            resolve: {
-                entity: function () {
-                    return account;
-                }
-            }
-        });
+                    modalInstance.result.then(function (modifiedAccount) {
+                    });
 
-        modalInstance.result.then(function (selectedItem) {
-            selectedItem.name = $rootScope.edit.update;
-            $scope.editClient(selectedItem);
-        }, function () {
-            console.log('Anulowano');
-        });
-    };
+                    $rootScope.reloadRoute();
 
-    $scope.editNumberClient = function (account) {
-        $rootScope.titleModal = 'Edycja numeru klienta';
-        $rootScope.edit.update = '';
+                }, function errorCallback(response) {
 
-        var modalInstance = $uibModal.open({
-            templateUrl: 'updateDataAccount.html',
-            controller: 'ModalInstanceCtrl',
-            controllerAs: '$ctrl',
-            resolve: {
-                entity: function () {
-                    return account;
-                }
-            }
-        });
+                    if (angular.equals(response.data.errorCode, 'CLIENT_ALREADY_EXISTS')) {
+                        $scope.errorMessage = 'Klient "' + nameClient + '" ' +
+                            'istnieje. Podany skrót lub numer klienta istnieje już w bazie danych.';
+                    } else {
+                        $scope.errorMessage = 'Sprawdź połączenie z internetem lub skontaktuj się z administratorem.';
+                    }
 
-        modalInstance.result.then(function (selectedItem) {
-            selectedItem.newNumberClient = $rootScope.edit.update;
-            $scope.editClient(selectedItem);
-        }, function () {
-            console.log('Anulowano');
-        });
-    };
+                    var modalInstance = $scope.openModal('updateResponseFromServer.html',
+                        'Błąd',
+                        $scope.errorMessage,
+                        {});
 
-    $scope.editNameTeamClient = function (account) {
-        $rootScope.titleModal = 'Edycja TOK-u';
-        $rootScope.edit.update = '';
+                    modalInstance.result.then(function (modifiedAccount) {
+                    });
 
-        var modalInstance = $uibModal.open({
-            templateUrl: 'updateDataAccount.html',
-            controller: 'ModalInstanceCtrl',
-            controllerAs: '$ctrl',
-            resolve: {
-                entity: function () {
-                    return account;
-                }
-            }
-        });
+                });
+        };
 
-        modalInstance.result.then(function (selectedItem) {
-            selectedItem.nameTeam = $rootScope.edit.update;
-            $scope.editClient(selectedItem);
-        }, function () {
-            console.log('Anulowano');
-        });
-    };
+        $scope.deleteClient = function (account) {
+            var modalInstance = $scope.openModal('modalQuestion.html',
+                'Usuwanie klienta',
+                'Czy chcesz usunąć klienta: "' + account.name + '" ?',
+                {});
 
-    $scope.editClient = function (account) {
+            modalInstance.result.then(function (modifiedAccount) {
+                ClientService.deleteClient(account.numberClient, account.name)
+                    .then(function successCallback(response) {
 
-        $http({
-            method: 'POST',
-            url: HOST + '/edit_client',
-            data: account,
-            headers: {'Content-type': 'application/json'}
-        }).then(function successCallback(response) {
+                        var modalInstance = $scope.openModal('updateResponseFromServer.html',
+                            'Sukces',
+                            'Klient: "' + account.name + '" został usnięty z bazy danych. ',
+                            {});
 
-            $rootScope.titleModal = 'Edycja klienta';
-            $rootScope.responseModalBody = 'Wartość pola klienta "'+account.name+'" została zautkualizowana pomyślnie.';
+                        modalInstance.result.then(function (modifiedAccount) {
+                        });
+                        $rootScope.reloadRoute();
 
-            var modalInstance = $uibModal.open({
-                templateUrl: 'updateResponseFromServer.html',
-                controller: 'ModalInstanceCtrl',
+                    }, function errorCallback(response) {
+
+                        if (angular.equals(response.data.errorCode, 'CLIENT_HAS_DOCUMENT')) {
+                            $scope.errorMessage = 'Do podanego klienta istnieją przypisane dokumentu WZ w bazie danych.' +
+                                ' Usunięcie klienta jest niemożliwe. ';
+                        } else {
+
+                            $scope.errorMessage = 'Klient nie został usunięty. Sprawdź połączenie z internetem lub ' +
+                                'skontaktuj się administratorem.';
+                        }
+
+                        var modalInstance = $scope.openModal('updateResponseFromServer.html',
+                            'Błąd',
+                            $scope.errorMessage,
+                            {});
+
+                        modalInstance.result.then(function (modifiedAccount) {
+                        });
+                        $rootScope.reloadRoute();
+
+                    });
+            });
+        };
+
+        $scope.editNameClient = function (account) {
+            var clientCopy = angular.copy(account);
+            var modalInstance = $scope.openModal('updateDataAccount.html',
+                'Edycja nazwy klienta',
+                '',
+                {});
+
+            modalInstance.result.then(function (modifiedClient) {
+                clientCopy.name = modifiedClient.value;
+                $scope.editClient(clientCopy);
+            });
+        };
+
+        $scope.editNumberClient = function (account) {
+            var clientCopy = angular.copy(account);
+            var modalInstance = $scope.openModal('updateDataAccount.html',
+                'Edycja numeru klienta',
+                '',
+                {});
+
+            modalInstance.result.then(function (modifiedClient) {
+                clientCopy.newNumberClient = modifiedClient.value;
+                $scope.editClient(clientCopy);
+            });
+        };
+
+        $scope.editNameTeamClient = function (account) {
+            var clientCopy = angular.copy(account);
+            var modalInstance = $scope.openModal('updateDataAccount.html',
+                'Edycja TOK-u',
+                '',
+                {});
+
+            modalInstance.result.then(function (modifiedClient) {
+                clientCopy.nameTeam = modifiedClient.value;
+                $scope.editClient(clientCopy);
+            });
+        };
+
+        $scope.editClient = function (account) {
+
+            ClientService.editClient(account)
+                .then(function successCallback(response) {
+                    var modalInstance = $scope.openModal('updateResponseFromServer.html',
+                        'Edycja klienta',
+                        'Wartość pola klienta "' + account.name + '" została zautkualizowana pomyślnie.',
+                        {});
+
+                    modalInstance.result.then(function (modifiedAccount) {
+                    });
+
+                    $scope.reloadRoute();
+
+                }, function errorCallback(response) {
+
+                    if (angular.equals(response.data.errorCode, 'NUMBER_ALREADY_EXISTS')) {
+                        $scope.errorMessage = 'Podany numer klienta jest już zajęty.';
+
+                    } else if (angular.equals(response.data.errorCode, 'TEAM_NOT_FOUND_TEAM')) {
+                        $scope.errorMessage = 'Podany TOK nie istnieje.';
+                    } else {
+                        $scope.errorMessage = 'Sprawdź połączenie z internetem lub skontaktuj się z administratorem.';
+                    }
+
+                    var modalInstance = $scope.openModal('updateResponseFromServer.html',
+                        'Błąd',
+                        $scope.errorMessage,
+                        {});
+
+                    modalInstance.result.then(function (modifiedAccount) {
+                    });
+                });
+        };
+
+        $scope.openModal = function (template, title, responseModalBody, entity) {
+            $rootScope.responseModalBody = responseModalBody;
+            $rootScope.titleModal = title;
+            return $uibModal.open({
+                templateUrl: template,
+                controller: 'ModalInstanceCtrlRole',
                 controllerAs: '$ctrl',
                 resolve: {
+                    title: function () {
+                        return title;
+                    },
+                    responseModalBody: function () {
+                        return responseModalBody;
+                    },
                     entity: function () {
-                        return account;
+                        return entity;
                     }
                 }
             });
+        };
 
-            modalInstance.result.then(function (selectedItem) {
-            }, function () {
-                console.log('Anulowano');
-            });
-            $scope.reloadRoute();
-
-        }, function errorCallback(response) {
-            $rootScope.titleModal = 'Błąd edycji';
-
-            if (angular.equals(response.data.errorCode, 'NUMBER_ALREADY_EXISTS')) {
-                $rootScope.responseModalBody = 'Podany numer klienta jest już zajęty.';
-
-            } else if (angular.equals(response.data.errorCode, 'TEAM_NOT_FOUND_TEAM')) {
-                $rootScope.responseModalBody = 'Podany TOK nie istnieje.';
-            } else {
-                $rootScope.responseModalBody = 'Sprawdź połączenie z internetem lub skontaktuj się z administratorem.';
-            }
-
-            var modalInstance = $uibModal.open({
-                templateUrl: 'updateResponseFromServer.html',
-                controller: 'ModalInstanceCtrl',
-                controllerAs: '$ctrl',
-                resolve: {
-                    entity: function () {
-                        return account;
-                    }
-                }
-            });
-
-            modalInstance.result.then(function (selectedItem) {
-            }, function () {
-                console.log('Anulowano');
-            });
-            $scope.reloadRoute();
-        });
-    };
-
-}]);
+    }]);

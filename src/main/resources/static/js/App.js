@@ -28,11 +28,11 @@ var app = angular.module('myApp', [
             responseError: function (rejection) {
                 if (rejection.status === 401) {
                     //here I preserve login page
-                    if( $location.absUrl() == 'http://wzb24.pl/#/login'){
+                    if( $location.absUrl() == 'http://localhost:8080/#/login'){
                         $location.url('/login');
 
-                    } else if ($location.absUrl() != 'http://wzb24.pl/#/after_register' &&
-                        $location.absUrl() != 'http://wzb24.pl/#/login') {
+                    } else if ($location.absUrl() != 'http://localhost:8080/#/after_register' &&
+                        $location.absUrl() != 'http://localhost:8080/#/login') {
                         $rootScope.authenticated = false;
                         $rootScope.userRoles = false;
                         $location.url('/main');
@@ -74,12 +74,12 @@ var app = angular.module('myApp', [
                 controller: 'UserAccount'
             })
             .when('/search', {
-                templateUrl: 'views/find_document.html',
-                controller: 'documentCtrl'
+                templateUrl: 'views/documentWZ.html',
+                controller: 'DocumentWzCtrl'
             })
             .when('/addDocument', {
                 templateUrl: 'views/admin/add/add_document.html',
-                controller: 'DocumentOperation'
+                controller: 'DocumentWzCtrl'
             })
             .when('/admin', {
                 templateUrl: 'views/admin/admin.html',
@@ -91,7 +91,7 @@ var app = angular.module('myApp', [
             })
             .when('/show_documents', {
                 templateUrl: 'views/admin/show_all/show_documents.html',
-                controller: 'documentCtrl'
+                controller: 'DocumentWzCtrl'
             })
             .when('/add_client', {
                 templateUrl: 'views/admin/add/add_client.html',
@@ -103,7 +103,7 @@ var app = angular.module('myApp', [
             })
             .when('/correct_document', {
                 templateUrl: 'views/admin/show_all/correct_document.html',
-                controller: 'documentCtrl'
+                controller: 'DocumentWzCtrl'
             })
             .when('/login', {
                 templateUrl: 'views/login.html',
@@ -172,15 +172,15 @@ var app = angular.module('myApp', [
             })
             .when('/save_item', {
                 templateUrl: 'views/items/add_items.html',
-                controller: 'ItemsOperation'
+                controller: 'ItemsCtrl'
             })
             .when('/all_items', {
                 templateUrl: 'views/items/items.html',
-                controller: 'ItemsOperation'
+                controller: 'ItemsCtrl'
             })
             .when('/access_denied', {
                 templateUrl: 'views/access_denied.html',
-                controller: 'ItemsOperation'
+                controller: 'ItemsCtrl'
             })
             .when('/under_construction', {
                 templateUrl: 'views/items/under_construction.html',
@@ -191,7 +191,7 @@ var app = angular.module('myApp', [
             })
             .when('/all_rf', {
                 templateUrl: 'views/user_info/all_user_rf.html',
-                controller: 'ItemsOperation'
+                controller: 'ItemsCtrl'
             })
 
             .otherwise({redirectTo: '/'});

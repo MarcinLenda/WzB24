@@ -51,7 +51,7 @@ public class MailService {
         String ednContent = "</table>\n" +
                 "\n" +
                 "    <div style=\"text-align: center\">\n" +
-                "        <a href=\"http://wzb24.pl/#/login\">\n" +
+                "        <a href=\"http://localhost:8080/#/login\">\n" +
                 "            <input style=\"margin-top: 30px;\" type=\"button\" value=\"Zaloguj się już teraz na WzB!\">\n" +
                 "        </a>\n" +
                 "    </div>\n" +

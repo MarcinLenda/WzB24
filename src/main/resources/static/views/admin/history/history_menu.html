@@ -6,7 +6,7 @@
             <div id="adminPanel" style="height: 151px;">
                 <a href="#/all_delete_document"><input ng-click="allDeleteDocument()" type="submit" class="submitAdmin" value="Usunięte dokumenty"></a>
                 <a href="#/all_corrects_document"><input ng-click="allDeleteDocument()"  type="submit" class="submitAdmin" value="Korekty"></a>
-                <a href="#/all_logged_user"><input ng-click="allDeleteDocument()"  type="submit" class="submitAdmin" value="Logowania"></a>
+                <a href="#/all_logged_user" ng-show="roleSuperAdmin"><input ng-click="allDeleteDocument()"  type="submit" class="submitAdmin" value="Logowania"></a>
                 <a href="#/admin"><input  style="background-color: #fed136"  type="submit" class="submitAdmin" value="Powrót do panelu"></a>
             </div>
         </div>

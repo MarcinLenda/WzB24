@@ -453,7 +453,7 @@ app.factory('progressBarService', function() {
     displayProgressBar = 100 - displayProgressBar; //To have 0 to 100 and not 100 to 0
     displayProgressBar = Math.round(displayProgressBar * 10) / 10; //learn more why : http://stackoverflow.com/questions/588004/is-floating-point-math-broken
 
-    if(displayProgressBar > 100){ //security
+    if(displayProgressBar > 100){ //converTo
       displayProgressBar = 100;
     }
 

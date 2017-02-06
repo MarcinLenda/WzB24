@@ -9,7 +9,7 @@
         <div class="intro-text">
             <img ng-show="load" style="font-size: 10px; padding-top: 80px;" src="../images/gears.svg">
 
-            <div ng-show="showInfo">
+            <div ng-show="showInfo" ng-controller="ItemsCtrl">
                 <div style="font-weight: 800; font-size: 40px; padding: 15px;" class="intro-lead-in">Twoje rezerwacje
                     fizyczne
                 </div>
@@ -20,7 +20,6 @@
                 </div>
 
                 <div style="font-size: 14px; letter-spacing: 1px;">Ost.Aktualizacja: {{text | date:'yyyy-MM-dd'}}</div>
-                <!--<a style="font-size: 18px;" href="#/advanced_search" ng-click="runService()" >Zawansowane wyszukiwanie.</a>-->
                 <div id="showItems">
 
                     <table class="table" ts-wrapper style="width: 100%; font-size: 14px;">
@@ -106,11 +105,11 @@
                             <td><input
                                     style="background-color:#13BA10; clear: both; width:95px;" class="adminSubmit"
                                     type="submit" value="OK"
-                                    ng-click="saveOnServer();"></td>
+                                    ng-click="saveOnServer()"></td>
                             <td ng-if="editItem.statusItem != true"><input
                                     style="background-color:#b92c28; clear: both; width:95px;" class="adminSubmit"
                                     type="submit" value="OK"
-                                    ng-click="changeStatusItem();"></td>
+                                    ng-click="changeStatusItem(editItem)"></td>
 
                         </tr>
                         </tbody>
@@ -131,22 +130,6 @@
                 </div>
             </div>
         </div>
-
-        <script type="text/ng-template" id="changeStatus">
-            <h1 style="font-size: 28px; text-align: center;">Udało się!</h1>
-            <p style="color:#ffffff;">Dodano pozycje do towarów zalegających.</p>
-
-            <input style="background-color: #13BA10;" class="submitSuccess" type="submit" value="Ok"
-                   ng-click="reloadRoute(); closeThisDialog(0);">
-        </script>
-
-         <script type="text/ng-template" id="changeStatusError">
-        <h1 style="font-size: 28px; text-align: center;">Nie udało się!</h1>
-        <p style="color:#ffffff;">Nie udało się dodać pozycji do towarów zalegających.</p>
-
-        <input style="background-color: #13BA10;" class="submitSuccess" type="submit" value="Ok"
-               ng-click="reloadRoute(); closeThisDialog(0);">
-         </script>
 
     </div>
 </div>

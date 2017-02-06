@@ -34,10 +34,6 @@ public class MongoUserDetailsService implements UserDetailsService {
         UserAccount userAccount = getUserDetail(username);
         UserDetails userDetails = new User(userAccount.getUsername(), userAccount.getPassword(), getAuthorities(userAccount.getRole()));
 
-        if (userDetails != null) {
-
-
-
             UserAccount userAccount1 = userAccountRepository.findByUsername(username);
             HistoryLoggedAppIn whoLogged = new HistoryLoggedAppIn();
             whoLogged.setDateLogged(new Date());
@@ -55,18 +51,28 @@ public class MongoUserDetailsService implements UserDetailsService {
 
             historyLoggedInService.saveWhoLoggedIn(whoLogged);
 
-        }
+
 
         return userDetails;
     }
 
     public List<GrantedAuthority> getAuthorities(String role) {
         List<GrantedAuthority> authList = new ArrayList<>();
-        if (role.equalsIgnoreCase("ADMIN")) {
+        if (role.equalsIgnoreCase("SUPER_ADMIN")) {
+            authList.add(new SimpleGrantedAuthority("ROLE_SUPER_ADMIN"));
+
+        }else if(role.equalsIgnoreCase("ADMIN")) {
             authList.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
 
-        } else if (role.equalsIgnoreCase("USER")) {
+        } else if(role.equalsIgnoreCase("MODERATOR")){
+            authList.add(new SimpleGrantedAuthority("ROLE_MODERATOR"));
+
+        } else if(role.equalsIgnoreCase("SUPER_USER")){
+            authList.add(new SimpleGrantedAuthority("ROLE_SUPER_USER"));
+        }
+        else if (role.equalsIgnoreCase("USER")) {
             authList.add(new SimpleGrantedAuthority("ROLE_USER"));
+
         }
 
         return authList;

@@ -2,7 +2,7 @@
  * Created by Promar on 10.11.2016.
  */
 
-app.controller('UserAccount', function ($scope, $http, $rootScope, $location, $timeout, documentWZ, $uibModal, HOST) {
+app.controller('UserAccount', function ($scope, $http, $rootScope, $location, $timeout, DocumentWzService, $uibModal, HOST) {
 
     $scope.username = $rootScope._username;
     $scope.infoUsers = '';
@@ -46,7 +46,7 @@ app.controller('UserAccount', function ($scope, $http, $rootScope, $location, $t
 
     $scope.findMyDocument = function () {
 
-        documentWZ.findByTrader($scope.infoUsers.surname);
+        DocumentWzService.findByTrader($scope.infoUsers.surname);
 
     };
 

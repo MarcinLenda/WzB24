@@ -12,7 +12,7 @@ public interface TraderAccountRepository extends MongoRepository<TraderAccount, 
 
     Optional<TraderAccount> findBySurnameAndNumberTrader(String surname, String numberTrader);
 
-    TraderAccount findBySurname(String surname);
+    Optional<TraderAccount> findBySurname(String surname);
 
     Optional<TraderAccount> findByNumberTrader(String numberTrader);
 }

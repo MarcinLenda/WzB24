@@ -51,16 +51,8 @@ public class DocumentWZCtrl {
         this.documentWzServiceImplementation = documentWzServiceImplementation;
     }
 
-    @CrossOrigin(origins = "http://wzb24.pl")
-    @RequestMapping(value = "/search", method = RequestMethod.POST)
-    public
-    @ResponseBody
-    Collection search(@RequestParam String value) {
-        return itemSearchRepository.searchItems(value);
-    }
-
-    @CrossOrigin(origins = "http://wzb24.pl")
-    @Secured("ROLE_ADMIN")
+    @CrossOrigin(origins = "http://localhost:8080")
+    @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN","ROLE_MODERATOR"})
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(value = "/saveDocument")
     public void createDocumentWz(@RequestBody @Valid DocumentWzDto documentWzDto) {
@@ -74,8 +66,8 @@ public class DocumentWZCtrl {
         }
     }
 
-    @CrossOrigin(origins = "http://wzb24.pl")
-    @Secured("ROLE_ADMIN")
+    @CrossOrigin(origins = "http://localhost:8080")
+    @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN","ROLE_MODERATOR"})
     @RequestMapping(value = "/deleteDocument", method = RequestMethod.DELETE)
     public void deleteDocument(@RequestBody @Valid DocumentWzToDeleteDto documentWzToDeleteDto) {
         Optional<DocumentWz> possibleDocument = documentWzServiceImplementation.findByNumberWZAndSubProcess(
@@ -101,7 +93,8 @@ public class DocumentWZCtrl {
 
     }
 
-    @CrossOrigin(origins = "http://wzb24.pl")
+    @CrossOrigin(origins = "http://localhost:8080")
+    @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN","ROLE_MODERATOR","ROLE_SUPER_USER", "ROLE_USER"})
     @ResponseBody
     @RequestMapping(value = "/findByNumber", method = RequestMethod.POST)
     public DocumentWzDto findDocumentWz(@RequestBody @Valid FindByNumberWzDto findByNumberWzDto) {
@@ -111,7 +104,8 @@ public class DocumentWZCtrl {
                 .orElseThrow(DocumentWzException::documentNotFound);
     }
 
-    @CrossOrigin(origins = "http://wzb24.pl")
+    @CrossOrigin(origins = "http://localhost:8080")
+    @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN","ROLE_MODERATOR","ROLE_SUPER_USER", "ROLE_USER"})
     @RequestMapping(value = "/findByClient", method = RequestMethod.POST)
     public List<DocumentWzDto> findByClient(@RequestBody @Valid DocumentWzAbbreviationNameDto documentWzAbbreviationNameDto) {
         return documentWzServiceImplementation
@@ -121,7 +115,8 @@ public class DocumentWZCtrl {
                 .collect(Collectors.toList());
     }
 
-    @CrossOrigin(origins = "http://wzb24.pl")
+    @CrossOrigin(origins = "http://localhost:8080")
+    @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN","ROLE_MODERATOR","ROLE_SUPER_USER", "ROLE_USER"})
     @RequestMapping(value = "/findByClientNumber", method = RequestMethod.POST)
     public List<DocumentWzDto> findByClientNumber(@RequestBody @Valid FindClientNumber findClientNumber) {
         return documentWzServiceImplementation.findByNumberClient(findClientNumber.getFindClientNumber())
@@ -130,7 +125,8 @@ public class DocumentWZCtrl {
                 .collect(Collectors.toList());
     }
 
-    @CrossOrigin(origins = "http://wzb24.pl")
+    @CrossOrigin(origins = "http://localhost:8080")
+    @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN","ROLE_MODERATOR","ROLE_SUPER_USER", "ROLE_USER"})
     @RequestMapping(value = "/findByTraderName", method = RequestMethod.POST)
     public List<DocumentWzDto> findByTraderName(@RequestBody @Valid String traderName) {
         return documentWzServiceImplementation.findByNameTrader(traderName)
@@ -139,7 +135,8 @@ public class DocumentWZCtrl {
                 .collect(Collectors.toList());
     }
 
-    @CrossOrigin(origins = "http://wzb24.pl")
+    @CrossOrigin(origins = "http://localhost:8080")
+    @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN","ROLE_MODERATOR","ROLE_SUPER_USER", "ROLE_USER"})
     @RequestMapping(value = "/showAllDocuments", method = RequestMethod.GET)
     public List<DocumentWzDto> findAll() {
         return documentWzServiceImplementation.showAllDocument()
@@ -148,7 +145,8 @@ public class DocumentWZCtrl {
                 .collect(Collectors.toList());
     }
 
-    @CrossOrigin(origins = "http://wzb24.pl")
+    @CrossOrigin(origins = "http://localhost:8080")
+    @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN","ROLE_MODERATOR","ROLE_SUPER_USER", "ROLE_USER"})
     @RequestMapping(value = "/by_correct", method = RequestMethod.PATCH)
     public void correctBy(@RequestBody @Valid FindByNumberWzDto findByNumberWzDto) {
         Optional<DocumentWz> possibleDocumentToCorrect = documentWzServiceImplementation.findByNumberWZAndSubProcess(
@@ -161,14 +159,15 @@ public class DocumentWZCtrl {
 
             //save information who accept correct document
             historyCorrectsDocumentRepository.save(convertTo.convertToHistoryCorrectDoc(documentWz.getNumberWZ(), documentWz.getSubProcess(),
-                    documentWz.getClient(), documentWz.getTraderName(), userAccount.getUsername(), new Date()));
+                    documentWz.getClient(), documentWz.getTraderName(), userAccount.getUsername()));
             documentWzServiceImplementation.createDocumentWz(documentWz);
             return documentWz;
         }).orElseThrow(DocumentWzException::documentNotFound);
 
     }
 
-    @CrossOrigin(origins = "http://wzb24.pl")
+    @CrossOrigin(origins = "http://localhost:8080")
+    @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN","ROLE_MODERATOR"})
     @RequestMapping(value = "/find_correct", method = RequestMethod.GET)
     public List<DocumentWzDto> findCorrectionDocument() {
         return documentWzServiceImplementation
@@ -178,7 +177,8 @@ public class DocumentWZCtrl {
                 .collect(Collectors.toList());
     }
 
-    @CrossOrigin(origins = "http://wzb24.pl")
+    @CrossOrigin(origins = "http://localhost:8080")
+    @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN","ROLE_MODERATOR","ROLE_SUPER_USER", "ROLE_USER"})
     @RequestMapping(value = "/find_nameteam", method = RequestMethod.POST)
     @ResponseBody
     public List<DocumentWzDto> findByNameTeam(@RequestBody @Valid String nameTeam) {
