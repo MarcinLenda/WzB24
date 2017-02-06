@@ -28,11 +28,11 @@ var app = angular.module('myApp', [
             responseError: function (rejection) {
                 if (rejection.status === 401) {
                     //here I preserve login page
-                    if( $location.absUrl() == 'http://155.133.24.148:8080/#/login'){
+                    if( $location.absUrl() == 'http://localhost:8080/#/login'){
                         $location.url('/login');
 
-                    } else if ($location.absUrl() != 'http://155.133.24.148:8080/#/after_register' &&
-                        $location.absUrl() != 'http://155.133.24.148:8080/#/login') {
+                    } else if ($location.absUrl() != 'http://localhost:8080/#/after_register' &&
+                        $location.absUrl() != 'http://localhost:8080/#/login') {
                         $rootScope.authenticated = false;
                         $rootScope.userRoles = false;
                         $location.url('/main');
