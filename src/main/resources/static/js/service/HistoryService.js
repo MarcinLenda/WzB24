@@ -24,8 +24,4 @@ app.service('HistoryService', function ($http, HOST) {
             url: 'history/all_logged'
         });
     };
-
-
-
-
 });

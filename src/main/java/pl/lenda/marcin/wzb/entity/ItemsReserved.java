@@ -44,6 +44,8 @@ public class ItemsReserved {
 
     private String pieces;
 
+    private String activeItemForTrader;
+
     private String delay;
 
     private String allPrice;
@@ -62,7 +64,7 @@ public class ItemsReserved {
     }
 
     public ItemsReserved(String numberPro, String subPro, String creator, String contentItem, String detailsContentItem, String clientName, String traderName, String nameTeam,
-                         String nameTeamCDS, String kbn, String numberFactory, String provider, String businessSector, String dateAccepted, String pieces, String delay, String allPrice, String priceItem, String section, String position, boolean statusItem, Date dateUpdate) {
+                         String nameTeamCDS, String kbn, String numberFactory, String provider, String businessSector, String dateAccepted, String pieces, String activeItemForTrader, String delay, String allPrice, String priceItem, String section, String position, boolean statusItem, Date dateUpdate) {
         this.numberPro = numberPro;
         this.subPro = subPro;
         this.creator = creator;
@@ -78,6 +80,7 @@ public class ItemsReserved {
         this.businessSector = businessSector;
         this.dateAccepted = dateAccepted;
         this.pieces = pieces;
+        this.activeItemForTrader = activeItemForTrader;
         this.delay = delay;
         this.allPrice = allPrice;
         this.priceItem = priceItem;
@@ -167,12 +170,12 @@ public class ItemsReserved {
         this.id = id;
     }
 
-    public String getPieces() {
-        return pieces;
+    public String getActiveItemForTrader() {
+        return activeItemForTrader;
     }
 
-    public void setPieces(String pieces) {
-        this.pieces = pieces;
+    public void setActiveItemForTrader(String activeItemForTrader) {
+        this.activeItemForTrader = activeItemForTrader;
     }
 
     public String getDelay() {
@@ -269,5 +272,13 @@ public class ItemsReserved {
 
     public void setPosition(String position) {
         this.position = position;
+    }
+
+    public String getPieces() {
+        return pieces;
+    }
+
+    public void setPieces(String pieces) {
+        this.pieces = pieces;
     }
 }

@@ -5,9 +5,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import pl.lenda.marcin.wzb.dto.ItemsReservedFindByDto;
-import pl.lenda.marcin.wzb.entity.ItemReservedUnnecessary;
 import pl.lenda.marcin.wzb.entity.ItemsReserved;
 import pl.lenda.marcin.wzb.entity.UserAccount;
 import pl.lenda.marcin.wzb.service.reserved_items.ItemsReservedUnnecessaryService;
@@ -124,6 +125,16 @@ public class UpdateItemsReserved {
         }
     }
 
+
+    public void updateItems(ItemsReservedFindByDto itemsReservedFindByDto) {
+
+        ItemsReserved itemsReserved = reserved_itemsService.findItem(itemsReservedFindByDto.getId());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        itemsReserved.setActiveItemForTrader(authentication.getName());
+        reserved_itemsService.saveItems(itemsReserved);
+    }
+
+
     private String convertTime(String time) {
 
         SimpleDateFormat inputFormat = new SimpleDateFormat("yyMMdd");
@@ -137,28 +148,6 @@ public class UpdateItemsReserved {
             logger.error(ex.getMessage(), ex);
         }
         return date;
-    }
-
-    public void updateItems(ItemsReservedFindByDto itemsReservedFindByDto) {
-
-        ItemsReserved itemsReserved = reserved_itemsService.findItem(itemsReservedFindByDto.getId());
-
-        if (Double.parseDouble(itemsReserved.getPieces()) == Double.parseDouble(itemsReservedFindByDto.getPieces())
-                ||Double.parseDouble(itemsReserved.getPieces()) < Double.parseDouble(itemsReservedFindByDto.getPieces())) {
-            ItemReservedUnnecessary itemReservedUnnecessary = itemsReservedUnnecessaryService.findItemUnnecessary(itemsReserved.getNumberPro(), itemsReserved.getSubPro(),
-                    itemsReserved.getPosition());
-
-            if (itemReservedUnnecessary != null) {
-                itemsReservedUnnecessaryService.delete(itemReservedUnnecessary);
-            }
-            reserved_itemsService.delete(itemsReserved);
-
-        } else {
-            double piecesSum = Double.parseDouble(itemsReserved.getPieces()) - Double.parseDouble(itemsReservedFindByDto.getPieces());
-
-            itemsReserved.setPieces(String.valueOf(piecesSum));
-            reserved_itemsService.saveItems(itemsReserved);
-        }
     }
 }
 

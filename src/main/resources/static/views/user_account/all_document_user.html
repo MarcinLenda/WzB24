@@ -6,13 +6,13 @@
                 <table class="table" ts-wrapper>
                     <thead>
                     <tr>
-
-                        <th>Numer WZ</th>
-                        <th ts-criteria="subProcess|parseInt">Podproces</th>
+                        <th>#</th>
+                        <th  ts-criteria="numberWZ|parseInt">Numer WZ</th>
+                        <th>Podproces</th>
                         <th ts-criteria="client|lowercase">Klient</th>
-                        <th ts-criteria="clientNumber|parseInt">Numer klienta</th>
-                        <th ts-criteria="traderName|lowercase">Handlowiec</th>
-                        <th ts-criteria="date|parseInt">Data zatwierdzenia</th>
+                        <th>Numer klienta</th>
+                        <th>Handlowiec</th>
+                        <th>Data zatwierdzenia</th>
                         <th>Zwłoka</th>
 
 
@@ -20,6 +20,7 @@
                     </thead>
                     <tbody>
                     <tr ng-repeat="document in documents" ts-repeat>
+                        <td>{{$index +1}}</td>
                         <td>{{document.numberWZ}}</td>
                         <td>{{document.subProcess}}</td>
                         <td>{{document.client}}</td>

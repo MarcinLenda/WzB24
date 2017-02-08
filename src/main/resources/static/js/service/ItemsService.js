@@ -15,22 +15,11 @@ app.service('ItemsService', function ($rootScope, $http, HOST) {
     };
 
     self.findAllItems = function () {
-        $http({
+        return $http({
             method: 'GET',
             url: HOST + '/rf/findAll_items',
             headers: {'Content-type': 'application/json'}
-        })
-            .success(function (data) {
-                $rootScope.listItems = data;
-                angular.forEach($rootScope.listItems, function (value, key) {
-                    console.log(key + ': ' + value.dateUpdate);
-                });
-
-            }).error(function (data) {
-            $rootScope.listClient = 'Nie udało się pobrać listy handlowców.'
         });
-
-
     };
 
     self.myRf = function () {
@@ -50,5 +39,14 @@ app.service('ItemsService', function ($rootScope, $http, HOST) {
         });
     };
 
+    self.updateInfoItem = function (item) {
+        return $http({
+            method: 'POST',
+            url: HOST + '/rf/update_items',
+            data: {
+                "id": item.id
+            }, headers: {'Content-type': 'application/json'}
+        });
+    };
 
 });

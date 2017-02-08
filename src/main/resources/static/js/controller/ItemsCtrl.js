@@ -1,212 +1,117 @@
 /**
  * Created by Promar on 26.11.2016.
  */
-app.controller('ItemsCtrl', ['$scope', '$rootScope', '$http', '$route', '$timeout', '$uibModal', 'ItemsService', 'HOST',
-    function ($scope, $rootScope, $http, $route, $timeout, $uibModal, ItemsService, HOST) {
+app.controller('ItemsCtrl', ['$scope', '$rootScope', '$http', '$route', '$timeout', '$uibModal', 'ItemsService',
+    function ($scope, $rootScope, $http, $route, $timeout, $uibModal, ItemsService) {
 
-        $scope.form = {};
-        $scope.listItems = '';
-        $rootScope.listClient = '';
-        $scope.resultListClient = [];
-        $scope.resultListTrader = [];
-        $scope.load = true;
-        $rootScope.itemsLength = 0;
-        $rootScope.text = new Date();
+
 
         $scope.reloadRoute = function () {
             $route.reload();
         };
+
+        $scope.load = true;
 
         $timeout(function () {
             $scope.showInfo = true;
             $scope.load = false;
         }, 4500);
 
-        $scope.changeStatusItem = function (item) {
-           ItemsService.statusItem(item.id)
-               .then(function successCallback(response) {
-                   var modalInstance = $scope.openModal('updateResponseFromServer.html',
-                       'Sukces',
-                      '"'+ item.contentItem+'" został dodany do towarów zalegających.',
-                       {});
 
-                   modalInstance.result.then(function (modifiedAccount) {
-                   });
-                   $scope.myItems();
-                   $scope.reloadRoute();
-               }, function errorCallback(response) {
-                   var modalInstance = $scope.openModal('updateResponseFromServer.html',
-                       'Błąd',
-                       '"'+ item.contentItem+'" nie został dodany do towarów zalegających.' +
-                       'Sprawdź połączenie z internetem lub skontaktuj się z administratorem.',
-                       {});
-
-                   modalInstance.result.then(function (modifiedAccount) {
-                   });
-               });
-
-        };
-
-
-            ItemsService.myRf()
-                .then(function successCallback(response) {
-                    $scope.resultListRf = response.data;
-
-                }, function errorCallback(response) {
-                    var modalInstance = $scope.openModal('updateResponseFromServer.html',
-                        'Błąd',
-                        'Nie udało się pobrać Twojej listy rezerwacji fizycznych.' +
-                        ' Sprawdź połączenie z internetem lub skontaktuj się z administratorem.',
-                        {});
-
-                    modalInstance.result.then(function (modifiedAccount) {
-                    });
-                });
-
-
-
-
-       ItemsService.findAllItems()
-           .then(function successCallback(response) {
-               $scope.listItems = response.data;
-
-           }, function errorCallback(response) {
-               var modalInstance = $scope.openModal('updateResponseFromServer.html',
-                   'Błąd',
-                   'Nie udało się pobrać  listy rezerwacji fizycznych.' +
-                   ' Sprawdź połączenie z internetem lub skontaktuj się z administratorem.',
-                   {});
-
-               modalInstance.result.then(function (modifiedAccount) {
-               });
-           });
-
-
-        $scope.runService = function () {
-            ItemsService.findAllItems();
-        };
-
-
-        //******************************************************************************************************************
-
-        $scope.editData = [];
-        $scope.editItem = [];
-        $scope.editOff = true;
-        $scope.editOn = false;
-
-        $scope.stopEdit = function () {
-            $scope.editOff = true;
-            $scope.editOn = false;
-        };
-
-        $scope.showEdit = function () {
-            $scope.editOff = false;
-            $scope.editOn = true;
-
-
-            $scope.id = $scope.editData.items.id;
-
-            $http({
-                method: 'POST',
-                url: HOST + '/rf/findItemBy_ID',
-                data: {
-                    "id": $scope.id
-                },
-                headers: {'Content-type': 'application/json'}
-            })
-                .success(function (data) {
-                    $scope.editItem = data;
-
-
-                }).error(function (data) {
-                $rootScope.listClient = 'Nie udało się pobrać listy handlowców.'
-            });
-
-
-        };
-
-        $scope.offEditNumber = true;
-        $scope.editNumber = false;
-        $scope.modelPieces = [];
-        $scope.startPieces = 0;
-
-        $scope.editItemPieces = function () {
-            $scope.offEditNumber = false;
-            $scope.editNumber = true;
-        };
-
-        $scope.save = function () {
-            $scope.offEditNumber = true;
-            $scope.editNumber = false;
-            $scope.startPieces = $scope.modelPieces.op;
-        };
-
-        $scope.return = function () {
-            $scope.offEditNumber = true;
-            $scope.editNumber = false;
-        };
-
-        $scope.saveOnServer = function (item) {
-
-            $http({
-                method: 'POST',
-                url: HOST + 'rf/update_items',
-                data: {
-                    "id": $scope.editData.items.id,
-                    "pieces": $scope.modelPieces.op
-                }, headers: {'Content-type': 'application/json'}
-            }).then(function successCallback(response) {
-
-                $rootScope.titleModal = 'Odpisywanie towaru';
-                $rootScope.responseModalBody = 'Odpisałeś pomyślnie towar ze zlecnia:' + item.numberPro + " / " +
-                    item.subPro;
-
-                var modalInstance = $uibModal.open({
-                    templateUrl: 'updateResponseFromServer.html',
-                    controller: 'ModalInstanceCtrl2',
-                    controllerAs: '$ctrl'
-                });
-
-                modalInstance.result.then(function (selectedItem) {
-                }, function () {
-                    console.log('Anulowano');
-                });
-                $scope.reloadRoute();
+        ItemsService.myRf()
+            .then(function successCallback(response) {
+                $scope.resultListRf = response.data;
 
             }, function errorCallback(response) {
-                $rootScope.titleModal = 'Błąd edycji';
+                var modalInstance = $scope.openModal('updateResponseFromServer.html',
+                    'Błąd',
+                    'Nie udało się pobrać Twojej listy rezerwacji fizycznych.' +
+                    ' Sprawdź połączenie z internetem lub skontaktuj się z administratorem.',
+                    {});
 
-                if (angular.equals(response.data.errorCode, 'NUMBER_ALREADY_EXISTS')) {
-                    $rootScope.responseModalBody = 'Handlowiec o podanym numerzy istnieje już w bazie danych.';
-
-                } else if (angular.equals(response.data.errorCode, 'TEAM_NOT_FOUND_TEAM')) {
-                    $rootScope.responseModalBody = 'Podany TOK nie istnieje.';
-                } else {
-                    $rootScope.responseModalBody = 'Sprawdź połączenie z internetem lub skontaktuj się z administratorem.';
-                }
-
-                var modalInstance = $uibModal.open({
-                    templateUrl: 'updateResponseFromServer.html',
-                    controller: 'ModalInstanceCtrl',
-                    controllerAs: '$ctrl',
-                    resolve: {
-                        entity: function () {
-                            return account;
-                        }
-                    }
+                modalInstance.result.then(function (modifiedAccount) {
                 });
+            });
 
-                modalInstance.result.then(function (selectedItem) {
-                }, function () {
-                    console.log('Anulowano');
+
+        ItemsService.findAllItems()
+            .then(function successCallback(response) {
+                $scope.listItems = response.data;
+
+            }, function errorCallback(response) {
+                var modalInstance = $scope.openModal('updateResponseFromServer.html',
+                    'Błąd',
+                    'Nie udało się pobrać  listy rezerwacji fizycznych.' +
+                    ' Sprawdź połączenie z internetem lub skontaktuj się z administratorem.',
+                    {});
+
+                modalInstance.result.then(function (modifiedAccount) {
                 });
-                $scope.reloadRoute();
+            });
+
+
+        $scope.rfDetails = function (item) {
+            var modalInstance = $scope.openModal('modalRF.html',
+                'Edycja pozycji',
+                '',
+                item);
+
+            modalInstance.result.then(function (item) {
+                ItemsService.statusItem(item.id)
+                    .then(function successCallback(response) {
+                        var modalInstance = $scope.openModal('updateResponseFromServer.html',
+                            'Sukces',
+                            '"' + item.contentItem + '" został dodany do towarów zalegających.',
+                            {});
+
+
+                        $scope.reloadRoute();
+                    }, function errorCallback(response) {
+                        var modalInstance = $scope.openModal('updateResponseFromServer.html',
+                            'Błąd',
+                            '"' + item.contentItem + '" nie został dodany do towarów zalegających.' +
+                            'Sprawdź połączenie z internetem lub skontaktuj się z administratorem.',
+                            {});
+
+                    });
             });
         };
+
+        $scope.rfDetailsInfo = function (item) {
+            var modalInstance = $scope.openModal('modalRFInfo.html',
+                'Info pozycja',
+                '',
+                item);
+
+            modalInstance.result.then(function (item) {
+                ItemsService.updateInfoItem(item)
+                    .then(function successCallback(response) {
+                        var modalInstance = $scope.openModal('updateResponseFromServer.html',
+                            'Sukces',
+                            'Pozycja: ' + item.contentItem + ' została odpisana.',
+                            item);
+                        $scope.reloadRoute();
+
+                    }, function errorCallback(response) {
+                        var modalInstance = $scope.openModal('updateResponseFromServer.html',
+                            'Błąd',
+                            'Pozycja: ' + item.contentItem + ' nie została odpisana.',
+                            item);
+                        $scope.reloadRoute();
+                    });
+
+                $scope.reloadRoute();
+            }, function errorCallback(response) {
+
+            });
+        };
+
 
         $scope.openModal = function (template, title, responseModalBody, entity) {
             $rootScope.responseModalBody = responseModalBody;
             $rootScope.titleModal = title;
+            $rootScope.itemTrader = entity;
+
             return $uibModal.open({
                 templateUrl: template,
                 controller: 'ModalInstanceCtrlRole',
@@ -226,3 +131,4 @@ app.controller('ItemsCtrl', ['$scope', '$rootScope', '$http', '$route', '$timeou
         };
 
     }]);
+

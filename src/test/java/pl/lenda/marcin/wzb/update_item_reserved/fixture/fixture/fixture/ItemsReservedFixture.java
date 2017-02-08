@@ -24,7 +24,7 @@ public class ItemsReservedFixture {
         itemsReserved.setNameTeamCDS("SCA");
         itemsReserved.setNumberFactory("112313");
         itemsReserved.setDetailsContentItem("Brak");
-        itemsReserved.setPieces("12");
+        itemsReserved.setActiveItemForTrader("12");
         itemsReserved.setProvider("Valvex");
         itemsReserved.setSection("I");
         return itemsReserved;

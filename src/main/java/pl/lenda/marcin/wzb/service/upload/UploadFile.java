@@ -19,7 +19,7 @@ public class UploadFile {
     @Value("${path.to.upload.file.windows}")
     String path;
 
-    public ResponseEntity uploadPhoto(MultipartFile file){
+    public ResponseEntity uploadFileCsv(MultipartFile file){
 
         if (!file.isEmpty()) {
             try {

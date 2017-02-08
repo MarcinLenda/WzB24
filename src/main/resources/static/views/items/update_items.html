@@ -56,7 +56,7 @@
                 </table>
 
                 <div>
-                    <div ng-controller="ItemsOperation">
+                    <div >
                         Ladowanie:
                         <div class="progress" style="">
                             <div class="progress-bar" role="progressbar" ng-style="{ 'width': uploader.progress + '%' }"></div>
@@ -67,11 +67,6 @@
 
             </div>
 
-            <script type="text/ng-template" id="updateSuccess">
-                <h1 style="font-size: 25px;">Baza RF została zaktualizowana!</h1>
-                <input style="width: 408px; margin-top: 5px;" class="submitConfirmDialog" type="submit" value="Ok"
-                       ng-click="reloadRoute(); closeThisDialog(0);">
-            </script>
         </div>
     </div>
 </div>

@@ -44,7 +44,7 @@ public class ItemsReservedCtrl {
     @ResponseBody
     public void handleFileUpload(MultipartFile file) {
         System.out.println("HandleFileUpload");
-        uploadFile.uploadPhoto(file);
+        uploadFile.uploadFileCsv(file);
 
     }
 
@@ -57,7 +57,7 @@ public class ItemsReservedCtrl {
     }
 
     @CrossOrigin(origins = "http://localhost:8080")
-    @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN","ROLE_MODERATOR"})
+    @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN","ROLE_MODERATOR", "ROLE_SUPER_USER", "ROLE_USER"})
     @RequestMapping(value = "/update_items", method = RequestMethod.POST)
     public void updateItems(@RequestBody ItemsReservedFindByDto itemsReservedFindByDto) {
         updateItemsReserved.updateItems(itemsReservedFindByDto);
@@ -94,13 +94,19 @@ public class ItemsReservedCtrl {
     @RequestMapping(value = "/item_change_status", method = RequestMethod.POST)
     public void changeStatusItem(@RequestBody ItemsReservedFindByDto _itemsReservedFindByDto) {
         ItemsReserved _itemsReserved = reserved_itemsService.findItem(_itemsReservedFindByDto.getId());
-        ItemReservedUnnecessary itemReservedUnnecessary = new ItemReservedUnnecessary();
-        itemReservedUnnecessary.setNumberPro(_itemsReserved.getNumberPro());
-        itemReservedUnnecessary.setSubPro(_itemsReserved.getSubPro());
-        itemReservedUnnecessary.setPosition(_itemsReserved.getPosition());
-        itemsReservedUnnecessaryService.saveItems(itemReservedUnnecessary);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        _itemsReserved.setStatusItem(true);
+        UserAccount userAccount = userAccountService.findByUsername(authentication.getName());
+
+        if(_itemsReserved.getCreator().equals(userAccount.getSurname())) {
+
+            ItemReservedUnnecessary itemReservedUnnecessary = new ItemReservedUnnecessary();
+            itemReservedUnnecessary.setNumberPro(_itemsReserved.getNumberPro());
+            itemReservedUnnecessary.setSubPro(_itemsReserved.getSubPro());
+            itemReservedUnnecessary.setPosition(_itemsReserved.getPosition());
+            itemsReservedUnnecessaryService.saveItems(itemReservedUnnecessary);
+            _itemsReserved.setStatusItem(true);
+        }
         reserved_itemsService.saveItems(_itemsReserved);
 
     }

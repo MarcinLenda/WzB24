@@ -10,22 +10,18 @@ app.controller('TraderOperation', ['$scope', '$http', '$route', '$rootScope', 'T
     $scope.names = ['STA', 'STB', 'STC',
         'STE', 'STG', 'STX'];
 
-    $http({
-        method: 'GET',
-        url: HOST + '/all_trader',
-
-        headers: {'Content-type': 'application/json'},
-    }).success(function (data) {
-        $scope.traders = data;
-
-    }).error(function (data) {
-        console.log('Nie udało się pobrać WZ');
-
-    });
-
     $scope.reloadRoute = function () {
         $route.reload();
     };
+
+
+    TraderService.allTrader()
+        .then(function successCallback(response) {
+            $scope.traders = data;
+        }, function errorCallback(response) {
+            console.log('Error: all traders in TraderCtrl');
+        });
+
 
     $scope.createTrader = function () {
         var name = $scope.form.nameTrader;
@@ -47,25 +43,60 @@ app.controller('TraderOperation', ['$scope', '$http', '$route', '$rootScope', 'T
             nameTeam = 'STX';
         }
 
-        TraderService.addTrader(name, surname, nameTeam, numberTrader);
+        TraderService.addTrader(name, surname, nameTeam, numberTrader)
+            .then(function successCallback(response) {
+                var modalInstance = $scope.openModal('updateResponseFromServer.html',
+                    'Dodano handlowca',
+                    'Handlowiec: "'+name +' '+ surname + '" został dodany do bazy danych. ',
+                    {});
+
+                modalInstance.result.then(function (modifiedAccount) {
+                });
+
+                $rootScope.reloadRoute();
+
+            }, function errorCallback(response) {
+                if (angular.equals(response.data.errorCode, 'NUMBER_ALREADY_EXISTS')) {
+                    $scope.errorMessage = 'Handlowiec: "'+name +' '+ surname +'" ' +
+                        'istnieje. Podane nazwisko lub numer handlowca istnieje już w bazie danych.';
+                } else {
+                    $scope.errorMessage = 'Sprawdź połączenie z internetem lub skontaktuj się z administratorem.';
+                }
+
+                var modalInstance = $scope.openModal('updateResponseFromServer.html',
+                    'Błąd',
+                    $scope.errorMessage,
+                    {});
+
+            });
+
     };
 
 
     $scope.deleteTrader = function (account) {
-        $rootScope.titleModal = 'Usuwanie handlowca ';
-        $rootScope.responseModalBody = 'Czy chcesz usunąć handlowca: "' + account.name + '" ?';
+        var modalInstance = $scope.openModal('modalQuestion.html',
+            'Usuwanie handlowca',
+            'Czy chcesz usunąć handlowca: "' + account.name +' '+account.surname+ '" ?',
+            {});
 
+        modalInstance.result.then(function (modifiedAccount) {
+            TraderService.deleteTrader(account.numberTrader, account.surname)
+                .then(function successCallback(response) {
 
-        var modalInstance = $uibModal.open({
-            templateUrl: 'modalQuestion.html',
-            controller: 'ModalInstanceCtrl2',
-            controllerAs: '$ctrl'
-        });
+                    var modalInstance = $scope.openModal('updateResponseFromServer.html',
+                        'Sukces',
+                        'Handlowiec: "' + account.name +' '+account.surname + '" został usnięty z bazy danych. ',
+                        {});
+                    $rootScope.reloadRoute();
 
-        modalInstance.result.then(function (selectedItem) {
-            TraderService.deleteTrader(account.numberTrader, account.surname);
-        }, function () {
-            console.log('Anulowano');
+                }, function errorCallback(response) {
+
+                    var modalInstance = $scope.openModal('updateResponseFromServer.html',
+                        'Błąd',
+                        'Handlowiec: "' + account.name +' '+account.surname + '" nie został usnięty z bazy danych. ' +
+                        'Sprawdź połączenie z internetem lub skontaktuj się z handlowcem.',
+                        {});
+                });
         });
     };
 

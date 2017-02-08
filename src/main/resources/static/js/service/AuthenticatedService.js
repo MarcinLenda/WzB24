@@ -14,41 +14,33 @@ app.service('AuthenticatedService', function ($rootScope, $http, HOST) {
 
     function serializeData(credentials) {
         return $.param({
-            "username" : credentials.username,
-            "password" : credentials.password
+            "username": credentials.username,
+            "password": credentials.password
         });
     }
 
-    (function() {
+    (function () {
 
         $http({
             method: 'GET',
             url: HOST + '/success'
         }).then(function successCallback(response) {
             var data = response.data;
-            if(data.name) {
-                $rootScope.authenticated = true;
-                $rootScope._username = data.username;
 
-                $rootScope.roleSuperAdmin = angular.equals(data.role,'SUPER_ADMIN');
-                $rootScope.roleAdmin = angular.equals(data.role,'ADMIN');
-                $rootScope.roleModerator = angular.equals(data.role,'MODERATOR');
+            $rootScope.authenticated = true;
+            $rootScope._username = data.username;
 
-                if(angular.equals(data.role,'SUPER_ADMIN')){
-                    $rootScope.roleSuperAdmin = true;
-                    $rootScope.roleAdmin = false;
-                    $rootScope.showAdminPanel = true;
-                }else if(angular.equals(data.role,'ADMIN')) {
-                    $rootScope.roleAdmin = true;
-                    $rootScope.roleSuperAdmin = false;
-                    $rootScope.showAdminPanel = true;
-                }else if(angular.equals(data.role,'MODERATOR')){
-                    $rootScope.showAdminPanel = true;
-                    $rootScope.roleModerator = true;
-                    $rootScope.roleSuperAdmin = false;
-                    $rootScope.showAdminPanel = false;
-                }
+            $rootScope.roleSuperAdmin = angular.equals(data.role, 'SUPER_ADMIN');
+            $rootScope.roleAdmin = angular.equals(data.role, 'ADMIN');
+            $rootScope.roleModerator = angular.equals(data.role, 'MODERATOR');
+
+            if ($rootScope.roleSuperAdmin || $rootScope.roleAdmin || $rootScope.roleModerator) {
+                $rootScope.admin = true;
             }
+
+            $rootScope.roleSuperUser = angular.equals(data.role, 'SUPER_USER');
+            $rootScope.roleUser = angular.equals(data.role, 'USER');
+
 
         }, function errorCallback(response) {
             $rootScope.authenticated = false;
@@ -57,7 +49,7 @@ app.service('AuthenticatedService', function ($rootScope, $http, HOST) {
     })();
 
 
-    this.authenticatedUser = function(credentials, callback) {
+    self.authenticatedUser = function (credentials, callback) {
 
         var headers = {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -66,47 +58,33 @@ app.service('AuthenticatedService', function ($rootScope, $http, HOST) {
         var data = serializeData(credentials);
 
         $http.post(HOST + '/perform_login', data, {
-            headers : headers
-        }).then(function(response) {
+            headers: headers
+        }).then(function (response) {
             var data = response.data;
 
-                $rootScope.authenticated = true;
-                $rootScope._username = data.username;
+            $rootScope.authenticated = true;
+            $rootScope._username = data.username;
 
+            $rootScope.roleSuperAdmin = angular.equals(data.role, 'SUPER_ADMIN');
+            $rootScope.roleAdmin = angular.equals(data.role, 'ADMIN');
+            $rootScope.roleModerator = angular.equals(data.role, 'MODERATOR');
 
-                if(angular.equals(data.role,'SUPER_ADMIN')){
-                    $rootScope.roleSuperAdmin = true;
-                    $rootScope.roleAdmin = false;
-                    $rootScope.showAdminPanel = true;
-                    console.log('Rola SuperAdmin');
-                }else if(angular.equals(data.role,'ADMIN')) {
-                    $rootScope.roleAdmin = true;
-                    $rootScope.roleSuperAdmin = false;
-                    $rootScope.showAdminPanel = true;
-                    console.log('Rola admin');
-                }else if(angular.equals(data.role,'MODERATOR')){
-                    $rootScope.showAdminPanel = true;
-                    $rootScope.roleModerator = true;
-                    $rootScope.roleSuperAdmin = false;
-                    $rootScope.showAdminPanel = false;
-                }
+            if ($rootScope.roleSuperAdmin || $rootScope.roleAdmin || $rootScope.roleModerator) {
+                $rootScope.admin = true;
+            }
 
-
-                // $http({
-                //     method: 'GET',
-                //     url: HOST + '/myAccount/role'
-                // }).then(function successCallback(response) {
-                //     $rootScope.userRoles = response.data;
-                // }, function errorCallback(response) {
-                //     $rootScope.userRoles = false;
-                // });
+            $rootScope.roleSuperUser = angular.equals(data.role, 'SUPER_USER');
+            $rootScope.roleUser = angular.equals(data.role, 'USER');
 
             callback && callback(true);
-        }, function(err) {
+        }, function (err) {
             self.authenticated = false;
-            self.admin = false;
             callback && callback(false);
 
         });
+    };
+
+    self.logOut = function () {
+        return $http.post('/logout', {});
     };
 });

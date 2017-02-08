@@ -123,11 +123,11 @@ var app = angular.module('myApp', [
                 controller: 'MainAccountCtrl'
             })
             .when('/user_document', {
-                templateUrl: 'views/user_info/all_user_document.html',
+                templateUrl: 'views/user_account/all_document_user.html',
                 controller: 'UserAccount'
             })
             .when('/change_password', {
-                templateUrl: 'views/user_info/change_password.html',
+                templateUrl: 'views/user_account/change_password.html',
                 controller: 'UserAccount'
             })
             .when('/after_register', {
@@ -190,7 +190,7 @@ var app = angular.module('myApp', [
                 controller: 'UploadController'
             })
             .when('/all_rf', {
-                templateUrl: 'views/user_info/all_user_rf.html',
+                templateUrl: 'views/user_account/all_rf_user.html',
                 controller: 'ItemsCtrl'
             })
 

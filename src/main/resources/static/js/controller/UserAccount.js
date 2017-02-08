@@ -2,53 +2,34 @@
  * Created by Promar on 10.11.2016.
  */
 
-app.controller('UserAccount', function ($scope, $http, $rootScope, $location, $timeout, DocumentWzService, $uibModal, HOST) {
+app.controller('UserAccount', function ($scope, $http, $rootScope, $location, $timeout, DocumentWzService, $uibModal, MainService) {
 
     $scope.username = $rootScope._username;
-    $scope.infoUsers = '';
-    $rootScope.nameUser = '';
+    $scope.infoUsers= {};
     $scope.showInfo = false;
     $scope.load = true;
 
     $timeout(function () {
         $scope.showInfo = true;
         $scope.load = false;
-    }, 900);
+    }, 1000);
 
 
-    $scope.isViewLoading = false;
-    $scope.$on('$routeChangeStart', function () {
-        $scope.isViewLoading = true;
-
-    });
-    $scope.$on('$routeChangeSuccess', function () {
-        $scope.isViewLoading = false;
-    });
-    $scope.$on('$routeChangeError', function () {
-        $scope.isViewLoading = false;
-    });
-
-
-    $http({
-        method: 'GET',
-        url: HOST + '/myAccount/user_info',
-        headers: {'Content-type': 'application/json'}
-    })
-        .success(function (data) {
-            $scope.infoUsers = data;
+    MainService.userInfo()
+        .then(function successCallback(response) {
+            $scope.infoUsers = response.data;
             $rootScope.nameUser = $scope.infoUsers.name;
 
+            DocumentWzService.findByTrader($scope.infoUsers.surname)
+                .then(function successCallback(response) {
+                    $scope.documents = response.data;
+                }, function errorCallback(response) {
+                    console.log('Error: user all document');
+                });
+        }, function errorCallback(response) {
+            console.log('Error: user info');
+        });
 
-        }).error(function (data) {
-
-    });
-
-
-    $scope.findMyDocument = function () {
-
-        DocumentWzService.findByTrader($scope.infoUsers.surname);
-
-    };
 
     $scope.changePassword = function () {
 
@@ -56,7 +37,7 @@ app.controller('UserAccount', function ($scope, $http, $rootScope, $location, $t
 
             $http({
                 method: 'POST',
-                url: HOST + '/myAccount/change_password',
+                url:'/myAccount/change_password',
                 data: {
                     "oldPassword": $scope.password.old,
                     "newPassword": $scope.password.new,
@@ -78,13 +59,7 @@ app.controller('UserAccount', function ($scope, $http, $rootScope, $location, $t
                     controllerAs: '$ctrl'
                 });
 
-                modalInstance.result.then(function (selectedItem) {
-                }, function () {
-                    console.log('Anulowano');
-                });
-
                 $location.path("/account");
-
 
             }, function errorCallback(response) {
 

@@ -28,6 +28,8 @@ app.controller('LoginCtrl', ['$rootScope', '$http', '$location', '$route', '$sco
 
         self.login = function () {
 
+
+
             authenticated(self.credentials, function (authenticated) {
                 if (authenticated) {
                     $location.path('/home');
@@ -36,7 +38,7 @@ app.controller('LoginCtrl', ['$rootScope', '$http', '$location', '$route', '$sco
 
                 } else {
                     $scope.errorForm = "Błędne dane!";
-                    $location.path("/perform_login");
+                    $location.path("/login");
                     self.error = true;
                     $rootScope.authenticated = false;
                 }
@@ -45,31 +47,17 @@ app.controller('LoginCtrl', ['$rootScope', '$http', '$location', '$route', '$sco
 
         $scope.logout = function () {
 
-
-            $http.post('/logout', {})
-
-                .success(function () {
-                $location.path('/login');
-                $rootScope.authenticated = false;
-                $rootScope.userRoles = false;
-                    $rootScope._username = '';
-
-
-            }).error(function (data) {
-                $location.path('/login');
-                $rootScope.authenticated = false;
-                $rootScope.userRoles = false;
-                $rootScope.userInfo = false;
-                $rootScope._username = '';
-            });
+            AuthenticatedService.logOut()
+               .then(function successCallback(response) {
+                   $location.path('/login');
+                   $rootScope.authenticated = false;
+                   $rootScope.admin = false;
+               }, function errorCallback(response) {
+                   $location.path('/login');
+                   $rootScope.authenticated = false;
+                   $rootScope.admin = false;
+               });
         }
 
-    }])
-    .config(function ($mdThemingProvider) {
+    }]);
 
-
-        $mdThemingProvider.theme('docs-dark', 'default')
-            .primaryPalette('yellow')
-            .dark();
-
-    });

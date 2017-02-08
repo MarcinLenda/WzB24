@@ -1,0 +1,102 @@
+
+<div class="container">
+    <div class="slider-container">
+        <div class="intro-text">
+            <img ng-show="load" style="font-size: 10px; padding-top: 80px;" src="../images/gears.svg">
+
+            <div ng-show="showInfo" ng-controller="ItemsCtrl">
+                <div style="font-weight: 800; font-size: 40px; padding: 15px;" class="intro-lead-in">Twoje rezerwacje
+                    fizyczne
+                </div>
+
+
+                <div style="margin: 0 auto;">
+                    <input style="font-size: 20px;" type="text" ng-model="search.$" placeholder="Wprowadź frazę.">
+                </div>
+
+                <div style="font-size: 14px; letter-spacing: 1px;">Ost.Aktualizacja: {{text | date:'yyyy-MM-dd'}}</div>
+                <div id="showItems">
+
+                    <table class="table" ts-wrapper style="width: 100%; font-size: 14px;">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>KBN</th>
+                            <th>Nazwa towaru</th>
+                            <th>Opis towaru</th>
+                            <th style="text-align: center;" ts-criteria="clientName|lowercase">DOST.</th>
+                            <th style="text-align: center;" ts-criteria="clientName|lowercase">TOK</th>
+                            <th style="text-align: center;">NR. FABR.</th>
+                            <th ts-criteria="nameTeam|lowercase">Tworzący</th>
+                            <th ts-criteria="dateAccepted|parseInt">Ost. rezerw.</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-class='{orange : item.statusItem, red : item.activeItemForTrader != null}'
+                            ng-repeat="item in resultListRf | filter:search" ts-repeat
+                            ng-click="rfDetails(item)">
+                            <td>{{$index +1}}</td>
+                            <td>{{item.kbn}}</td>
+                            <td>{{item.contentItem}}</td>
+                            <td>{{item.detailsContentItem}}</td>
+                            <td>{{item.provider}}</td>
+                            <td>{{item.nameTeam}}</td>
+                            <td>{{item.numberFactory}}</td>
+                            <td>{{item.creator}}</td>
+                            <td style="background: #18F73E">
+                                {{item.dateAccepted}}
+                            </td>
+
+
+                        </tr>
+                        </tbody>
+
+
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/ng-template" id="modalRF.html">
+            <div class="modal-header">
+                <h3 class="modal-title" style="text-align: center;"><b>{{titleModal}}</b></h3>
+                <br>
+                <h4 class="modal-title" style="text-align: center;">{{itemTrader.contentItem}}</h4>
+            </div>
+
+            <div class="modal-body">
+                <table class="table" ts-wrapper style="width: 100%; font-size: 14px;">
+                    <thead>
+                    <tr>
+                        <th>Proces</th>
+                        <th>/</th>
+                        <th>Dostępne</th>
+                        <th>Zalegacz</th>
+                        <th ng-show="itemTrader.activeItemForTrader != null">Poz.aktywna</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>{{itemTrader.numberPro}}</td>
+                        <td>{{itemTrader.subPro}}</td>
+                        <td>{{itemTrader.pieces}}</td>
+                        <td ng-show="!itemTrader.statusItem">
+                            <button class="btn btn-primary" type="button"
+                                    ng-click="$ctrl.ok()">Zalegacz
+                            </button>
+                        </td>
+                        <td ng-show="itemTrader.statusItem">Dodany</td>
+                        <td ng-show="itemTrader.activeItemForTrader != null">{{itemTrader.activeItemForTrader}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" type="button" ng-click="$ctrl.cancel()">Zamknij</button>
+            </div>
+        </script>
+
+    </div>
+</div>
+</div>

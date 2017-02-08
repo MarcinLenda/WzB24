@@ -66,12 +66,4 @@ app.controller('RegisterCtrl', function ($scope, $http, $location, HOST) {
             $scope.numberStart0 = false;
         }
     }
-})
-    .config(function ($mdThemingProvider) {
-
-
-        $mdThemingProvider.theme('docs-dark', 'default')
-            .primaryPalette('yellow')
-            .dark();
-
-    });
+});
