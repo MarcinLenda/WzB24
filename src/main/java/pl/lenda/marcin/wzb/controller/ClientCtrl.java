@@ -31,7 +31,7 @@ public class ClientCtrl {
 
 
 
-    @CrossOrigin(origins = "http://localhost:8080")
+    @CrossOrigin(origins = "http://155.133.24.148:8080")
     @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN","ROLE_MODERATOR"})
     @RequestMapping(value = "/save_client", method = RequestMethod.POST)
     @ResponseBody
@@ -39,7 +39,7 @@ public class ClientCtrl {
         clientAccountService.createAccount(validateClient.clientValidate(clientAccountDto));
     }
 
-    @CrossOrigin(origins = "http://localhost:8080")
+    @CrossOrigin(origins = "http://155.133.24.148:8080")
     @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN"})
     @RequestMapping(value = "/delete_client", method = RequestMethod.DELETE)
     public void deleteClient(@RequestBody ClientAccountDto clientFindDto){
@@ -55,7 +55,7 @@ public class ClientCtrl {
        clientAccountService.createAccount(validateClient.clientAccountDataCheck(clientAccount, clientAccountDto));
     }
 
-    @CrossOrigin(origins = "http://localhost:8080")
+    @CrossOrigin(origins = "http://155.133.24.148:8080")
     @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN","ROLE_MODERATOR"})
     @RequestMapping(value = "/all_client", method = RequestMethod.GET)
     public List<ClientAccountDto> allClientAccount() {

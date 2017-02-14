@@ -16,6 +16,7 @@ app.controller('HistoryCtrl', ['$scope', '$http', 'HistoryService',
                 console.log('Error: history delete document');
             });
 
+
          HistoryService.historyAllDeleteDocument()
              .then(function successCallback(response) {
                  $scope.correctsDocument = response.data;

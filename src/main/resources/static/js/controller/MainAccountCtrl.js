@@ -7,6 +7,7 @@ app.controller('MainAccountCtrl', ['$scope', '$http', '$rootScope', '$route',  '
         $scope.notActiveAccounts = [];
         $scope.activeAccounts = [];
 
+
         $rootScope.reloadRoute = function () {
             $route.reload();
         };

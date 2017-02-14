@@ -9,6 +9,7 @@ app.controller('LoginCtrl', ['$rootScope', '$http', '$location', '$route', '$sco
         var self = this;
         this.credentials = {};
         $rootScope.loginError = false;
+
         $scope.showInfo = false;
         $scope.load = true;
 
@@ -17,9 +18,11 @@ app.controller('LoginCtrl', ['$rootScope', '$http', '$location', '$route', '$sco
             $scope.load = false;
         }, 1500);
 
+
         self.tab = function (route) {
             return $route.current && route === $route.current.controller;
         };
+
 
         var authenticated = function (credentials, callback) {
             AuthenticatedService.authenticatedUser(credentials, callback);
@@ -45,6 +48,7 @@ app.controller('LoginCtrl', ['$rootScope', '$http', '$location', '$route', '$sco
             })
         };
 
+
         $scope.logout = function () {
 
             AuthenticatedService.logOut()
@@ -59,5 +63,13 @@ app.controller('LoginCtrl', ['$rootScope', '$http', '$location', '$route', '$sco
                });
         }
 
-    }]);
+    }])
+    .config(function ($mdThemingProvider) {
+
+
+        $mdThemingProvider.theme('docs-dark', 'default')
+            .primaryPalette('yellow')
+            .dark();
+
+    });
 

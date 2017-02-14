@@ -2,6 +2,7 @@ app.service('AdminService', function ($http, HOST) {
 
     var self = this;
 
+
     self.findCorrect = function () {
         return $http({
             method: 'GET',
@@ -9,6 +10,7 @@ app.service('AdminService', function ($http, HOST) {
             headers: {'Content-type': 'application/json'}
         });
     };
+
 
     self.findNotActiveAccount = function () {
         return $http({

@@ -2,6 +2,7 @@ app.service('AccountService', function ($http, HOST) {
 
     var self = this;
 
+
     self.updateAccount = function (account) {
         return $http({
             method: 'POST',
@@ -11,6 +12,7 @@ app.service('AccountService', function ($http, HOST) {
         });
     };
 
+
     self.resetPassword = function (account) {
         return $http({
             method: 'POST',
@@ -19,6 +21,7 @@ app.service('AccountService', function ($http, HOST) {
             headers: {'Content-type': 'application/json'}
         });
     };
+
 
     self.updateRole = function (account) {
         return $http({
@@ -32,6 +35,7 @@ app.service('AccountService', function ($http, HOST) {
         });
     };
 
+
     self.showAllActiveUser = function () {
         return $http({
             method: 'GET',
@@ -40,6 +44,7 @@ app.service('AccountService', function ($http, HOST) {
         });
     };
 
+
     self.showAllNotActiveUser = function () {
        return $http({
             method: 'GET',
@@ -47,6 +52,7 @@ app.service('AccountService', function ($http, HOST) {
             headers: {'Content-type': 'application/json'}
         });
     };
+
 
     self.activationUserAccount = function (username) {
 
@@ -60,6 +66,7 @@ app.service('AccountService', function ($http, HOST) {
       });
     };
 
+
     self.blockedUserAccount = function (username) {
         return $http({
             method: 'PATCH',
@@ -70,6 +77,7 @@ app.service('AccountService', function ($http, HOST) {
             headers: {'Content-type': 'application/json'}
         });
     };
+
 
     self.deleteUserAccount = function (username) {
         return $http({

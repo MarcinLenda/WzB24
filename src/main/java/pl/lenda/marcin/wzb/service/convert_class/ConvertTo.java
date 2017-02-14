@@ -2,16 +2,14 @@ package pl.lenda.marcin.wzb.service.convert_class;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import pl.lenda.marcin.wzb.dto.ClientAccountDto;
-import pl.lenda.marcin.wzb.dto.DocumentWzDto;
-import pl.lenda.marcin.wzb.dto.TraderAccountDto;
-import pl.lenda.marcin.wzb.dto.UserAccountDto;
+import pl.lenda.marcin.wzb.dto.*;
 import pl.lenda.marcin.wzb.entity.*;
 import pl.lenda.marcin.wzb.service.client_account.ClientAccountService;
 import pl.lenda.marcin.wzb.service.trader.TraderService;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.Optional;
 
 /**
  * Created by Promar on 02.11.2016.
@@ -153,5 +151,48 @@ public class ConvertTo {
         historyCorrectsDocument.setNameTrader(trader);
         historyCorrectsDocument.setDate(new Date());
         return historyCorrectsDocument;
+    }
+
+    public OfferAn convertToOfferAnEntity(OfferAnDto offerAnDto, UserAccount userAccount){
+
+        Optional<TraderAccount> traderAccount = traderService.findByNumberTrader(userAccount.getNumberUser());
+        Optional<ClientAccount> clientAccount = clientAccountService.findByNumberClient(offerAnDto.getClient());
+
+        OfferAn offerAnEntity = new OfferAn();
+
+
+        if(clientAccount.isPresent()){
+            offerAnEntity.setClient(clientAccount.get().getName());
+        }else{
+            offerAnEntity.setClient(offerAnDto.getClient());
+        }
+
+        if(traderAccount.isPresent()){
+            offerAnEntity.setNameTeam(traderAccount.get().getNameTeam());
+            offerAnEntity.setNameTrader(traderAccount.get().getSurname());
+        }else{
+            offerAnEntity.setNameTeam("Wolny");
+            offerAnEntity.setNameTrader(userAccount.getSurname());
+        }
+
+        if(offerAnDto.getNumberOffer() == null){
+            offerAnEntity.setNumberOffer("brak");
+        }
+
+        offerAnEntity.setContentPriority(offerAnDto.getContentPriority());
+        offerAnEntity.setCityName(offerAnDto.getCityName());
+        offerAnEntity.setNameOffer(offerAnDto.getNameOffer());
+        offerAnEntity.setPriority(offerAnDto.getPriority());
+        offerAnEntity.setWhoCreate(offerAnDto.getWhoCreate());
+        offerAnEntity.setDateCreate(new Date());
+        offerAnEntity.setFinishAN(offerAnDto.isFinishAN());
+        offerAnEntity.setHistoryAN(offerAnDto.isHistoryAN());
+        offerAnEntity.setWaitingAN(offerAnDto.isWaitingAN());
+        offerAnEntity.setWhoCreate(offerAnDto.getWhoCreate());
+        offerAnEntity.setPriority(offerAnDto.getPriority());
+        offerAnEntity.setStatus(offerAnDto.getStatus());
+        offerAnEntity.setValue(offerAnDto.getValue());
+
+        return offerAnEntity;
     }
 }

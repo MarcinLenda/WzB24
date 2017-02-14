@@ -49,16 +49,14 @@ app.controller('UserAccount', function ($scope, $http, $rootScope, $location, $t
                 headers: {'Content-type': 'application/json'}
             }).then(function successCallback(response) {
 
-                $rootScope.titleModal = 'Hasło zmienione';
-                $rootScope.responseModalBody = 'Twoje hasło zostało zmienione. Przy próbie następnego logowania użyj ' +
-                    'nowego hasła.';
+                var modalInstance = $scope.openModal('updateResponseFromServer.html',
+                    'Sukces',
+                    'Twoje hasło zostało zmienione. Przy próbie następnego logowania użyj ' +
+                    'nowego hasła.',
+                    {});
 
-                var modalInstance = $uibModal.open({
-                    templateUrl: 'updateResponseFromServer.html',
-                    controller: 'ModalInstanceCtrl2',
-                    controllerAs: '$ctrl'
+                modalInstance.result.then(function (modifiedAccount) {
                 });
-
                 $location.path("/account");
 
             }, function errorCallback(response) {
@@ -66,24 +64,40 @@ app.controller('UserAccount', function ($scope, $http, $rootScope, $location, $t
                 if ('WRONG_PASSWORD' == response.data.errorCode) {
                     $scope.wrongPass = true;
                 }
-                $rootScope.titleModal = 'Błąd zmiany hasła';
-                $rootScope.responseModalBody = 'Twoje hasło nie zostało zmienione. Skontaktuj się z administratorem.' +
-                    'nowego hasła.';
 
-                var modalInstance = $uibModal.open({
-                    templateUrl: 'updateResponseFromServer.html',
-                    controller: 'ModalInstanceCtrl2',
-                    controllerAs: '$ctrl'
-                });
+                var modalInstance = $scope.openModal('updateResponseFromServer.html',
+                    'Błąd',
+                    'Twoje hasło nie zostało zmienione. Skontaktuj się z administratorem.',
+                    {});
 
-                modalInstance.result.then(function (selectedItem) {
-                }, function () {
-                    console.log('Anulowano');
+                modalInstance.result.then(function (modifiedAccount) {
                 });
 
             });
         } else {
             $scope.diffPass = true;
         }
+    };
+
+
+    $scope.openModal = function (template, title, responseModalBody, entity) {
+        $rootScope.responseModalBody = responseModalBody;
+        $rootScope.titleModal = title;
+        return $uibModal.open({
+            templateUrl: template,
+            controller: 'ModalInstanceCtrlRole',
+            controllerAs: '$ctrl',
+            resolve: {
+                title: function () {
+                    return title;
+                },
+                responseModalBody: function () {
+                    return responseModalBody;
+                },
+                entity: function () {
+                    return entity;
+                }
+            }
+        });
     };
 });

@@ -28,11 +28,11 @@ var app = angular.module('myApp', [
             responseError: function (rejection) {
                 if (rejection.status === 401) {
                     //here I preserve login page
-                    if( $location.absUrl() == 'http://localhost:8080/#/login'){
+                    if( $location.absUrl() == 'http://155.133.24.148:8080/#/login'){
                         $location.url('/login');
 
-                    } else if ($location.absUrl() != 'http://localhost:8080/#/after_register' &&
-                        $location.absUrl() != 'http://localhost:8080/#/login') {
+                    } else if ($location.absUrl() != 'http://155.133.24.148:8080/#/after_register' &&
+                        $location.absUrl() != 'http://155.133.24.148:8080/#/login') {
                         $rootScope.authenticated = false;
                         $rootScope.userRoles = false;
                         $location.url('/main');
@@ -169,22 +169,13 @@ var app = angular.module('myApp', [
             .when('/items', {
                 templateUrl: 'views/items/items_menu.html',
                 controller: ''
-            })
-            .when('/save_item', {
-                templateUrl: 'views/items/add_items.html',
-                controller: 'ItemsCtrl'
-            })
-            .when('/all_items', {
+            }).when('/all_items', {
                 templateUrl: 'views/items/items.html',
                 controller: 'ItemsCtrl'
             })
             .when('/access_denied', {
                 templateUrl: 'views/access_denied.html',
                 controller: 'ItemsCtrl'
-            })
-            .when('/under_construction', {
-                templateUrl: 'views/items/under_construction.html',
-                controller: 'LoginCtrl'
             }).when('/update_items', {
                 templateUrl: 'views/items/update_items.html',
                 controller: 'UploadController'
@@ -192,6 +183,22 @@ var app = angular.module('myApp', [
             .when('/all_rf', {
                 templateUrl: 'views/user_account/all_rf_user.html',
                 controller: 'ItemsCtrl'
+            })
+            .when('/an', {
+                templateUrl: 'views/an/an_menu.html',
+                controller: 'OfferAnCtrl'
+            })
+            .when('/add_an', {
+                templateUrl: 'views/an/add/add_an.html',
+                controller: 'OfferAnCtrl'
+            })
+            .when('/waiting_an', {
+                templateUrl: 'views/an/waiting_room/waiting_an.html',
+                controller: 'OfferAnCtrl'
+            })
+            .when('/confirm_an', {
+                templateUrl: 'views/an/confirm_offer/confirm_an.html',
+                controller: 'OfferAnCtrl'
             })
 
             .otherwise({redirectTo: '/'});

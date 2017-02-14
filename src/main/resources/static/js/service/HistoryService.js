@@ -15,7 +15,7 @@ app.service('HistoryService', function ($http, HOST) {
             method: 'GET',
             url: 'history/all_corrects'
         });
-    }
+    };
 
 
     self.historyAllLoggedUser = function () {

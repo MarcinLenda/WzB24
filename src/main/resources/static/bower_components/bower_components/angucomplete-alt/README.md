@@ -13,7 +13,7 @@ To see a demo go here: https://ghiden.github.io/angucomplete-alt
 
 ###Key Features
 * Show just a title, a title and a description or a title, description and image in your autocomplete list
-* Deliberately minimally styled so you can customise it to your heart's content!
+* Deliberately minimally styled so you can customise it to your heart's contentPriority!
 * Reads JSON data and allows you to specify which fields to use for display
 * Simple setup - e.g. to pull data from a server, just set the url parameter
 

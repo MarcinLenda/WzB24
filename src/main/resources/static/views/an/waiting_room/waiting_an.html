@@ -1,0 +1,61 @@
+<div class="container">
+    <div class="slider-container">
+        <div class="intro-text">
+
+            <div class="intro-heading">POCZEKALNIA</div>
+
+            <div id="showDocument">
+                <table class="table" ts-wrapper>
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th >TOK</th>
+                        <th>Zgłaszający</th>
+                        <th>Klient</th>
+                        <th>Nazwa inwestycji</th>
+                        <th>Miejscowość</th>
+                        <th>Data wejścia</th>
+                        <th>Czeka</th>
+                        <th>Kto</th>
+                        <th>Zatwierdź</th>
+
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="offer in waitingOffer" ts-repeat>
+                        <td>{{$index +1}}</td>
+                        <td>{{offer.nameTeam}}</td>
+                        <td>{{offer.nameTrader}}</td>
+                        <td>{{offer.client}}</td>
+                        <td>{{offer.nameOffer}}</td>
+                        <td>{{offer.cityName}}</td>
+                        <td>{{offer.dateCreate | date:'MM/dd/yyyy'}}</td>
+                        <td><timer start-time="offer.dateCreate">{{days}} dni </timer></td>
+                        <td>
+                            <select style="width: 250px;" ng-model="trader">
+                                <option>sziemiec@bimsplus.com.pl</option>
+                                <option>pnowak@bimsplus.com.pl</option>
+                                <option>arychly@bimsplus.com.pl</option>
+                                <option>mbryczkowska@bimsplus.com.pl</option>
+                            </select>
+
+                        </td>
+                        </td>
+                        <td><input class="button_management" style="background-color:#FF5D00;width: 85px;"
+                                   class="adminSubmit" type="submit" value="Aktywuj"
+                                   ng-click="confirmAn(offer, trader)"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <a href="#/an">
+                    <img src="images/icons/back.png">
+                </a>
+            </div>
+        </div>
+
+        </div>
+    </div>
+</div>

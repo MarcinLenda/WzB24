@@ -2,7 +2,7 @@
  * Created by Promar on 03.11.2016.
  */
 
-app.controller('TraderOperation', ['$scope', '$http', '$route', '$rootScope', 'TraderService','HOST','$uibModal', function ($scope, $http, $route, $rootScope, TraderService,HOST, $uibModal) {
+app.controller('TraderOperation', ['$scope', '$http', '$route', '$rootScope', 'TraderService', 'HOST', '$uibModal', function ($scope, $http, $route, $rootScope, TraderService, HOST, $uibModal) {
 
     $scope.form = {};
     $scope.traders = [];
@@ -15,9 +15,9 @@ app.controller('TraderOperation', ['$scope', '$http', '$route', '$rootScope', 'T
     };
 
 
-    TraderService.allTrader()
+    TraderService.allTraders()
         .then(function successCallback(response) {
-            $scope.traders = data;
+            $scope.traders = response.data;
         }, function errorCallback(response) {
             console.log('Error: all traders in TraderCtrl');
         });
@@ -35,19 +35,20 @@ app.controller('TraderOperation', ['$scope', '$http', '$route', '$rootScope', 'T
             nameTeam = 'STB';
         } else if ($scope.nameTeam == 'STC') {
             nameTeam = 'STC';
-        } else if($scope.nameTeam == 'STE') {
+        } else if ($scope.nameTeam == 'STE') {
             nameTeam = 'STE';
-        }else if($scope.nameTeam == 'STG') {
+        } else if ($scope.nameTeam == 'STG') {
             nameTeam = 'STG';
-        }else{
+        } else {
             nameTeam = 'STX';
         }
+
 
         TraderService.addTrader(name, surname, nameTeam, numberTrader)
             .then(function successCallback(response) {
                 var modalInstance = $scope.openModal('updateResponseFromServer.html',
                     'Dodano handlowca',
-                    'Handlowiec: "'+name +' '+ surname + '" został dodany do bazy danych. ',
+                    'Handlowiec: "' + name + ' ' + surname + '" został dodany do bazy danych. ',
                     {});
 
                 modalInstance.result.then(function (modifiedAccount) {
@@ -57,7 +58,7 @@ app.controller('TraderOperation', ['$scope', '$http', '$route', '$rootScope', 'T
 
             }, function errorCallback(response) {
                 if (angular.equals(response.data.errorCode, 'NUMBER_ALREADY_EXISTS')) {
-                    $scope.errorMessage = 'Handlowiec: "'+name +' '+ surname +'" ' +
+                    $scope.errorMessage = 'Handlowiec: "' + name + ' ' + surname + '" ' +
                         'istnieje. Podane nazwisko lub numer handlowca istnieje już w bazie danych.';
                 } else {
                     $scope.errorMessage = 'Sprawdź połączenie z internetem lub skontaktuj się z administratorem.';
@@ -73,19 +74,19 @@ app.controller('TraderOperation', ['$scope', '$http', '$route', '$rootScope', 'T
     };
 
 
-    $scope.deleteTrader = function (account) {
+    $scope.deleteTrader = function (trader) {
         var modalInstance = $scope.openModal('modalQuestion.html',
             'Usuwanie handlowca',
-            'Czy chcesz usunąć handlowca: "' + account.name +' '+account.surname+ '" ?',
-            {});
+            'Czy chcesz usunąć handlowca: "' + trader.name + ' ' + trader.surname + '" ?',
+            trader);
 
-        modalInstance.result.then(function (modifiedAccount) {
-            TraderService.deleteTrader(account.numberTrader, account.surname)
+        modalInstance.result.then(function (trader) {
+            TraderService.deleteTrader(trader.numberTrader, trader.surname)
                 .then(function successCallback(response) {
 
                     var modalInstance = $scope.openModal('updateResponseFromServer.html',
                         'Sukces',
-                        'Handlowiec: "' + account.name +' '+account.surname + '" został usnięty z bazy danych. ',
+                        'Handlowiec: "' + trader.name + ' ' + trader.surname + '" został usnięty z bazy danych. ',
                         {});
                     $rootScope.reloadRoute();
 
@@ -93,163 +94,108 @@ app.controller('TraderOperation', ['$scope', '$http', '$route', '$rootScope', 'T
 
                     var modalInstance = $scope.openModal('updateResponseFromServer.html',
                         'Błąd',
-                        'Handlowiec: "' + account.name +' '+account.surname + '" nie został usnięty z bazy danych. ' +
-                        'Sprawdź połączenie z internetem lub skontaktuj się z handlowcem.',
+                        'Handlowiec: "' + trader.name + ' ' + trader.surname + '" nie został usnięty z bazy danych. ' +
+                        'Sprawdź połączenie z internetem lub skontaktuj się z administratorem.',
                         {});
                 });
         });
     };
 
 
-    $scope.editNameTrader = function (account) {
-        $rootScope.titleModal = 'Edycja imienia handlowca';
-        $rootScope.edit.update = '';
+    $scope.editNameTrader = function (trader) {
+        var traderCopy = angular.copy(trader);
+        var modalInstance = $scope.openModal('updateDataAccount.html',
+            'Edycja imienia handlowca',
+            '',
+            {});
 
-        var modalInstance = $uibModal.open({
-            templateUrl: 'updateDataAccount.html',
-            controller: 'ModalInstanceCtrl',
-            controllerAs: '$ctrl',
-            resolve: {
-                entity: function () {
-                    return account;
-                }
-            }
-        });
-
-        modalInstance.result.then(function (selectedItem) {
-            selectedItem.name = $rootScope.edit.update;
-            $scope.editTrader(selectedItem);
-        }, function () {
-            console.log('Anulowano');
+        modalInstance.result.then(function (modifiedTrader) {
+            traderCopy.name = modifiedTrader.value;
+            $scope.editTrader(traderCopy);
         });
     };
 
-    $scope.editSurnameTrader = function (account) {
-        $rootScope.titleModal = 'Edycja nazwiska handlowca';
-        $rootScope.edit.update = '';
+    $scope.editSurnameTrader = function (trader) {
+        var traderCopy = angular.copy(trader);
+        var modalInstance = $scope.openModal('updateDataAccount.html',
+            'Edycja nazwiska handlowca',
+            '',
+            {});
 
-        var modalInstance = $uibModal.open({
-            templateUrl: 'updateDataAccount.html',
-            controller: 'ModalInstanceCtrl',
-            controllerAs: '$ctrl',
-            resolve: {
-                entity: function () {
-                    return account;
-                }
-            }
-        });
-
-        modalInstance.result.then(function (selectedItem) {
-            selectedItem.surname = $rootScope.edit.update;
-            $scope.editTrader(selectedItem);
-        }, function () {
-            console.log('Anulowano');
+        modalInstance.result.then(function (modifiedTrader) {
+            traderCopy.surname = modifiedTrader.value;
+            $scope.editTrader(traderCopy);
         });
     };
 
-    $scope.editNumberTrader = function (account) {
-        $rootScope.titleModal = 'Edycja numeru handlowca';
-        $rootScope.edit.update = '';
+    $scope.editNumberTrader = function (trader) {
+        var traderCopy = angular.copy(trader);
+        var modalInstance = $scope.openModal('updateDataAccount.html',
+            'Edycja numeru handlowca',
+            '',
+            {});
 
-        var modalInstance = $uibModal.open({
-            templateUrl: 'updateDataAccount.html',
-            controller: 'ModalInstanceCtrl',
-            controllerAs: '$ctrl',
-            resolve: {
-                entity: function () {
-                    return account;
-                }
-            }
-        });
-
-        modalInstance.result.then(function (selectedItem) {
-            selectedItem.newNumberTrader = $rootScope.edit.update;
-            $scope.editTrader(selectedItem);
-        }, function () {
-            console.log('Anulowano');
+        modalInstance.result.then(function (modifiedTrader) {
+            traderCopy.newNumberTrader = modifiedTrader.value;
+            $scope.editTrader(traderCopy);
         });
     };
 
-    $scope.editNameTeamTrader = function (account) {
-        $rootScope.titleModal = 'Edycja TOK-u';
-        $rootScope.edit.update = '';
+    $scope.editNameTeamTrader = function (trader) {
+        var traderCopy = angular.copy(trader);
+        var modalInstance = $scope.openModal('updateDataAccount.html',
+            'Edycja TOK-u handlowca',
+            '',
+            {});
 
-        var modalInstance = $uibModal.open({
-            templateUrl: 'updateDataAccount.html',
-            controller: 'ModalInstanceCtrl',
-            controllerAs: '$ctrl',
-            resolve: {
-                entity: function () {
-                    return account;
-                }
-            }
-        });
-
-        modalInstance.result.then(function (selectedItem) {
-            selectedItem.nameTeam = $rootScope.edit.update;
-            $scope.editTrader(selectedItem);
-        }, function () {
-            console.log('Anulowano');
+        modalInstance.result.then(function (modifiedTrader) {
+            traderCopy.nameTeam = modifiedTrader.value;
+            $scope.editTrader(traderCopy);
         });
     };
 
-    $scope.editTrader = function (account) {
+    $scope.editTrader = function (trader) {
 
-        $http({
-            method: 'POST',
-            url: HOST + '/edit_trader',
-            data: account,
-            headers: {'Content-type': 'application/json'}
-        }).then(function successCallback(response) {
+        TraderService.editTraderData(trader)
+            .then(function successCallback(response) {
+                var modalInstance = $scope.openModal('updateResponseFromServer.html',
+                    'Sukces',
+                    'Wartość pola : "' + trader.name + ' ' + trader.surname + '" została zautkualizowana pomyślnie.',
+                    {});
+                $scope.reloadRoute();
 
-            $rootScope.titleModal = 'Edycja handlowca';
-            $rootScope.responseModalBody = 'Wartość pola klienta "'+account.name+'" została zautkualizowana pomyślnie.';
+            }, function errorCallback(response) {
+                var modalInstance = $scope.openModal('updateResponseFromServer.html',
+                    'Błąd',
+                    'Nie udało się zaktualizować pola. Sprawdź połączenie z internetem lub ' +
+                    'skontaktuj się z adminsitratorem.',
+                    {});
 
-            var modalInstance = $uibModal.open({
-                templateUrl: 'updateResponseFromServer.html',
-                controller: 'ModalInstanceCtrl',
-                controllerAs: '$ctrl',
-                resolve: {
-                    entity: function () {
-                        return account;
-                    }
+                modalInstance.result.then(function (modifiedAccount) {
+                });
+            });
+
+    };
+
+
+    $scope.openModal = function (template, title, responseModalBody, entity) {
+        $rootScope.responseModalBody = responseModalBody;
+        $rootScope.titleModal = title;
+        return $uibModal.open({
+            templateUrl: template,
+            controller: 'ModalInstanceCtrlRole',
+            controllerAs: '$ctrl',
+            resolve: {
+                title: function () {
+                    return title;
+                },
+                responseModalBody: function () {
+                    return responseModalBody;
+                },
+                entity: function () {
+                    return entity;
                 }
-            });
-
-            modalInstance.result.then(function (selectedItem) {
-            }, function () {
-                console.log('Anulowano');
-            });
-            $scope.reloadRoute();
-
-        }, function errorCallback(response) {
-            $rootScope.titleModal = 'Błąd edycji';
-
-            if (angular.equals(response.data.errorCode, 'NUMBER_ALREADY_EXISTS')) {
-                $rootScope.responseModalBody = 'Handlowiec o podanym numerzy istnieje już w bazie danych.';
-
-            } else if (angular.equals(response.data.errorCode, 'TEAM_NOT_FOUND_TEAM')) {
-                $rootScope.responseModalBody = 'Podany TOK nie istnieje.';
-            } else {
-                $rootScope.responseModalBody = 'Sprawdź połączenie z internetem lub skontaktuj się z administratorem.';
             }
-
-            var modalInstance = $uibModal.open({
-                templateUrl: 'updateResponseFromServer.html',
-                controller: 'ModalInstanceCtrl',
-                controllerAs: '$ctrl',
-                resolve: {
-                    entity: function () {
-                        return account;
-                    }
-                }
-            });
-
-            modalInstance.result.then(function (selectedItem) {
-            }, function () {
-                console.log('Anulowano');
-            });
-            $scope.reloadRoute();
         });
     };
 

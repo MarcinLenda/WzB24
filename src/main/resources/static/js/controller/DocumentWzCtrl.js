@@ -47,13 +47,15 @@ app.controller('DocumentWzCtrl', ['$scope', '$rootScope', '$http', '$route', 'Do
                     $scope.resultListClient.push(value.abbreviationName);
                 });
             }, function errorCallback(response) {
-
+                console.log('Error: docuemntCtrl allClient')
             });
 
 
         DocumentWzService.allTrader()
             .then(function successCallback(response) {
                 $scope.trader = response.data;
+
+                console.log(response.data);
 
                 angular.forEach($scope.trader, function (value, key) {
                     $scope.resultListTrader.push(value.surname);
@@ -256,6 +258,7 @@ app.controller('DocumentWzCtrl', ['$scope', '$rootScope', '$http', '$route', 'Do
             });
         };
 
+
         $scope.correctBy = function (document) {
             var modalInstance = $scope.openModal('modalQuestion.html',
                 'Korekta',
@@ -314,7 +317,7 @@ app.controller('DocumentWzCtrl', ['$scope', '$rootScope', '$http', '$route', 'Do
         $scope.responseDocument = function (documentSearch, orCheck) {
             $scope.checkDocuments = documentSearch;
             $scope.orCheck = orCheck;
-            if ($scope.checkDocuments.length > 3 && $scope.orCheck) {
+            if ($scope.checkDocuments.length > 5 && $scope.orCheck) {
                 var modalInstance = $scope.openModal('updateResponseFromServer.html',
                     'Uwaga',
                     'Ten klient posiada zbyt dużą ilość nieodebranych dokumentów.' +

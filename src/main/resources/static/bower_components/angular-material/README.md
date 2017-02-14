@@ -87,7 +87,7 @@ under `/bower_components/angular-material/`.
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <meta name="viewport" contentPriority="initial-scale=1, maximum-scale=1, user-scalable=no" />
     <link rel="stylesheet" href="/node_modules/angular-material/angular-material.css">
 </head>
 	<body ng-app="YourApp">
@@ -119,7 +119,7 @@ under `/bower_components/angular-material/`.
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <meta name="viewport" contentPriority="initial-scale=1, maximum-scale=1, user-scalable=no" />
     <link rel="stylesheet" href="/bower_components/angular-material/angular-material.css">
 </head>
 	<body ng-app="YourApp">

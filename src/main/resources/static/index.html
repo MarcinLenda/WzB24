@@ -2,11 +2,11 @@
 <html lang="pl">
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" contentPriority="IE=edge">
+    <meta name="viewport" contentPriority="width=device-width, initial-scale=1">
 
-    <meta name="description" content="">
-    <meta name="author" content="Marcin Lenda">
+    <meta name="description" contentPriority="">
+    <meta name="author" contentPriority="Marcin Lenda">
     <link rel="icon" href="favicon.ico">
     <title>WzB</title>
 
@@ -55,7 +55,7 @@
             <a ng-show="authenticated" class="navbar-brand page-scroll" href="#/home"><img src="images/5wzb24.png" alt="WzB"></a>
 
         </div>
-        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Collect the nav links, forms, and other contentPriority for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" ng-controller="LoginCtrl">
             <ul class="nav navbar-nav navbar-right">
                 <li class="hidden">
@@ -68,14 +68,14 @@
                     <a class="page-scroll" href="#/search">Szukaj WZ  <md-icon md-svg-src='images/icons/loop.svg'></md-icon></a>
                 </li>
                 <li ng-show="authenticated">
-                    <a class="page-scroll" href="#/account">Moje konto <md-icon md-svg-src='images/icons/my_account.svg'></md-icon></a>
+                    <a class="page-scroll" href="#/account">Moje konto<md-icon md-svg-src='images/icons/my_account.svg'></md-icon></a>
                 </li>
                 <li ng-show="authenticated">
                     <a class="page-scroll" href="#/all_items">RF <md-icon md-svg-src='images/icons/rf.svg'></md-icon></a>
                 </li>
-                <li ng-show="authenticated">
-                    <a class="page-scroll" href="#/all_items">AN<md-icon md-svg-src='images/icons/an.svg'></md-icon></a>
-                </li>
+                <!--<li ng-show="authenticated">-->
+                    <!--<a class="page-scroll" href="#/an">AN<md-icon md-svg-src='images/icons/an.svg'></md-icon></a>-->
+                <!--</li>-->
                 <li ng-show="admin">
                     <a class="page-scroll" href="#/admin">Administracja <md-icon md-svg-src='images/icons/admin.svg'></md-icon></a>
                 </li>
@@ -180,6 +180,7 @@
 <script src="js/controller/HistoryCtrl.js"></script>
 <script src="js/controller/ItemsCtrl.js"></script>
 <script src="js/controller/UploadCtrl.js"></script>
+<script src="js/controller/OfferAnCtrl.js"></script>
 
 
 
@@ -196,6 +197,7 @@
 <script src="js/service/HistoryService.js"></script>
 <script src="js/service/UploadService.js"></script>
 <script src="js/service/MainService.js"></script>
+<script src="js/service/OfferAnService.js"></script>
 
 
 <script src="js/config.js"></script>

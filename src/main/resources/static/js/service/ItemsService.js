@@ -14,6 +14,7 @@ app.service('ItemsService', function ($rootScope, $http, HOST) {
         });
     };
 
+
     self.findAllItems = function () {
         return $http({
             method: 'GET',
@@ -21,6 +22,7 @@ app.service('ItemsService', function ($rootScope, $http, HOST) {
             headers: {'Content-type': 'application/json'}
         });
     };
+
 
     self.myRf = function () {
         return $http({
@@ -38,6 +40,7 @@ app.service('ItemsService', function ($rootScope, $http, HOST) {
             headers: {'Content-type': 'application/json'}
         });
     };
+
 
     self.updateInfoItem = function (item) {
         return $http({

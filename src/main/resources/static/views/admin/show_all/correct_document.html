@@ -7,7 +7,7 @@
                 <table class="table" ts-wrapper ng-init="showModal=false">
                     <thead>
                     <tr>
-
+                        <th>#</th>
                         <th style="background-color: #1C1D21">Numer WZ</th>
                         <th style="background-color: #1C1D21" ts-criteria="subProcess|parseInt">Podproces</th>
                         <th style="background-color: #1C1D21" ts-criteria="client|lowercase">Klient</th>
@@ -21,7 +21,7 @@
                     </thead>
                     <tbody>
                     <tr ng-repeat="document in documentsByCorrect" ts-repeat>
-
+                        <td>{{$index +1}}</td>
                         <td>{{document.numberWZ}}</td>
                         <td>{{document.subProcess}}</td>
                         <td>{{document.client}}</td>

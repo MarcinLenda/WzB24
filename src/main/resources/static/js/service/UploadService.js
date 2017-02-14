@@ -14,5 +14,4 @@ app.service('UploadService', function ($http) {
         });
     };
 
-
 });

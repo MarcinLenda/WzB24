@@ -10,7 +10,6 @@ app.service('TraderService', function ($rootScope, $http, $uibModal, HOST) {
         return $http({
             method: 'GET',
             url: HOST + '/all_trader',
-
             headers: {'Content-type': 'application/json'},
         });
     };
@@ -30,7 +29,7 @@ app.service('TraderService', function ($rootScope, $http, $uibModal, HOST) {
     };
 
 
-    this.deleteTrader = function (numberTrader, surname) {
+    self.deleteTrader = function (numberTrader, surname) {
         return $http({
             method: 'DELETE',
             url: HOST + '/delete_trader',
@@ -42,24 +41,13 @@ app.service('TraderService', function ($rootScope, $http, $uibModal, HOST) {
         });
     };
 
-    $scope.openModal = function (template, title, responseModalBody, entity) {
-        $rootScope.responseModalBody = responseModalBody;
-        $rootScope.titleModal = title;
-        return $uibModal.open({
-            templateUrl: template,
-            controller: 'ModalInstanceCtrlRole',
-            controllerAs: '$ctrl',
-            resolve: {
-                title: function () {
-                    return title;
-                },
-                responseModalBody: function () {
-                    return responseModalBody;
-                },
-                entity: function () {
-                    return entity;
-                }
-            }
+
+    self.editTraderData = function (trader) {
+        return  $http({
+            method: 'POST',
+            url: HOST + '/edit_trader',
+            data: trader,
+            headers: {'Content-type': 'application/json'}
         });
     };
 

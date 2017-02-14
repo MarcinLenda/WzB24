@@ -4,18 +4,19 @@
 app.controller('ItemsCtrl', ['$scope', '$rootScope', '$http', '$route', '$timeout', '$uibModal', 'ItemsService',
     function ($scope, $rootScope, $http, $route, $timeout, $uibModal, ItemsService) {
 
-
-
-        $scope.reloadRoute = function () {
-            $route.reload();
-        };
-
+        $scope.showInfo = false;
         $scope.load = true;
+
 
         $timeout(function () {
             $scope.showInfo = true;
             $scope.load = false;
         }, 4500);
+
+
+        $scope.reloadRoute = function () {
+            $route.reload();
+        };
 
 
         ItemsService.myRf()
@@ -37,6 +38,7 @@ app.controller('ItemsCtrl', ['$scope', '$rootScope', '$http', '$route', '$timeou
         ItemsService.findAllItems()
             .then(function successCallback(response) {
                 $scope.listItems = response.data;
+                $rootScope.itemsLength = $scope.listItems.length;
 
             }, function errorCallback(response) {
                 var modalInstance = $scope.openModal('updateResponseFromServer.html',
@@ -76,6 +78,7 @@ app.controller('ItemsCtrl', ['$scope', '$rootScope', '$http', '$route', '$timeou
                     });
             });
         };
+
 
         $scope.rfDetailsInfo = function (item) {
             var modalInstance = $scope.openModal('modalRFInfo.html',

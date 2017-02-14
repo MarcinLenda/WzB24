@@ -15,6 +15,7 @@ app.service('ClientService', function ($http, HOST) {
         });
     };
 
+
     self.addClient = function (name, numberClient, nameTeam, abbreviationNameClient) {
         return $http({
             method: 'POST',
@@ -28,6 +29,7 @@ app.service('ClientService', function ($http, HOST) {
             headers: {'Content-type': 'application/json'}
         });
     };
+
 
     self.deleteClient = function (numberClient, name) {
         return $http({

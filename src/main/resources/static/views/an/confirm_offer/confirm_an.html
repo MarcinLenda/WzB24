@@ -1,0 +1,79 @@
+<div class="container">
+    <div class="slider-container">
+        <div class="intro-text">
+
+            <div class="intro-heading">W TRAKCIE</div>
+
+            <div id="showDocument">
+                <table class="table" ts-wrapper>
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Nr. projektu</th>
+                        <th >TOK</th>
+                        <th>Zgłaszający</th>
+                        <th>Klient</th>
+                        <th>Nazwa inwestycji</th>
+                        <th>Miejscowość</th>
+                        <th>Status</th>
+                        <th>Czeka</th>
+                        <th>Tworzący</th>
+                        <th>Zatwierdź</th>
+
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-click="editDataOffer(offer)" ng-repeat="offer in confirmOffer" ts-repeat>
+                        <td>{{$index +1}}</td>
+                        <td>{{offer.numberOffer}}</td>
+                        <td>{{offer.nameTeam}}</td>
+                        <td>{{offer.nameTrader}}</td>
+                        <td>{{offer.client}}</td>
+                        <td>{{offer.nameOffer}}</td>
+                        <td>{{offer.cityName}}</td>
+                        <td>{{offer.status}}</td>
+                        <td><timer start-time="offer.dateCreate">{{days}} dni </timer></td>
+                        <td>{{offer.whoCreate}}</td>
+                        </td>
+                        <td><input class="button_management" style="background-color:#FF5D00;width: 85px;"
+                                   class="adminSubmit" type="submit" value="Aktywuj"
+                                   ng-click="confirmAn(offer, trader)"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <a href="#/an">
+                    <img src="images/icons/back.png">
+                </a>
+            </div>
+        </div>
+
+        <script type="text/ng-template" id="modalOfferAn.html">
+            <div class="modal-header">
+                <h3 class="modal-title" style="text-align: center;">{{titleModal}}</h3>
+            </div>
+            <div class="modal-body">
+                <div class="modal-body">
+
+                    <div class="modal-body">
+                        <input style="background-color: #e7e7e7; color:black;" type="text" name="name" ng-model="numberOffer"
+                               placeholder="Wprowadź numer oferty" required>
+                        <input style="background-color: #e7e7e7; color:black;" type="text" name="name" ng-model="valueOffer"
+                               placeholder="Wprowadź wartość projektu" required>
+
+                        <select ng-model="status">
+                            <option>Wysłane zapytanie</option>
+                            <option>W trakcie</option>
+                        </select>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" type="button" ng-click="$ctrl.ok()">Tak</button>
+                <button class="btn btn-warning" type="button" ng-click="$ctrl.cancel()">Nie</button>
+            </div>
+        </script>
+
+    </div>
+</div>
+</div>

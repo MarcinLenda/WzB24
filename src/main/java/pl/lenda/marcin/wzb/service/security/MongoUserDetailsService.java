@@ -16,6 +16,7 @@ import pl.lenda.marcin.wzb.service.history.HistoryLoggedInService;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by Promar on 06.11.2016.
@@ -34,12 +35,12 @@ public class MongoUserDetailsService implements UserDetailsService {
         UserAccount userAccount = getUserDetail(username);
         UserDetails userDetails = new User(userAccount.getUsername(), userAccount.getPassword(), getAuthorities(userAccount.getRole()));
 
-            UserAccount userAccount1 = userAccountRepository.findByUsername(username);
+            Optional<UserAccount> userAccount1 = userAccountRepository.findByUsername(username);
             HistoryLoggedAppIn whoLogged = new HistoryLoggedAppIn();
             whoLogged.setDateLogged(new Date());
-            whoLogged.setName(userAccount1.getName());
-            whoLogged.setSurname(userAccount1.getSurname());
-            whoLogged.setUsername(userAccount1.getUsername());
+            whoLogged.setName(userAccount1.get().getName());
+            whoLogged.setSurname(userAccount1.get().getSurname());
+            whoLogged.setUsername(userAccount1.get().getUsername());
 
             if (historyLoggedInService.findByUsername(userDetails.getUsername()).size() != 0) {
                 List<HistoryLoggedAppIn> historyLoggedAppIn = historyLoggedInService.findByUsername(userDetails.getUsername());
@@ -80,13 +81,13 @@ public class MongoUserDetailsService implements UserDetailsService {
 
 
     public UserAccount getUserDetail(String username) {
-        UserAccount userAccount = userAccountRepository.findByUsername(username);
-        if (userAccount.getRole().equals("ADMIN")) {
-            userAccount.setActive(true);
-            userAccountRepository.save(userAccount);
+        Optional<UserAccount> userAccount = userAccountRepository.findByUsername(username);
+        if (userAccount.get().getRole().equals("ADMIN")) {
+            userAccount.get().setActive(true);
+            userAccountRepository.save(userAccount.get());
         }
 
-        UserAccount userAccountBeActive = userAccountRepository.findByUsernameAndActiveTrue(userAccount.getUsername());
-        return userAccountBeActive;
+        Optional<UserAccount> userAccountBeActive = userAccountRepository.findByUsernameAndActiveTrue(userAccount.get().getUsername());
+        return userAccountBeActive.get();
     }
 }

@@ -31,6 +31,7 @@ app.service('MainService', function ($http) {
         });
     };
 
+
     self.userInfo = function () {
         return   $http({
             method: 'GET',

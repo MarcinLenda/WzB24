@@ -2,22 +2,24 @@
  * Created by Promar on 03.11.2016.
  */
 
-app.controller('ClientOperation', ['$scope', '$rootScope', '$http', '$route', '$uibModal', 'ClientService', 'HOST',
-    function ($scope, $rootScope, $http, $route, $uibModal, ClientService, HOST) {
+app.controller('ClientOperation', ['$scope', '$rootScope', '$http', '$route', '$uibModal', 'ClientService',
+    function ($scope, $rootScope, $http, $route, $uibModal, ClientService) {
 
         $scope.form = {};
         $scope.clients = [];
-        $rootScope.edit = {};
         $scope.names = ["STA", "STB", "STC",
             "STE", "STG", "STX"];
+
 
         $scope.reloadRoute = function () {
             $route.reload();
         };
 
+
         ClientService.allClient()
             .then(function successCallback(response) {
                 $scope.clients = response.data;
+                console.log(response.data);
             }, function errorCallback(response) {
                 console.log('Error: all_client');
             });
@@ -62,6 +64,7 @@ app.controller('ClientOperation', ['$scope', '$rootScope', '$http', '$route', '$
                 });
         };
 
+
         $scope.deleteClient = function (account) {
             var modalInstance = $scope.openModal('modalQuestion.html',
                 'Usuwanie klienta',
@@ -105,6 +108,7 @@ app.controller('ClientOperation', ['$scope', '$rootScope', '$http', '$route', '$
             });
         };
 
+
         $scope.editNameClient = function (account) {
             var clientCopy = angular.copy(account);
             var modalInstance = $scope.openModal('updateDataAccount.html',
@@ -117,6 +121,7 @@ app.controller('ClientOperation', ['$scope', '$rootScope', '$http', '$route', '$
                 $scope.editClient(clientCopy);
             });
         };
+
 
         $scope.editNumberClient = function (account) {
             var clientCopy = angular.copy(account);
@@ -131,6 +136,7 @@ app.controller('ClientOperation', ['$scope', '$rootScope', '$http', '$route', '$
             });
         };
 
+
         $scope.editNameTeamClient = function (account) {
             var clientCopy = angular.copy(account);
             var modalInstance = $scope.openModal('updateDataAccount.html',
@@ -143,6 +149,7 @@ app.controller('ClientOperation', ['$scope', '$rootScope', '$http', '$route', '$
                 $scope.editClient(clientCopy);
             });
         };
+
 
         $scope.editClient = function (account) {
 
@@ -178,6 +185,7 @@ app.controller('ClientOperation', ['$scope', '$rootScope', '$http', '$route', '$
                     });
                 });
         };
+
 
         $scope.openModal = function (template, title, responseModalBody, entity) {
             $rootScope.responseModalBody = responseModalBody;
