@@ -74,7 +74,7 @@
 //        String endContent =  " </table>\n" +
 //                "<p style=\"font-size: 17px; margin-top:15px;\"><b>Aktualizacja:</b> możesz sprawdzić listę swoich rezerwacji fizycznych poprzez wejście w moje konto i zakładkę RF."+
 //                "    <p style=\"font-size: 17px;\">Gdybyś miał zamiar zrobić korektę do któregoś z dokumentów poinformuj nas o tym na: <a\n" +
-//                "            href=\"http://155.133.24.148:8080/#/login\">\n" +
+//                "            href=\"http://wzb24.pl/#/login\">\n" +
 //                "        <input style=\"width:150px; margin-top: 30px;\" type=\"button\" value=\"WzB\">\n" +
 //                "    </a></p>\n" +
 //                "\n" +

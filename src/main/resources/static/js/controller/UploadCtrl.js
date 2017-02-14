@@ -11,7 +11,7 @@ app.controller('UploadController', function ($scope, $rootScope, $route, FileUpl
 
     $scope.uploader = new FileUploader(
         {
-            url: 'http://155.133.24.148:8080/upload'
+            url: 'http://wzb24.pl/upload'
         }
     );
 

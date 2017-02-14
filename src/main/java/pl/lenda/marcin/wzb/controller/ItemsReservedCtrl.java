@@ -38,7 +38,7 @@ public class ItemsReservedCtrl {
     UpdateItemsReserved updateItemsReserved;
 
 
-    @CrossOrigin(origins = "http://155.133.24.148:8080")
+    @CrossOrigin(origins = "http://wzb24.pl")
     @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN","ROLE_MODERATOR"})
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     @ResponseBody
@@ -48,7 +48,7 @@ public class ItemsReservedCtrl {
 
     }
 
-    @CrossOrigin(origins = "http://155.133.24.148:8080")
+    @CrossOrigin(origins = "http://wzb24.pl")
     @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN","ROLE_MODERATOR"})
     @RequestMapping(value = "/save_items", method = RequestMethod.GET)
     public void saveItems() {
@@ -56,14 +56,14 @@ public class ItemsReservedCtrl {
 
     }
 
-    @CrossOrigin(origins = "http://155.133.24.148:8080")
+    @CrossOrigin(origins = "http://wzb24.pl")
     @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN","ROLE_MODERATOR", "ROLE_SUPER_USER", "ROLE_USER"})
     @RequestMapping(value = "/update_items", method = RequestMethod.POST)
     public void updateItems(@RequestBody ItemsReservedFindByDto itemsReservedFindByDto) {
         updateItemsReserved.updateItems(itemsReservedFindByDto);
     }
 
-    @CrossOrigin(origins = "http://155.133.24.148:8080")
+    @CrossOrigin(origins = "http://wzb24.pl")
     @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN","ROLE_MODERATOR","ROLE_SUPER_USER", "ROLE_USER"})
     @RequestMapping(value = "/findAll_items", method = RequestMethod.GET)
     public List<ItemsReserved> allItems() {
@@ -71,14 +71,14 @@ public class ItemsReservedCtrl {
     }
 
 
-    @CrossOrigin(origins = "http://155.133.24.148:8080")
+    @CrossOrigin(origins = "http://wzb24.pl")
     @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN","ROLE_MODERATOR","ROLE_SUPER_USER", "ROLE_USER"})
     @RequestMapping(value = "/findItemBy_ID", method = RequestMethod.POST)
     public ItemsReserved allItems(@RequestBody ItemsReservedFindByDto _itemsReservedFindByDto) {
         return reserved_itemsService.findItem(_itemsReservedFindByDto.getId());
     }
 
-    @CrossOrigin(origins = "http://155.133.24.148:8080")
+    @CrossOrigin(origins = "http://wzb24.pl")
     @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN","ROLE_MODERATOR","ROLE_SUPER_USER", "ROLE_USER"})
     @RequestMapping(value = "/findItemBy_nameTrader", method = RequestMethod.GET)
     public List<ItemsReserved> allItemsTrader() {
@@ -89,7 +89,7 @@ public class ItemsReservedCtrl {
         return lista;
     }
 
-    @CrossOrigin(origins = "http://155.133.24.148:8080")
+    @CrossOrigin(origins = "http://wzb24.pl")
     @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN","ROLE_MODERATOR","ROLE_SUPER_USER", "ROLE_USER"})
     @RequestMapping(value = "/item_change_status", method = RequestMethod.POST)
     public void changeStatusItem(@RequestBody ItemsReservedFindByDto _itemsReservedFindByDto) {

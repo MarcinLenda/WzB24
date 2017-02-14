@@ -27,21 +27,21 @@ public class HistoryCtrl {
     @Autowired
     HistoryLoggedInService historyLoggedInService;
 
-    @CrossOrigin(origins = "http://155.133.24.148:8080")
+    @CrossOrigin(origins = "http://wzb24.pl")
     @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN"})
     @RequestMapping(value = "/all_delete", method = RequestMethod.GET)
     public List<HistoryDeleteDocumentWz> showAllDocumentDelete(){
         return historyService.showAllDeleteDocument();
     }
 
-    @CrossOrigin(origins = "http://155.133.24.148:8080")
+    @CrossOrigin(origins = "http://wzb24.pl")
     @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN"})
     @RequestMapping(value = "/all_corrects", method = RequestMethod.GET)
     public List<HistoryCorrectsDocument> showAllDocumentCorrects(){
         return historyService.showAllCorrectsDocument();
     }
 
-    @CrossOrigin(origins = "http://155.133.24.148:8080")
+    @CrossOrigin(origins = "http://wzb24.pl")
     @Secured("ROLE_SUPER_ADMIN")
     @RequestMapping(value = "/all_logged", method = RequestMethod.GET)
     public List<HistoryLoggedAppIn> showAllLoggedUser(){

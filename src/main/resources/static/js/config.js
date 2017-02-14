@@ -1,2 +1,2 @@
 angular.module('config', [])
-    .constant('HOST','http://155.133.24.148:8080');
+    .constant('HOST','http://wzb24.pl');
