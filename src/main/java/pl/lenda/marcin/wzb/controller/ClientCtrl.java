@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
  * Created by Promar on 03.11.2016.
  */
 @RestController
+@RequestMapping("/client")
 public class ClientCtrl {
 
     private final Map<String, Object> response = new LinkedHashMap<>();
@@ -31,7 +32,7 @@ public class ClientCtrl {
 
 
     @CrossOrigin(origins = "http://155.133.24.148:8080")
-    @Secured("ROLE_ADMIN")
+    @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN","ROLE_MODERATOR"})
     @RequestMapping(value = "/save_client", method = RequestMethod.POST)
     @ResponseBody
     public void saveClient(@RequestBody @Valid ClientAccountDto clientAccountDto) {
@@ -39,15 +40,15 @@ public class ClientCtrl {
     }
 
     @CrossOrigin(origins = "http://155.133.24.148:8080")
-    @Secured("ROLE_ADMIN")
+    @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN"})
     @RequestMapping(value = "/delete_client", method = RequestMethod.DELETE)
     public void deleteClient(@RequestBody ClientAccountDto clientFindDto){
         Optional<ClientAccount> clientAccount = clientAccountService.findByNumberClient(clientFindDto.getNumberClient());
         clientAccountService.deleteAccountClient(clientAccount);
     }
 
-    @CrossOrigin(origins = "http://155.133.24.148:8080")
-    @Secured("ROLE_ADMIN")
+    @CrossOrigin(origins = "http://localhost:8080")
+    @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN","ROLE_MODERATOR"})
     @RequestMapping(value = "/edit_client", method = RequestMethod.POST)
     public void editClient(@RequestBody ClientAccountDto clientAccountDto){
         ClientAccount clientAccount = clientAccountService.findByNumberClient(clientAccountDto.getNumberClient()).get();
@@ -55,6 +56,7 @@ public class ClientCtrl {
     }
 
     @CrossOrigin(origins = "http://155.133.24.148:8080")
+    @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN","ROLE_MODERATOR"})
     @RequestMapping(value = "/all_client", method = RequestMethod.GET)
     public List<ClientAccountDto> allClientAccount() {
         return clientAccountService.findAllClient()

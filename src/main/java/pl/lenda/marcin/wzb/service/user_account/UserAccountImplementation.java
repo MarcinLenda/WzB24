@@ -41,7 +41,7 @@ public class UserAccountImplementation implements UserAccountService{
 
     @Override
     public UserAccount findByUsername(String username) {
-        return userAccountRepository.findByUsername(username);
+        return userAccountRepository.findByUsername(username).get();
     }
 
 
@@ -52,12 +52,12 @@ public class UserAccountImplementation implements UserAccountService{
 
     @Override
     public UserAccount findByNameAndSurname(String name, String surname) {
-        return userAccountRepository.findByNameAndSurname(name, surname);
+        return userAccountRepository.findByNameAndSurname(name, surname).get();
     }
 
     @Override
     public UserAccount findByNumberUser(String numberUser) {
-        return userAccountRepository.findByNumberUser(numberUser);
+        return userAccountRepository.findByNumberUser(numberUser).get();
     }
 
     @Override

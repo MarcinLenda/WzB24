@@ -40,7 +40,7 @@ public class ConvertUserAccount {
         UserAccountDto dto = convertTo.convertToUserAccountDto(userAccount);
 
         //then
-        validateConverToUserAccountDto(dto, userAccount, traderAccount.getNameTeam());
+        validateConvertToUserAccountDto(dto, userAccount, traderAccount.getNameTeam());
     }
 
     @Test
@@ -59,9 +59,10 @@ public class ConvertUserAccount {
         UserAccountDto dto = convertTo.convertToUserAccountDto(userAccount);
 
         //then
-        validateConverToUserAccountDto(dto, userAccount, "X");
+        validateConvertToUserAccountDto(dto, userAccount, "X");
     }
 
+    @Test
     public void convertToUserAccountEntityTest(){
         //given
         UserAccountDto userAccountDto = UserAccountFixture.userAccountDto();
@@ -78,7 +79,7 @@ public class ConvertUserAccount {
 
     }
 
-    private void validateConverToUserAccountDto(UserAccountDto expectedUserAccountDto, UserAccount actualUserAccount, String teamName) {
+    private void validateConvertToUserAccountDto(UserAccountDto expectedUserAccountDto, UserAccount actualUserAccount, String teamName) {
         assertThat(expectedUserAccountDto.getName()).isEqualTo(actualUserAccount.getName());
         assertThat(expectedUserAccountDto.getPassword()).isNull();
         assertThat(expectedUserAccountDto.getRole()).isEqualTo(actualUserAccount.getRole());

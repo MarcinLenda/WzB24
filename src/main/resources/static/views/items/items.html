@@ -1,9 +1,3 @@
-<style type="text/css">
-    .red {
-        background-color: red;
-    }
-
-</style>
 <div class="container">
     <div class="slider-container">
         <div class="intro-text">
@@ -17,115 +11,97 @@
                 <div style="margin: 0 auto;">
                     <input style="font-size: 20px;" type="text" ng-model="search.$" placeholder="Wprowadź frazę.">
                 </div>
-                <div  style="font-size: 14px; letter-spacing: 1px;">Ost.Aktualizacja: {{text | date:'yyyy-MM-dd'}} </br> Pozycji:{{itemsLength}}</div>
+                <div style="font-size: 14px; letter-spacing: 1px;">
+                    Pozycji:{{itemsLength}}
+                </div>
+
+
+                <div style="width: 120px; height: 50px; background-color: red; border-style: ridge"><b>Aktywna pozycja</b></div>
+                </br>
+
+                <div style="width: 120px; height: 50px; background-color: #FF530D; border-style: ridge;"><b>Zalegajaca pozycja</b></div>
 
                 <div id="showItems">
 
                     <table class="table" ts-wrapper style="width: 100%; font-size: 14px;">
                         <thead>
-                        <tr ng-show="editOff">
+                        <tr>
                             <th>#</th>
                             <th>KBN</th>
                             <th>Nazwa towaru</th>
-                            <th>Opis towaru</th>
-                            <th style="text-align: center;" ts-criteria="clientName|lowercase">DOST.</th>
-                            <th style="text-align: center;" ts-criteria="clientName|lowercase">TOK</th>
-                            <th style="text-align: center;">NR. FABR.</th>
-                            <th ts-criteria="nameTeam|lowercase">Tworzący</th>
-                            <th ts-criteria="dateAccepted|parseInt">Ost. rezerw.</th>
+                            <td ts-criteria="provider|lowercase">Dział</td>
+                            <th ts-criteria="provider|lowercase">DOST.</th>
+                            <th ts-criteria="nameTeam|lowercase">TOK</th>
+                            <th>NR. FABR.</th>
+                            <th ts-criteria="creator|lowercase">Tworzący</th>
+                            <th>Ost. rezerw.</th>
                         </tr>
                         </thead>
                         <tbody>
 
 
-                        <tr ng-class='{red : item.statusItem}' ng-show="editOff" ng-repeat="item in listItems | filter:search" ts-repeat
-                            ng-click="editData.items = item; showEdit();">
-
+                        <tr ng-class='{orange : item.statusItem, red : item.activeItemForTrader != null}'
+                            ng-repeat="item in listItems | filter:search" ts-repeat
+                            ng-click="rfDetailsInfo(item)">
 
 
                             <td>{{$index +1}}</td>
                             <td>{{item.kbn}}</td>
                             <td>{{item.contentItem}}</td>
-                            <td>{{item.detailsContentItem}}</td>
+                            <td>{{item.section}}</td>
                             <td>{{item.provider}}</td>
                             <td>{{item.nameTeam}}</td>
                             <td>{{item.numberFactory}}</td>
                             <td>{{item.creator}}</td>
-                            <td ng-if="item.delay<14" style="background: #18F73E">
-                               {{item.delay}}
-                            </td>
-                            <td ng-if="item.delay>14 && item.delay<31" style="background: #FFF726">
-                                {{item.delay}}
-                            </td>
-                            <td ng-if="item.delay>=31 && item.delay<60" style="background: #FF7800">
-                                {{item.delay}}
-                            </td>
-                            <td ng-if="item.delay>=60" style="background: #FF0000">
-                                {{item.delay}}
-                            </td>
-
+                            <td style="background-color: #18F73E;">{{item.dateAccepted}}</td>
                         </tr>
                         </tbody>
 
 
+                    </table>
+                </div>
+            </div>
+            <script type="text/ng-template" id="modalRFInfo.html">
+                <div class="modal-header">
+                    <h3 class="modal-title" style="text-align: center;"><b>{{titleModal}}</b></h3>
+                    <br>
+                    <h4 class="modal-title" style="text-align: center;">{{itemTrader.contentItem}}</h4>
+
+                </div>
+
+                <div class="modal-body">
+                    <table class="table" ts-wrapper style="width: 100%; font-size: 14px;">
                         <thead>
-                        <tr ng-show="editOn">
-                            <th style="background: #3258A6;">#</th>
-                            <th style="background: #3258A6;">OPIS TOWARU</th>
-                            <th style="background: #3258A6;">PROCES</th>
-                            <th style="background: #3258A6;">/</th>
-                            <th style="background: #3258A6;">KBN</th>
-                            <th style="background: #3258A6;">TOK</th>
-                            <th style="background: #3258A6" >CDS</th>
-                            <th style="background: #3258A6;">STAN (szt.)</th>
-                            <th style="background: #3258A6; width: 128px;">ODPISZ (szt.)</th>
-                            <th style="background: #3258A6;">ZATWIERDŹ</th>
+                        <tr>
+                            <th>Opis</th>
+                            <th>Proces</th>
+                            <th>/</th>
+                            <th>Dostępne</th>
+                            <th ng-show="itemTrader.activeItemForTrader == null">Odpisz</th>
+                            <th ng-show="itemTrader.activeItemForTrader != null">Poz.aktywna</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr ng-show="editOn">
-                            <!--ng-click="editData.documents = document; showToEdit();">-->
-                            <td>{{$index +1}}</td>
-                            <td>{{editItem.contentItem}}</td>
-                            <td>{{editItem.numberPro}}</td>
-                            <td>{{editItem.subPro}}</td>
-                            <td>{{editItem.kbn}}</td>
-                            <td>{{editItem.nameTeam}}</td>
-                            <td>{{editItem.nameTeamCDS}}</td>
-                            <td>{{editItem.pieces}}</td>
-                            <td ng-show="offEditNumber" ng-click="editItemPieces()">{{startPieces}}</td>
-                            <td ng-show="editNumber">
-                                <input style="width:50px;" type="text" ng-model="modelPieces.op" placeholder="1">
-                                <a class="smallConfirm" ng-click="save()"> <md-icon md-svg-src='images/icons/confirmSmall.svg'></md-icon></a>
-                                <a class="smallDelete" ng-click="return()"> <md-icon  md-svg-src='images/icons/deleteSmall.svg'></md-icon></a>
+                        <tr>
+                            <td>{{itemTrader.detailsContentItem}}</td>
+                            <td>{{itemTrader.numberPro}}</td>
+                            <td>{{itemTrader.subPro}}</td>
+                            <td>{{itemTrader.pieces}}</td>
 
+                            <td ng-show="itemTrader.activeItemForTrader == null">
+                                <button class="btn btn-primary" type="button"
+                                        ng-click="$ctrl.ok()">Odpisz</button>
                             </td>
-                            <td><input
-                                    style="background-color:#13BA10; clear: both; width:95px;" class="adminSubmit"
-                                    type="submit" value="OK"
-                                    ng-click="saveOnServer();"></td>
-
-                       </tr>
+                            <td ng-show="itemTrader.activeItemForTrader != null">{{itemTrader.activeItemForTrader}}</td>
+                        </tr>
                         </tbody>
                     </table>
 
-                    <script type="text/ng-template" id="updatePieces">
-                        <h1 style="font-size: 23px;">{{successChangePieces}}</h1>
-                        <p style="font-size: 18px; color: #ffffff;">{{successChangePieces2}}</p>
-
-                        <input style="background-color: #13BA10;" class="submitSuccess" type="submit" value="Ok"
-                               ng-click="reloadRoute(); closeThisDialog(0);">
-                    </script>
                 </div>
-                <div ng-show="editOn">
-                    <a href="" ng-click="stopEdit()">
-                        <img src="images/icons/back.png">
-                    </a>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="button" ng-click="$ctrl.cancel()">Zamknij</button>
                 </div>
-            </div>
-        </div>
-
-
+            </script>
 
         </div>
     </div>

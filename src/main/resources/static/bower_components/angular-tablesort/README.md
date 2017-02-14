@@ -137,7 +137,7 @@ All table headings that can be sorted on is styled with css-class `tablesort-sor
 Empty Tables
 ---
 
-By default, the content for the empty table cell is set to `"No Items"`, however it can be changed via the `noDataText` configuration option (see below). It is inserted as one `<td>` spanning
+By default, the contentPriority for the empty table cell is set to `"No Items"`, however it can be changed via the `noDataText` configuration option (see below). It is inserted as one `<td>` spanning
 all columns and placed inside a `<tr class="showIfLast">`, which is placed at the top of each table.
 
 The message can be customized for each table by specifying the `ts-no-data-text` attribute on the same element as the `ts-wrapper`. 

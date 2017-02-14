@@ -4,6 +4,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import pl.lenda.marcin.wzb.entity.UserAccount;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by Promar on 06.11.2016.
@@ -12,13 +13,13 @@ public interface UserAccountRepository extends MongoRepository<UserAccount, Stri
 
     List<UserAccount> findByRole(String role);
 
-    UserAccount findByUsername(String username);
+    Optional<UserAccount> findByUsername(String username);
 
-    UserAccount findByNameAndSurname(String name, String surname);
+    Optional<UserAccount> findByNameAndSurname(String name, String surname);
 
-    UserAccount findByUsernameAndActiveTrue(String username);
+    Optional<UserAccount> findByUsernameAndActiveTrue(String username);
 
-    UserAccount findByNumberUser(String numberUser);
+    Optional<UserAccount> findByNumberUser(String numberUser);
 
     List<UserAccount> findAllByActiveTrue();
 

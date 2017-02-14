@@ -50,8 +50,8 @@ public class MailConfiguration {
         mailSender.setHost(host);
         mailSender.setPort(port);
         mailSender.setProtocol(protocol);
-        mailSender.setUsername(stmpUsername);
-        mailSender.setPassword(stmpPassword);
+        mailSender.setUsername(username);
+        mailSender.setPassword(password);
 
         return mailSender;
     }

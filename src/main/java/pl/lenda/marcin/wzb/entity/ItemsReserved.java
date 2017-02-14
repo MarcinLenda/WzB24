@@ -2,7 +2,7 @@ package pl.lenda.marcin.wzb.entity;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
 /**
@@ -40,10 +40,11 @@ public class ItemsReserved {
 
     private String businessSector;
 
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private Date dateAccepted;
+    private String dateAccepted;
 
     private String pieces;
+
+    private String activeItemForTrader;
 
     private String delay;
 
@@ -51,16 +52,19 @@ public class ItemsReserved {
 
     private String priceItem;
 
+    private String section;
+
+    private String position;
+
     private boolean statusItem;
 
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private Date dateUpdate;
 
     public ItemsReserved(){
     }
 
     public ItemsReserved(String numberPro, String subPro, String creator, String contentItem, String detailsContentItem, String clientName, String traderName, String nameTeam,
-                         String nameTeamCDS, String kbn, String numberFactory, String provider, String businessSector, Date dateAccepted, String pieces, String delay, String allPrice, String priceItem, boolean statusItem, Date dateUpdate) {
+                         String nameTeamCDS, String kbn, String numberFactory, String provider, String businessSector, String dateAccepted, String pieces, String activeItemForTrader, String delay, String allPrice, String priceItem, String section, String position, boolean statusItem, Date dateUpdate) {
         this.numberPro = numberPro;
         this.subPro = subPro;
         this.creator = creator;
@@ -76,9 +80,12 @@ public class ItemsReserved {
         this.businessSector = businessSector;
         this.dateAccepted = dateAccepted;
         this.pieces = pieces;
+        this.activeItemForTrader = activeItemForTrader;
         this.delay = delay;
         this.allPrice = allPrice;
         this.priceItem = priceItem;
+        this.section = section;
+        this.position = position;
         this.statusItem = statusItem;
         this.dateUpdate = dateUpdate;
     }
@@ -139,11 +146,11 @@ public class ItemsReserved {
         this.businessSector = businessSector;
     }
 
-    public Date getDateAccepted() {
+    public String getDateAccepted() {
         return dateAccepted;
     }
 
-    public void setDateAccepted(Date dateAccepted) {
+    public void setDateAccepted(String dateAccepted) {
         this.dateAccepted = dateAccepted;
     }
 
@@ -163,12 +170,12 @@ public class ItemsReserved {
         this.id = id;
     }
 
-    public String getPieces() {
-        return pieces;
+    public String getActiveItemForTrader() {
+        return activeItemForTrader;
     }
 
-    public void setPieces(String pieces) {
-        this.pieces = pieces;
+    public void setActiveItemForTrader(String activeItemForTrader) {
+        this.activeItemForTrader = activeItemForTrader;
     }
 
     public String getDelay() {
@@ -249,5 +256,29 @@ public class ItemsReserved {
 
     public void setDateUpdate(Date dateUpdate) {
         this.dateUpdate = dateUpdate;
+    }
+
+    public String getSection() {
+        return section;
+    }
+
+    public void setSection(String section) {
+        this.section = section;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public String getPieces() {
+        return pieces;
+    }
+
+    public void setPieces(String pieces) {
+        this.pieces = pieces;
     }
 }

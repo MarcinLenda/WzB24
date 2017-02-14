@@ -29,6 +29,7 @@ public class ValidateClient {
         if (clientAccountService.findByAbbreviationName(clientAccountDto.getAbbreviationName()).isPresent()) {
             throw ClientException.clientAlreadyExists();
         }
+
         return convertTo.convertClientAccountDtoToEntity(clientAccountDto);
     }
 

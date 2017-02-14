@@ -1,5 +1,6 @@
 package pl.lenda.marcin.wzb.service.upload;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -15,9 +16,10 @@ import java.io.FileOutputStream;
 @Service
 public class UploadFile {
 
+    @Value("${path.to.upload.file.windows}")
+    String path;
 
-
-    public ResponseEntity uploadPhoto(MultipartFile file){
+    public ResponseEntity uploadFileCsv(MultipartFile file){
 
         if (!file.isEmpty()) {
             try {
@@ -25,7 +27,7 @@ public class UploadFile {
                 String filename = file.getOriginalFilename();
                 String path = "";
                 byte[] bytes = file.getBytes();
-                File serverFile = new File("/home/promar/java/WzB24/src/main/resources/static" + "/"  + filename);
+                File serverFile = new File("C:\\Users\\Promar\\Desktop\\wzb_kopia\\src\\main\\resources\\static" + "\\"  + filename);
 
 
 

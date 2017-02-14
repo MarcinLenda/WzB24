@@ -1,0 +1,31 @@
+<div class="container">
+    <div class="slider-container">
+        <div class="intro-text">
+
+            <form id="form" name="projectAN" class="topBefore" ng-submit="createNewOffer(nameAN,city,
+             adress,client, priority)" style="font-size:20px;">
+                <h1>Dodawanie oferty</h1>
+
+                <input name="nameAN" type="text"  ng-model="nameAN" placeholder="Nazwa inwestycji">
+                <input name="city"   type="text"   ng-model="city" placeholder="Miejscowość" required/>
+                <input name="adress" type="text"  ng-model="adress" placeholder="Adres"/>
+                <input name="client" type="text"  ng-model="client" placeholder="Numer klienta" required/>
+                <select ng-model="priority" required>
+                    <option>NISKI</option>
+                    <option>NORMALNY</option>
+                    <option>ŚREDNI</option>
+                    <option>WYSOKI</option>
+                </select>
+                <input ng-if="piorytet == 'WYSOKI'" name="contentPriority" type="text"  ng-model="form.contentPriority" placeholder="Uzasadnienie (wysoki piorytet AN)" required/>
+                <input id="submit" type="submit" value="Dodaj">
+            </form>
+            <div>
+                <a href="#/an">
+                    <img src="images/icons/back.png">
+                </a>
+            </div>
+
+
+        </div>
+    </div>
+</div>

@@ -3,7 +3,7 @@ package pl.lenda.marcin.wzb.dto;
 /**
  * Created by Promar on 02.12.2016.
  */
-public class ItemsReserverdFindByDto {
+public class ItemsReservedFindByDto {
 
     private String id;
 
@@ -11,10 +11,10 @@ public class ItemsReserverdFindByDto {
 
     private String pieces;
 
-    public ItemsReserverdFindByDto(){
+    public ItemsReservedFindByDto(){
     }
 
-    public ItemsReserverdFindByDto(String id, String nameTrader, String pieces) {
+    public ItemsReservedFindByDto(String id, String nameTrader, String pieces) {
         this.id = id;
         this.nameTrader = nameTrader;
         this.pieces = pieces;

@@ -865,7 +865,7 @@ Login and register
 #login
 {
 
-    background-color: #fec503;
+    /*background-color: #fec503;*/
     width: 300px;
     height: 328px;
     margin: 0 auto;
@@ -1104,4 +1104,10 @@ md-icon svg {
     50% {background-position: 500px 500px, 100px 200px, -100px 150px;}
     100% {background-position: 500px 1000px, 200px 400px, -100px 300px;}
 }
+.red {
+    background-color: red;
+}
 
+.orange {
+    background-color: #FF530D;
+}

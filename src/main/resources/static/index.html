@@ -2,11 +2,11 @@
 <html lang="pl">
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" contentPriority="IE=edge">
+    <meta name="viewport" contentPriority="width=device-width, initial-scale=1">
 
-    <meta name="description" content="">
-    <meta name="author" content="Marcin Lenda">
+    <meta name="description" contentPriority="">
+    <meta name="author" contentPriority="Marcin Lenda">
     <link rel="icon" href="favicon.ico">
     <title>WzB</title>
 
@@ -29,13 +29,6 @@
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-    <script type="text/javascript">
-        function onclickHandler() {
-            alert('Wyszukiwanie dokumentu WZ:' +
-                    '-wielkość liter nie ma znaczenia na wynik wyszukiwania,' +
-                    '-polskie znaki mają wpływ na rezultat zapytania,');
-        }
-    </script>
     <style>
         [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
             display: none !important;
@@ -62,7 +55,7 @@
             <a ng-show="authenticated" class="navbar-brand page-scroll" href="#/home"><img src="images/5wzb24.png" alt="WzB"></a>
 
         </div>
-        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Collect the nav links, forms, and other contentPriority for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" ng-controller="LoginCtrl">
             <ul class="nav navbar-nav navbar-right">
                 <li class="hidden">
@@ -75,15 +68,15 @@
                     <a class="page-scroll" href="#/search">Szukaj WZ  <md-icon md-svg-src='images/icons/loop.svg'></md-icon></a>
                 </li>
                 <li ng-show="authenticated">
-                    <a class="page-scroll" href="#/account">Moje konto <md-icon md-svg-src='images/icons/my_account.svg'></md-icon></a>
+                    <a class="page-scroll" href="#/account">Moje konto<md-icon md-svg-src='images/icons/my_account.svg'></md-icon></a>
                 </li>
                 <li ng-show="authenticated">
                     <a class="page-scroll" href="#/all_items">RF <md-icon md-svg-src='images/icons/rf.svg'></md-icon></a>
                 </li>
                 <!--<li ng-show="authenticated">-->
-                    <!--<a class="page-scroll" href="#/all_items">AN<md-icon md-svg-src='images/icons/an.svg'></md-icon></a>-->
+                    <!--<a class="page-scroll" href="#/an">AN<md-icon md-svg-src='images/icons/an.svg'></md-icon></a>-->
                 <!--</li>-->
-                <li ng-show="userRoles">
+                <li ng-show="admin">
                     <a class="page-scroll" href="#/admin">Administracja <md-icon md-svg-src='images/icons/admin.svg'></md-icon></a>
                 </li>
                 <li ng-show="authenticated">
@@ -176,30 +169,36 @@
 
 
 <script src="js/App.js"></script>
-<script src="js/controller/AddDocumentController.js"></script>
-<script src="js/controller/MainControllerController.js"></script>
 <script src="js/controller/DocumentWzCtrl.js"></script>
+<script src="js/controller/MainCtrl.js"></script>
 <script src="js/controller/ClientController.js"></script>
 <script src="js/controller/TraderController.js"></script>
 <script src="js/controller/AdminController.js"></script>
-<script src="js/controller/LoginController.js"></script>
-<script src="js/controller/ManagementAccountsCtrl.js"></script>
+<script src="js/controller/LoginCtrl.js"></script>
+<script src="js/controller/MainAccountCtrl.js"></script>
 <script src="js/controller/UserAccount.js"></script>
 <script src="js/controller/HistoryCtrl.js"></script>
 <script src="js/controller/ItemsCtrl.js"></script>
+<script src="js/controller/UploadCtrl.js"></script>
+<script src="js/controller/OfferAnCtrl.js"></script>
 
 
 
-<script src="js/controller/LoginController.js"></script>
+<script src="js/controller/LoginCtrl.js"></script>
 <script src="js/controller/RegisterController.js"></script>
 <script src="js/service/ClientService.js"></script>
 <script src="js/service/TraderService.js"></script>
-<script src="js/service/UserService.js"></script>
 <script src="js/service/AuthenticatedService.js"></script>
+<script src="js/service/AccountService.js"></script>
 <script src="js/directive/ConfirmDelete.js"></script>
 <script src="js/service/DocumentService.js"></script>
 <script src="js/service/ItemsService.js"></script>
-<script src="js/controller/UploadController.js"></script>
+<script src="js/service/AdminService.js"></script>
+<script src="js/service/HistoryService.js"></script>
+<script src="js/service/UploadService.js"></script>
+<script src="js/service/MainService.js"></script>
+<script src="js/service/OfferAnService.js"></script>
+
 
 <script src="js/config.js"></script>
 
@@ -208,14 +207,14 @@
 
 <script type="text/ng-template" id="updateDataAccount.html">
     <div class="modal-header">
-        <h3 class="modal-title">{{titleModal}}</h3>
+        <h3 class="modal-title" style="text-align: center;">{{titleModal}}</h3>
     </div>
     <div class="modal-body">
-        <input style="background-color: #e7e7e7; color:black;" type="text" name="name" ng-model="edit.update"
+        <input style="background-color: #e7e7e7; color:black;" type="text" name="name" ng-model="$ctrl.entity.value"
                placeholder="Wprowadź nową wartość" required>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-primary" type="button" ng-click="editDataAccount(); $ctrl.ok()">OK</button>
+        <button class="btn btn-primary" type="button" ng-click="$ctrl.ok()">OK</button>
         <button class="btn btn-warning" type="button" ng-click="$ctrl.cancel()">Cancel</button>
     </div>
 </script>
@@ -228,7 +227,7 @@
         {{responseModalBody}}
     </div>
     <div class="modal-footer">
-        <button class="btn btn-primary" type="button" ng-click="editDataAccount(); $ctrl.ok()">OK</button>
+        <button class="btn btn-primary" type="button" ng-click="$ctrl.ok()">OK</button>
     </div>
 </script>
 
@@ -240,12 +239,31 @@
         {{responseModalBody}}
     </div>
     <div class="modal-footer">
-        <button ng-show="orAdmin" class="btn btn-primary" type="button" ng-click="$ctrl.ok()">Tak</button>
-        <button ng-show="orUser" class="btn btn-primary" type="button" ng-click="$ctrl.ok()">Tak</button>
+        <button class="btn btn-primary" type="button" ng-click="$ctrl.ok()">Tak</button>
         <button class="btn btn-warning" type="button" ng-click="$ctrl.cancel()">Nie</button>
     </div>
 </script>
+<script type="text/ng-template" id="modalRole.html">
+    <div class="modal-header">
+        <h3 class="modal-title" style="text-align: center;">{{titleModal}}</h3>
+    </div>
 
+    <div class="modal-body">
+        {{responseModalBody}}
+        <select ng-model="$ctrl.entity.role">
+            <option>SUPER_ADMIN</option>
+            <option>ADMIN</option>
+            <option>MODERATOR</option>
+            <option>SUPER_USER</option>
+            <option>USER</option>
+        </select>
+
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" type="button" ng-click="$ctrl.ok()">Tak</button>
+        <button class="btn btn-warning" type="button" ng-click="$ctrl.cancel()">Nie</button>
+    </div>
+</script>
 </body>
 
 </html>

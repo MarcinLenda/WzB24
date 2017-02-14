@@ -28,15 +28,19 @@
                             <md-icon md-svg-src='images/icons/team.svg' style="color: #e7e7e7;"></md-icon>
                             Team
                         </th>
-                        <th ts-criteria="nameTeam">
+                        <th  ts-criteria="nameTeam">
                             <md-icon md-svg-src='images/icons/role.svg' style="color: #e7e7e7;"></md-icon>
                             Rola
                         </th>
-                        <th>
+                        <th ng-show="roleSuperAdmin" ts-criteria="nameTeam">
+                            <md-icon md-svg-src='images/icons/role.svg' style="color: #e7e7e7;"></md-icon>
+                            Uprawnienia
+                        </th>
+                        <th ng-show="roleSuperAdmin || roleAdmin" >
                             <md-icon md-svg-src='images/icons/block.svg' style="color: #e7e7e7;"></md-icon>
                             Blokada
                         </th>
-                        <th ts-criteria="">
+                        <th ng-show="roleSuperAdmin" ts-criteria="">
                             <md-icon md-svg-src='images/icons/delete.svg' style="color: #e7e7e7;"></md-icon>
                             Usuń
                         </th>
@@ -51,19 +55,19 @@
                         <td ng-click="editSurname(account);">{{account.surname}}</td>
                         <td ng-click="editNumber(account);">{{account.numberUser}}</td>
                         <td>{{account.nameTeam}}</td>
-                        <td ng-show="account.role=='ADMIN'"><input
-                                style="background-color:#DAA502; clear: both; width:95px;" class="adminSubmit"
-                                type="submit" value="ADMIN" ng-click="giveRoleUser(account);"></td>
-                        <td ng-show="account.role=='USER'"><input
-                                style="background-color:#13BA10; ;clear: both; width:95px;" class="adminSubmit"
-                                type="submit" value="USER"
-                                ng-click="giveRoleAdmin(account);"></td>
+                        <td>{{account.role}}</td>
+                        <td ng-show="roleSuperAdmin" ><input
+                                style="background-color:#DAA502; clear: both; width:85px;" class="adminSubmit"
+                                type="submit" value="Zmień" ng-click="roleUser(account);">
+                        </td>
 
-                        <td><input class="button_management" style="background-color:#FF5D00;width: 95px;"
-                                                             class="adminSubmit" type="submit" value="Zablokuj"
+
+
+                        <td ng-show="roleSuperAdmin || roleAdmin" ><input class="button_management" style="background-color:#FF5D00;width: 85px;"
+                                                             class="adminSubmit" type="submit" value="Blokada"
                                                              ng-click="blockAccountUser(account)">
                         </td>
-                        <td><input class="button_management" style="background-color:rgb(221,44,0);width: 95px;"
+                        <td ng-show="roleSuperAdmin"><input class="button_management" style="background-color:rgb(221,44,0);width: 85px;"
                                                              class="adminSubmit" type="submit" value="Usuń"
                                                              ng-click="deleteAccount(account)">
                         </td>

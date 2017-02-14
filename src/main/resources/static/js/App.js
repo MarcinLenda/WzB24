@@ -74,12 +74,12 @@ var app = angular.module('myApp', [
                 controller: 'UserAccount'
             })
             .when('/search', {
-                templateUrl: 'views/find_document.html',
-                controller: 'documentCtrl'
+                templateUrl: 'views/documentWZ.html',
+                controller: 'DocumentWzCtrl'
             })
             .when('/addDocument', {
                 templateUrl: 'views/admin/add/add_document.html',
-                controller: 'DocumentOperation'
+                controller: 'DocumentWzCtrl'
             })
             .when('/admin', {
                 templateUrl: 'views/admin/admin.html',
@@ -91,7 +91,7 @@ var app = angular.module('myApp', [
             })
             .when('/show_documents', {
                 templateUrl: 'views/admin/show_all/show_documents.html',
-                controller: 'documentCtrl'
+                controller: 'DocumentWzCtrl'
             })
             .when('/add_client', {
                 templateUrl: 'views/admin/add/add_client.html',
@@ -103,7 +103,7 @@ var app = angular.module('myApp', [
             })
             .when('/correct_document', {
                 templateUrl: 'views/admin/show_all/correct_document.html',
-                controller: 'documentCtrl'
+                controller: 'DocumentWzCtrl'
             })
             .when('/login', {
                 templateUrl: 'views/login.html',
@@ -123,11 +123,11 @@ var app = angular.module('myApp', [
                 controller: 'MainAccountCtrl'
             })
             .when('/user_document', {
-                templateUrl: 'views/user_info/all_user_document.html',
+                templateUrl: 'views/user_account/all_document_user.html',
                 controller: 'UserAccount'
             })
             .when('/change_password', {
-                templateUrl: 'views/user_info/change_password.html',
+                templateUrl: 'views/user_account/change_password.html',
                 controller: 'UserAccount'
             })
             .when('/after_register', {
@@ -169,29 +169,36 @@ var app = angular.module('myApp', [
             .when('/items', {
                 templateUrl: 'views/items/items_menu.html',
                 controller: ''
-            })
-            .when('/save_item', {
-                templateUrl: 'views/items/add_items.html',
-                controller: 'ItemsOperation'
-            })
-            .when('/all_items', {
+            }).when('/all_items', {
                 templateUrl: 'views/items/items.html',
-                controller: 'ItemsOperation'
+                controller: 'ItemsCtrl'
             })
             .when('/access_denied', {
                 templateUrl: 'views/access_denied.html',
-                controller: 'ItemsOperation'
-            })
-            .when('/under_construction', {
-                templateUrl: 'views/items/under_construction.html',
-                controller: 'LoginCtrl'
+                controller: 'ItemsCtrl'
             }).when('/update_items', {
                 templateUrl: 'views/items/update_items.html',
                 controller: 'UploadController'
             })
             .when('/all_rf', {
-                templateUrl: 'views/user_info/all_user_rf.html',
-                controller: 'ItemsOperation'
+                templateUrl: 'views/user_account/all_rf_user.html',
+                controller: 'ItemsCtrl'
+            })
+            .when('/an', {
+                templateUrl: 'views/an/an_menu.html',
+                controller: 'OfferAnCtrl'
+            })
+            .when('/add_an', {
+                templateUrl: 'views/an/add/add_an.html',
+                controller: 'OfferAnCtrl'
+            })
+            .when('/waiting_an', {
+                templateUrl: 'views/an/waiting_room/waiting_an.html',
+                controller: 'OfferAnCtrl'
+            })
+            .when('/confirm_an', {
+                templateUrl: 'views/an/confirm_offer/confirm_an.html',
+                controller: 'OfferAnCtrl'
             })
 
             .otherwise({redirectTo: '/'});
