@@ -27,7 +27,8 @@ public class UploadFile {
                 String filename = file.getOriginalFilename();
                 String path = "";
                 byte[] bytes = file.getBytes();
-                File serverFile = new File("C:\\Users\\Promar\\Desktop\\wzb_kopia\\src\\main\\resources\\static" + "\\"  + filename);
+
+                File serverFile = new File("/home/promar/java/WzB24/src/main/resources/static" + "/"  + filename);
 
 
 

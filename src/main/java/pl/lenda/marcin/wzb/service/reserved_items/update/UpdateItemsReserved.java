@@ -46,7 +46,7 @@ public class UpdateItemsReserved {
         mongoTemplate.dropCollection("reserved_Items");
         mongoTemplate.dropCollection("itemsReserved");
 
-        String csvFile = path;
+        String csvFile = "/home/promar/java/WzB24/src/main/resources/static/rf_raport.csv";
         BufferedReader br = null;
         String line = "";
         String cvsSplitBy = ";";
