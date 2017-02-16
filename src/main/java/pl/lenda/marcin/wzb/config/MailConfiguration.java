@@ -37,7 +37,7 @@ public class MailConfiguration {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         Properties props = System.getProperties();
         props.put("mail.transport.protocol", "smtps");
-        props.put("mail.smtp.port", 25);
+        props.put("mail.smtp.port", 587);
 
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
