@@ -33,14 +33,14 @@ public class TraderCtrl {
 
 
 
-    @CrossOrigin(origins = "http://155.133.24.148:8080")
+    @CrossOrigin(origins = "http://localhost:8080")
     @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN","ROLE_MODERATOR"})
     @RequestMapping(value = "/save_trader", method = RequestMethod.POST)
     public void saveTrader(@RequestBody @Valid TraderAccountDto traderAccountDto){
         traderService.createTrader(validateTrader.traderValidate(traderAccountDto));
     }
 
-    @CrossOrigin(origins = "http://155.133.24.148:8080")
+    @CrossOrigin(origins = "http://localhost:8080")
     @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN","ROLE_MODERATOR"})
     @RequestMapping(value = "/all_trader", method = RequestMethod.GET)
     public List<TraderAccountDto> findAllTrader(){
@@ -50,7 +50,7 @@ public class TraderCtrl {
                 .collect(Collectors.toList());
     }
 
-    @CrossOrigin(origins = "http://155.133.24.148:8080")
+    @CrossOrigin(origins = "http://localhost:8080")
     @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN","ROLE_MODERATOR","ROLE_SUPER_USER", "ROLE_USER"})
     @RequestMapping(value = "/find_trader", method = RequestMethod.POST)
     public TraderAccountDto findTrader(@RequestBody FindTraderAccount findTraderAccount){
@@ -60,7 +60,7 @@ public class TraderCtrl {
     }
 
 
-    @CrossOrigin(origins = "http://155.133.24.148:8080")
+    @CrossOrigin(origins = "http://localhost:8080")
     @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN"})
     @RequestMapping(value = "/delete_trader", method = RequestMethod.DELETE)
     public void deleteTraderAccount(@RequestBody TraderToDeleteDto traderToDeleteDto){
@@ -70,7 +70,7 @@ public class TraderCtrl {
     }
 
 
-    @CrossOrigin(origins = "http://155.133.24.148:8080")
+    @CrossOrigin(origins = "http://localhost:8080")
     @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN","ROLE_MODERATOR"})
     @RequestMapping(value = "/edit_trader", method = RequestMethod.POST)
     public void editTrader(@RequestBody TraderAccountDto traderAccountDto){

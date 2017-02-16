@@ -29,7 +29,7 @@ public class OfferAnCtrl {
     @Autowired
     private UserAccountService userAccountService;
 
-    @CrossOrigin(origins = "http://155.133.24.148:8080")
+    @CrossOrigin(origins = "http://localhost:8080")
     @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN","ROLE_MODERATOR","ROLE_SUPER_USER","ROLE_USER"})
     @RequestMapping(value = "/save_an", method = RequestMethod.POST)
     @ResponseBody
@@ -38,7 +38,7 @@ public class OfferAnCtrl {
         offerAnService.saveNewOffer(offerAnDto);
     }
 
-    @CrossOrigin(origins = "http://155.133.24.148:8080")
+    @CrossOrigin(origins = "http://localhost:8080")
     @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN","ROLE_MODERATOR","ROLE_SUPER_USER","ROLE_USER"})
     @RequestMapping(value = "/confirm_an", method = RequestMethod.POST)
     @ResponseBody
@@ -50,7 +50,7 @@ public class OfferAnCtrl {
         offerAnService.updateOffer(offerAn);
     }
 
-    @CrossOrigin(origins = "http://155.133.24.148:8080")
+    @CrossOrigin(origins = "http://localhost:8080")
     @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN","ROLE_MODERATOR","ROLE_SUPER_USER","ROLE_USER"})
     @RequestMapping(value = "/change_status_an", method = RequestMethod.POST)
     @ResponseBody
@@ -58,12 +58,12 @@ public class OfferAnCtrl {
 
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserAccount userAccount = userAccountService.findByUsername(authentication.getName());
+        UserAccount userAccount = userAccountService.findByUsername(authentication.getName()).get();
 
         offerAnService.updateOffer(convertTo.convertToOfferAnEntity(offerAnDto,userAccount));
     }
 
-    @CrossOrigin(origins = "http://155.133.24.148:8080")
+    @CrossOrigin(origins = "http://localhost:8080")
     @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN","ROLE_MODERATOR","ROLE_SUPER_USER","ROLE_USER"})
     @RequestMapping(value = "/all_waiting_an", method = RequestMethod.GET)
     @ResponseBody
@@ -73,7 +73,7 @@ public class OfferAnCtrl {
     }
 
 
-    @CrossOrigin(origins = "http://155.133.24.148:8080")
+    @CrossOrigin(origins = "http://localhost:8080")
     @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN","ROLE_MODERATOR","ROLE_SUPER_USER","ROLE_USER"})
     @RequestMapping(value = "/all_confirm_an", method = RequestMethod.GET)
     @ResponseBody

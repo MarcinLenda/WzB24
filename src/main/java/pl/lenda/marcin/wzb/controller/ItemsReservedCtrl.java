@@ -18,6 +18,7 @@ import pl.lenda.marcin.wzb.service.user_account.UserAccountService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by Promar on 26.11.2016.
@@ -38,7 +39,7 @@ public class ItemsReservedCtrl {
     UpdateItemsReserved updateItemsReserved;
 
 
-    @CrossOrigin(origins = "http://155.133.24.148:8080")
+    @CrossOrigin(origins = "http://localhost:8080")
     @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN","ROLE_MODERATOR"})
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     @ResponseBody
@@ -48,7 +49,7 @@ public class ItemsReservedCtrl {
 
     }
 
-    @CrossOrigin(origins = "http://155.133.24.148:8080")
+    @CrossOrigin(origins = "http://localhost:8080")
     @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN","ROLE_MODERATOR"})
     @RequestMapping(value = "/save_items", method = RequestMethod.GET)
     public void saveItems() {
@@ -56,14 +57,14 @@ public class ItemsReservedCtrl {
 
     }
 
-    @CrossOrigin(origins = "http://155.133.24.148:8080")
+    @CrossOrigin(origins = "http://localhost:8080")
     @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN","ROLE_MODERATOR", "ROLE_SUPER_USER", "ROLE_USER"})
     @RequestMapping(value = "/update_items", method = RequestMethod.POST)
     public void updateItems(@RequestBody ItemsReservedFindByDto itemsReservedFindByDto) {
         updateItemsReserved.updateItems(itemsReservedFindByDto);
     }
 
-    @CrossOrigin(origins = "http://155.133.24.148:8080")
+    @CrossOrigin(origins = "http://localhost:8080")
     @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN","ROLE_MODERATOR","ROLE_SUPER_USER", "ROLE_USER"})
     @RequestMapping(value = "/findAll_items", method = RequestMethod.GET)
     public List<ItemsReserved> allItems() {
@@ -71,34 +72,34 @@ public class ItemsReservedCtrl {
     }
 
 
-    @CrossOrigin(origins = "http://155.133.24.148:8080")
+    @CrossOrigin(origins = "http://localhost:8080")
     @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN","ROLE_MODERATOR","ROLE_SUPER_USER", "ROLE_USER"})
     @RequestMapping(value = "/findItemBy_ID", method = RequestMethod.POST)
     public ItemsReserved allItems(@RequestBody ItemsReservedFindByDto _itemsReservedFindByDto) {
         return reserved_itemsService.findItem(_itemsReservedFindByDto.getId());
     }
 
-    @CrossOrigin(origins = "http://155.133.24.148:8080")
+    @CrossOrigin(origins = "http://localhost:8080")
     @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN","ROLE_MODERATOR","ROLE_SUPER_USER", "ROLE_USER"})
     @RequestMapping(value = "/findItemBy_nameTrader", method = RequestMethod.GET)
     public List<ItemsReserved> allItemsTrader() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserAccount userAccount = userAccountService.findByUsername(authentication.getName());
+        UserAccount userAccount = userAccountService.findByUsername(authentication.getName()).get();
         List<ItemsReserved> lista = new ArrayList<>();
         lista = reserved_itemsService.findAllItemsTrader(userAccount.getSurname());
         return lista;
     }
 
-    @CrossOrigin(origins = "http://155.133.24.148:8080")
+    @CrossOrigin(origins = "http://localhost:8080")
     @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN","ROLE_MODERATOR","ROLE_SUPER_USER", "ROLE_USER"})
     @RequestMapping(value = "/item_change_status", method = RequestMethod.POST)
     public void changeStatusItem(@RequestBody ItemsReservedFindByDto _itemsReservedFindByDto) {
         ItemsReserved _itemsReserved = reserved_itemsService.findItem(_itemsReservedFindByDto.getId());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        UserAccount userAccount = userAccountService.findByUsername(authentication.getName());
+        Optional<UserAccount> userAccount = userAccountService.findByUsername(authentication.getName());
 
-        if(_itemsReserved.getCreator().equals(userAccount.getSurname())) {
+        if(_itemsReserved.getCreator().equals(userAccount.get().getSurname())) {
 
             ItemReservedUnnecessary itemReservedUnnecessary = new ItemReservedUnnecessary();
             itemReservedUnnecessary.setNumberPro(_itemsReserved.getNumberPro());

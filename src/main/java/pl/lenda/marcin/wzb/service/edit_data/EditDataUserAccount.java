@@ -27,7 +27,7 @@ public class EditDataUserAccount {
     }
 
     public void resetPassword(UpdateUserAccountDto updateUserAccountDto){
-        UserAccount userAccount = userAccountService.findByUsername(updateUserAccountDto.getUsername());
+        UserAccount userAccount = userAccountService.findByUsername(updateUserAccountDto.getUsername()).get();
         userAccount.setPassword(bCryptPasswordEncoder.encode(userAccount.getUsername()));
         userAccountService.editData(userAccount);
     }

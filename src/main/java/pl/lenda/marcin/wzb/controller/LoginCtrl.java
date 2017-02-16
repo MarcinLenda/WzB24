@@ -26,17 +26,17 @@ public class LoginCtrl {
     @Autowired
     ConvertTo convertTo;
 
-    @CrossOrigin(origins = "http://155.133.24.148:8080")
+    @CrossOrigin(origins = "http://localhost:8080")
     @RequestMapping(path = "/unauthorized", method = RequestMethod.GET)
     public ResponseEntity<Void> login() {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
-    @CrossOrigin(origins = "http://155.133.24.148:8080")
+    @CrossOrigin(origins = "http://localhost:8080")
     @RequestMapping(path = "/success", method = RequestMethod.GET)
     public ResponseEntity<UserAccountDto> success() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserAccount userAccount = userAccountService.findByUsername(authentication.getName());
+        UserAccount userAccount = userAccountService.findByUsername(authentication.getName()).get();
         UserAccountDto userAccountDto = convertTo.convertToUserAccountDto(userAccount);
         return ResponseEntity.status(HttpStatus.OK).body(userAccountDto);
     }
