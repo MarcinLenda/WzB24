@@ -29,10 +29,7 @@ public class MailConfiguration {
     private String username;
     @Value("${mail.password}")
     private String password;
-    @Value("${mail.stmp.username}")
-    private String stmpUsername;
-    @Value("${mail.stmp.password}")
-    private String stmpPassword;
+
 
     @Bean
     public JavaMailSender javaMailSender() {
