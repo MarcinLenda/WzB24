@@ -76,8 +76,11 @@ public class UpdateItemsReserved {
                 StringBuilder sb = new StringBuilder(items[18]);
                 numberCreator = sb.substring(1);
 
-                if (userAccountService.findByNumberUser(numberCreator) != null) {
-                    UserAccount userAccount = userAccountService.findByNumberUser(numberCreator);
+                UserAccount userAccount = userAccountService.findByNumberUser(numberCreator);
+
+
+                if (userAccount.) {
+
                     _itemsReserved.setCreator(userAccount.getSurname());
 
                 } else {

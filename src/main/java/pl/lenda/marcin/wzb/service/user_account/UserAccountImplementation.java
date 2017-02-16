@@ -12,6 +12,7 @@ import pl.lenda.marcin.wzb.repository.UserAccountRepository;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by Promar on 06.11.2016.
@@ -56,8 +57,8 @@ public class UserAccountImplementation implements UserAccountService{
     }
 
     @Override
-    public UserAccount findByNumberUser(String numberUser) {
-        return userAccountRepository.findByNumberUser(numberUser).get();
+    public Optional<UserAccount> findByNumberUser(String numberUser) {
+        return userAccountRepository.findByNumberUser(numberUser);
     }
 
     @Override
