@@ -11,7 +11,7 @@ app.controller('UploadController', function ($scope, $rootScope, $route, FileUpl
 
     $scope.uploader = new FileUploader(
         {
-            url: 'http://wzb24.pl/upload'
+            url: 'http://wzb24.pl/rf/upload'
         }
     );
 
