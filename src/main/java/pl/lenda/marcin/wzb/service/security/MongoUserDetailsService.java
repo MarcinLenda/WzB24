@@ -90,6 +90,12 @@ public class MongoUserDetailsService implements UserDetailsService {
         System.out.println(userAccount.getName());
         System.out.println(userAccount.getRole());
 
+        List<UserAccount> listUserAccount = userAccountRepository.findAllByActiveFalse();
+
+        for(UserAccount u: listUserAccount){
+            System.out.println(u);
+        }
+
         UserAccount userAccountBeActive = userAccountRepository.findByUsernameAndActiveTrue(userAccount.getUsername());
         return userAccountBeActive;
 
