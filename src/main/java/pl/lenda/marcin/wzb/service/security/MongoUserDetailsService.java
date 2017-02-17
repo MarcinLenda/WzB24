@@ -87,6 +87,9 @@ public class MongoUserDetailsService implements UserDetailsService {
             userAccountRepository.save(userAccount);
         }
 
+        System.out.println(userAccount.getName());
+        System.out.println(userAccount.getRole());
+
         UserAccount userAccountBeActive = userAccountRepository.findByUsernameAndActiveTrue(userAccount.getUsername());
         return userAccountBeActive;
 
