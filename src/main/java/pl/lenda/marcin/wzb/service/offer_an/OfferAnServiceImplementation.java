@@ -14,7 +14,6 @@ import pl.lenda.marcin.wzb.repository.UserAccountRepository;
 import pl.lenda.marcin.wzb.service.convert_class.ConvertTo;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Created by Promar on 09.02.2017.
@@ -40,9 +39,9 @@ public class OfferAnServiceImplementation implements OfferAnService {
 
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Optional<UserAccount> userAccount = userAccountRepository.findByUsername(authentication.getName());
+        UserAccount userAccount = userAccountRepository.findByUsername(authentication.getName());
 
-        offerAnRepository.save(convertTo.convertToOfferAnEntity(offerAnDto, userAccount.get()));
+        offerAnRepository.save(convertTo.convertToOfferAnEntity(offerAnDto, userAccount));
     }
 
     @Override

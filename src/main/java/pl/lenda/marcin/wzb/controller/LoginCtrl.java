@@ -14,8 +14,6 @@ import pl.lenda.marcin.wzb.entity.UserAccount;
 import pl.lenda.marcin.wzb.service.convert_class.ConvertTo;
 import pl.lenda.marcin.wzb.service.user_account.UserAccountService;
 
-import java.util.Optional;
-
 /**
  * Created by Promar on 21.11.2016.
  */
@@ -38,8 +36,8 @@ public class LoginCtrl {
     @RequestMapping(path = "/success", method = RequestMethod.GET)
     public ResponseEntity<UserAccountDto> success() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Optional<UserAccount> userAccount = userAccountService.findByUsername(authentication.getName());
-        UserAccountDto userAccountDto = convertTo.convertToUserAccountDto(userAccount.get());
+        UserAccount userAccount = userAccountService.findByUsername(authentication.getName());
+        UserAccountDto userAccountDto = convertTo.convertToUserAccountDto(userAccount);
         return ResponseEntity.status(HttpStatus.OK).body(userAccountDto);
     }
 }

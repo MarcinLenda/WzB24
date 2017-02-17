@@ -21,7 +21,6 @@ import java.security.Principal;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -85,10 +84,10 @@ public class AccountCtrl {
     @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN"})
     @RequestMapping(value = "/make_active_account", method = RequestMethod.PATCH)
     public void makeAccountActive(@RequestBody UserAccountActiveOrRemoveDto userAccountActiveOrRemoveDto) throws MessagingException {
-        Optional<UserAccount> userAccount = userAccountService.findByUsername(userAccountActiveOrRemoveDto.getUsername());
-        userAccount.get().setActive(true);
-        userAccountService.makeActiveAccount(userAccount.get());
-        mailService.mailConfirmAccount(userAccount.get().getUsername(), userAccount.get().getName(), userAccount.get().getSurname(), userAccount.get().getUsername(), userAccount.get().getNumberUser());
+        UserAccount userAccount = userAccountService.findByUsername(userAccountActiveOrRemoveDto.getUsername());
+        userAccount.setActive(true);
+        userAccountService.makeActiveAccount(userAccount);
+        mailService.mailConfirmAccount(userAccount.getUsername(), userAccount.getName(), userAccount.getSurname(), userAccount.getUsername(), userAccount.getNumberUser());
 
     }
 
@@ -96,18 +95,18 @@ public class AccountCtrl {
     @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN"})
     @RequestMapping(value = "/block_account", method = RequestMethod.PATCH)
     public void blockAccount(@RequestBody UserAccountActiveOrRemoveDto userAccountActiveOrRemoveDto) {
-        Optional<UserAccount> userAccount = userAccountService.findByUsername(userAccountActiveOrRemoveDto.getUsername());
-        userAccount.get().setActive(false);
-        userAccountService.registerNewUser(userAccount.get());
+        UserAccount userAccount = userAccountService.findByUsername(userAccountActiveOrRemoveDto.getUsername());
+        userAccount.setActive(false);
+        userAccountService.registerNewUser(userAccount);
     }
 
     @CrossOrigin(origins = "http://wzb24.pl")
     @Secured("ROLE_SUPER_ADMIN")
     @RequestMapping(value = "/role", method = RequestMethod.POST)
     public boolean giveRoleAdmin(@RequestBody RoleDto roleDto) {
-        Optional<UserAccount> userAccount = userAccountService.findByUsername(roleDto.getUsername());
-        userAccount.get().setRole(roleDto.getRoleLevel());
-        return userAccountService.updateRole(userAccount.get());
+        UserAccount userAccount = userAccountService.findByUsername(roleDto.getUsername());
+        userAccount.setRole(roleDto.getRoleLevel());
+        return userAccountService.updateRole(userAccount);
     }
 
 
@@ -117,8 +116,8 @@ public class AccountCtrl {
     public UserAccountDto userInfo() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Optional<UserAccount> userAccount = userAccountService.findByUsername(authentication.getName());
-        UserAccountDto userAccountDto = convertTo.convertToUserAccountDto(userAccount.get());
+        UserAccount userAccount = userAccountService.findByUsername(authentication.getName());
+        UserAccountDto userAccountDto = convertTo.convertToUserAccountDto(userAccount);
 
         return userAccountDto;
     }
@@ -128,8 +127,8 @@ public class AccountCtrl {
     @RequestMapping(value = "/change_password", method = RequestMethod.POST)
     public void changePassword(@RequestBody @Valid ChangePasswordDto changePasswordDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Optional<UserAccount> userAccount = userAccountService.findByUsername(authentication.getName());
-        validateUserAccount.userAccountChangePassword(changePasswordDto, userAccount.get());
+        UserAccount userAccount = userAccountService.findByUsername(authentication.getName());
+        validateUserAccount.userAccountChangePassword(changePasswordDto, userAccount);
     }
 
     @CrossOrigin(origins = "http://wzb24.pl")
@@ -143,24 +142,24 @@ public class AccountCtrl {
     @Secured("ROLE_SUPER_ADMIN")
     @RequestMapping(value = "/remove", method = RequestMethod.DELETE)
     public void removeAccount(@RequestBody UserAccountActiveOrRemoveDto userAccountActiveOrRemoveDto) {
-        Optional<UserAccount> userAccount = userAccountService.findByUsername(userAccountActiveOrRemoveDto.getUsername());
-        userAccountService.removeAccount(userAccount.get());
+        UserAccount userAccount = userAccountService.findByUsername(userAccountActiveOrRemoveDto.getUsername());
+        userAccountService.removeAccount(userAccount);
     }
 
     @CrossOrigin(origins = "http://wzb24.pl")
     @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN","ROLE_MODERATOR","ROLE_SUPER_USER", "ROLE_USER"})
     @RequestMapping(value = "/find_user", method = RequestMethod.POST)
     public UserAccount findUserAccount(@RequestBody FindUserAccountDto findUserAccountDto) {
-        Optional<UserAccount> userAccount = userAccountService.findByUsername(findUserAccountDto.getUsername());
-        return userAccount.get();
+        UserAccount userAccount = userAccountService.findByUsername(findUserAccountDto.getUsername());
+        return userAccount;
     }
 
     @CrossOrigin(origins = "http://wzb24.pl")
     @RequestMapping(value = "/edit_date", method = RequestMethod.POST)
     @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN","ROLE_MODERATOR"})
     public void updateUserAccount(@RequestBody @Valid UpdateUserAccountDto updateUserAccountDto) {
-        Optional<UserAccount> userAccount = userAccountService.findByUsername(updateUserAccountDto.getUsername());
-        editDataUserAccount.changeDataUserAccount(updateUserAccountDto, userAccount.get());
+        UserAccount userAccount = userAccountService.findByUsername(updateUserAccountDto.getUsername());
+        editDataUserAccount.changeDataUserAccount(updateUserAccountDto, userAccount);
     }
 
 }

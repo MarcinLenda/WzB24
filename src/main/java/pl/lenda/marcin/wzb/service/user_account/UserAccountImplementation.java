@@ -41,7 +41,7 @@ public class UserAccountImplementation implements UserAccountService{
     }
 
     @Override
-    public Optional<UserAccount> findByUsername(String username) {
+    public UserAccount findByUsername(String username) {
 
         return userAccountRepository.findByUsername(username);
     }
