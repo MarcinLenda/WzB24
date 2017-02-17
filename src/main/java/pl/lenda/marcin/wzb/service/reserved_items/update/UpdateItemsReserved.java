@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Optional;
 
 /**
  * Created by Promar on 30.01.2017.
@@ -77,12 +76,12 @@ public class UpdateItemsReserved {
                 StringBuilder sb = new StringBuilder(items[18]);
                 numberCreator = sb.substring(1);
 
-                Optional<UserAccount> userAccount = userAccountService.findByNumberUser(numberCreator);
+                UserAccount userAccount = userAccountService.findByNumberUser(numberCreator);
 
 
-                if (userAccount.isPresent()) {
+                if (userAccount != null) {
 
-                    _itemsReserved.setCreator(userAccount.get().getSurname());
+                    _itemsReserved.setCreator(userAccount.getSurname());
 
                 } else {
                     _itemsReserved.setCreator(items[18]);

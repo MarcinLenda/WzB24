@@ -4,7 +4,6 @@ import pl.lenda.marcin.wzb.dto.ChangePasswordDto;
 import pl.lenda.marcin.wzb.entity.UserAccount;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Created by Promar on 06.11.2016.
@@ -19,7 +18,7 @@ public interface UserAccountService {
 
     UserAccount findByNameAndSurname(String name, String surname);
 
-    Optional<UserAccount> findByNumberUser(String numberUser);
+    UserAccount findByNumberUser(String numberUser);
 
     List<UserAccount> findActiveAccount();
 
