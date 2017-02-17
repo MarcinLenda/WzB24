@@ -89,5 +89,7 @@ public class MongoUserDetailsService implements UserDetailsService {
 
         UserAccount userAccountBeActive = userAccountRepository.findByUsernameAndActiveTrue(userAccount.getUsername());
         return userAccountBeActive;
+
+
     }
 }
