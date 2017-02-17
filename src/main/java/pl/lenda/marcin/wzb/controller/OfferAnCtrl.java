@@ -14,6 +14,7 @@ import pl.lenda.marcin.wzb.service.user_account.UserAccountService;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by Promar on 09.02.2017.
@@ -58,9 +59,9 @@ public class OfferAnCtrl {
 
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserAccount userAccount = userAccountService.findByUsername(authentication.getName());
+        Optional<UserAccount> userAccount = userAccountService.findByUsername(authentication.getName());
 
-        offerAnService.updateOffer(convertTo.convertToOfferAnEntity(offerAnDto,userAccount));
+        offerAnService.updateOffer(convertTo.convertToOfferAnEntity(offerAnDto,userAccount.get()));
     }
 
     @CrossOrigin(origins = "http://wzb24.pl")

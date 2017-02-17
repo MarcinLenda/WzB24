@@ -38,18 +38,19 @@ app.controller('OfferAnCtrl', ['$scope','$rootScope', 'OfferAnService','$uibModa
             });
     };
 
-    $scope.editDataOffer = function (offer) {
+    $scope.editDataOffer = function (offerIn) {
 
         var modalInstance = $scope.openModal('modalOfferAn.html',
             'Aktualizacja danych'
             , '',
-            offer);
+            {});
         modalInstance.result.then(function (offer) {
-            offer.numberOffer = $scope.numberOffer;
-            offer.value = $scope.valueOffer;
-            offer.status = $scope.status;
-            console.log(offer);
-            OfferAnService.changeStatusAn(offer)
+            console.log(offer.numberOffer);
+            offerIn.numberOffer = offer.numberOffer;
+            offerIn.value = offer.valueOffer;
+            offerIn.status = offer.status;
+            console.log(offerIn);
+            OfferAnService.changeStatusAn(offerIn)
                 .then(function successCallback(response) {
                     console.log('sukces');
                 }, function errorCallback(response) {

@@ -8,6 +8,8 @@ import pl.lenda.marcin.wzb.entity.UserAccount;
 import pl.lenda.marcin.wzb.service.user_account.UserAccountService;
 import pl.lenda.marcin.wzb.service.validate.ValidateUserAccount;
 
+import java.util.Optional;
+
 /**
  * Created by Promar on 11.01.2017.
  */
@@ -27,9 +29,9 @@ public class EditDataUserAccount {
     }
 
     public void resetPassword(UpdateUserAccountDto updateUserAccountDto){
-        UserAccount userAccount = userAccountService.findByUsername(updateUserAccountDto.getUsername());
-        userAccount.setPassword(bCryptPasswordEncoder.encode(userAccount.getUsername()));
-        userAccountService.editData(userAccount);
+        Optional<UserAccount> userAccount = userAccountService.findByUsername(updateUserAccountDto.getUsername());
+        userAccount.get().setPassword(bCryptPasswordEncoder.encode(userAccount.get().getUsername()));
+        userAccountService.editData(userAccount.get());
     }
 
 }

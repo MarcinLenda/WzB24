@@ -76,12 +76,12 @@ public class DocumentWZCtrl {
             documentWzServiceImplementation.removeDocumentWz(document);
 
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            UserAccount userAccount = userAccountService.findByUsername(authentication.getName());
+            Optional<UserAccount> userAccount = userAccountService.findByUsername(authentication.getName());
 
             //save history, who delete document
             historyDeleteDocumentWzRepository.save(convertTo.convertToHistoryDeleteDoc(documentWzToDeleteDto.getNumberWZ(),
                     documentWzToDeleteDto.getSubPro(),
-                    document.getClient(), document.getTraderName(), userAccount.getUsername()));
+                    document.getClient(), document.getTraderName(), userAccount.get().getUsername()));
 
             return document;
         })
@@ -152,11 +152,11 @@ public class DocumentWZCtrl {
         possibleDocumentToCorrect.map(documentWz ->{
             documentWz.setBeCorrects(true);
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            UserAccount userAccount = userAccountService.findByUsername(authentication.getName());
+            Optional<UserAccount> userAccount = userAccountService.findByUsername(authentication.getName());
 
             //save information who accept correct document
             historyCorrectsDocumentRepository.save(convertTo.convertToHistoryCorrectDoc(documentWz.getNumberWZ(), documentWz.getSubProcess(),
-                    documentWz.getClient(), documentWz.getTraderName(), userAccount.getUsername()));
+                    documentWz.getClient(), documentWz.getTraderName(), userAccount.get().getUsername()));
             documentWzServiceImplementation.createDocumentWz(documentWz);
             return documentWz;
         }).orElseThrow(DocumentWzException::documentNotFound);

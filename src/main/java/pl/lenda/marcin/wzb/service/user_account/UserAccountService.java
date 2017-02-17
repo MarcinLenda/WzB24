@@ -13,7 +13,7 @@ public interface UserAccountService {
 
     void registerNewUser(UserAccount userAccount);
 
-    UserAccount findByUsername(String username);
+    Optional<UserAccount> findByUsername(String username);
 
     UserAccount editData(UserAccount userAccount);
 
